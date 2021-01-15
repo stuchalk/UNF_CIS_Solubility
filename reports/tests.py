@@ -26,6 +26,7 @@ ref = dst[0]['reference']
 test = SciData(sysid)
 test.context(['https://stuchalk.github.io/scidata/contexts/sds.jsonld',
               'https://stuchalk.github.io/scidata/contexts/scidata.jsonld'])
+test.add_namespace({'w3i': 'https://w3id.org/skgo/modsci#'})
 test.base({"@base": "https://scidata.unf.edu/iupac/sds/" + sysid + "/"})
 test.version(1)
 test.generatedAt(str(datetime.now()))
@@ -33,8 +34,8 @@ test.publisher('The International Union of Pure and Applied Chemistry')
 test.add_keyword('Solubility')
 test.add_keyword('Solubility data series')
 test.title('Solubility data from volume ' + pub['volume'])
-
-
+test.discipline('w3i:Chemistry')
+test.subdiscipline('w3i:PhysicalChemistry')
 
 test.add_source([{"title": pub['title'], "year": pub['year'], "type": "Critically evaluate report"}])
 if ref:
