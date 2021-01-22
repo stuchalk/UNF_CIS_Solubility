@@ -9,12 +9,12 @@ django.setup()
 from reports.serializers import *
 from scidata.model import *
 from datetime import datetime
-sysid = '58_1'
+sysid = '58_2'
 rep = Reports.objects.get(sysid__exact=sysid)
 report = ReportSerializer(rep)
 data = report.data
-# print(json.dumps(data, indent=4))
-# exit()
+print(json.dumps(data, indent=4))
+exit()
 
 # organize data
 pub = data['pub']
@@ -30,10 +30,16 @@ test.add_namespace({'w3i': 'https://w3id.org/skgo/modsci#'})
 test.base({"@base": "https://scidata.unf.edu/iupac/sds/" + sysid + "/"})
 test.version(1)
 test.generatedAt(str(datetime.now()))
+# add general metadata
+test.title('Solubility data from volume ' + pub['volume'])
+# data["set"][0]
+string = "Stuart Chalk"
+parts = string.split(" ")
+
+#test.author()
 test.publisher('The International Union of Pure and Applied Chemistry')
 test.add_keyword('Solubility')
 test.add_keyword('Solubility data series')
-test.title('Solubility data from volume ' + pub['volume'])
 test.discipline('w3i:Chemistry')
 test.subdiscipline('w3i:PhysicalChemistry')
 
