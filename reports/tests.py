@@ -45,6 +45,7 @@ test.add_keyword('Solubility')
 test.add_keyword('Solubility data series')
 test.discipline('w3i:Chemistry')
 test.subdiscipline('w3i:PhysicalChemistry')
+test.description('Critically reviewed solubility data reported in the IUPAC Solubility Data Series')
 
 # SciData section
 
