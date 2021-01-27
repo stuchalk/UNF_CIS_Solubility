@@ -32,11 +32,12 @@ test.version(1)
 test.generatedAt(str(datetime.now()))
 # add general metadata
 test.title('Solubility data from volume ' + pub['volume'])
-# data["set"][0]
-string = "Stuart Chalk"
-parts = string.split(" ")
+#
 
-#test.author()
+
+test.author(data["set"][0])
+# string = "Stuart Chalk"
+# parts = string.split(" ")
 test.publisher('The International Union of Pure and Applied Chemistry')
 test.add_keyword('Solubility')
 test.add_keyword('Solubility data series')
