@@ -309,3 +309,16 @@ class AuthorsReports(models.Model):
     class Meta:
         managed = False
         db_table = 'authors_reports'
+
+
+class Identifiers(models.Model):
+    """ indentifiers table model """
+
+    sub = models.ForeignKey(Substances, models.DO_NOTHING, db_column="substance_id")
+    type = models.CharField(max_length=12)
+    value = models.CharField(max_length=1024)
+    updated = models.DateTimeField()
+
+    class Meta:
+        managed = False
+        db_table = 'identifiers'

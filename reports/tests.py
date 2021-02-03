@@ -9,7 +9,7 @@ django.setup()
 from reports.serializers import *
 from scidata.model import *
 from datetime import datetime
-sysid = '58_2'
+sysid = '58_1'
 rep = Reports.objects.get(sysid__exact=sysid)
 report = ReportSerializer(rep)
 data = report.data
@@ -51,6 +51,8 @@ test.subdiscipline('w3i:PhysicalChemistry')
 # methodology
 
 # system
+fs = [{"@id": "chemical", "@type": "sdo:chemical", "name": "test name", "description": "test description"}];
+test.facets(fs)
 
 # dataset
 
