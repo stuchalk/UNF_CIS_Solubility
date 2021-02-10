@@ -5,7 +5,6 @@ import json
 
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "djangoProject.settings")
 django.setup()
-
 from reports.serializers import *
 from scidata.model import *
 from datetime import datetime
@@ -21,6 +20,13 @@ pub = data['pub']
 dst = data['set']
 ref = dst[0]['reference']
 
+chemicals = data['chem']
+for chemical in chemicals:
+    print(chemical)
+    #this is a for loop
+print(chemicals)
+
+#chemsubtances =
 
 # create json-ld file
 test = SciData(sysid)
@@ -39,6 +45,7 @@ aus = []
 for au in aulist:
     aus.append({'name': au})
 test.author(aus)
+
 
 test.publisher('The International Union of Pure and Applied Chemistry')
 test.add_keyword('Solubility')
