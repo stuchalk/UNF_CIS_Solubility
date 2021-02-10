@@ -76,8 +76,17 @@ class ChemicalSerializer(serializers.ModelSerializer):
     class Meta:
         """ settings """
         model = Chemicals
-        depth = 1
+        depth = 2
         exclude = ['rep']
+
+
+class IdentifierSerializer(serializers.ModelSerializer):
+    """ indentifiers serializer """
+
+    class Meta:
+        """ settings """
+        model = Identifiers
+        depth = 1
 
 
 class SubstanceSystemSerializer(serializers.ModelSerializer):
@@ -93,12 +102,13 @@ class SubstanceSystemSerializer(serializers.ModelSerializer):
 class SubstanceSerializer(serializers.ModelSerializer):
     """ substance serializer """
     chemical = ChemicalSerializer(source='chemicals_set', many=True, required=False)
+    identifier = IdentifierSerializer(source='identifiers_set', many=True, required=False)
 
     class Meta:
         """ settings """
         model = Substances
         fields = '__all__'
-        depth = 0
+        depth = 2
 
 
 class SystemSerializer(serializers.ModelSerializer):

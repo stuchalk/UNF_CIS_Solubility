@@ -8,7 +8,7 @@ django.setup()
 from reports.serializers import *
 from scidata.model import *
 from datetime import datetime
-sysid = '58_2'
+sysid = '58_1'
 rep = Reports.objects.get(sysid__exact=sysid)
 report = ReportSerializer(rep)
 data = report.data
@@ -59,6 +59,8 @@ test.description('Critically reviewed solubility data reported in the IUPAC Solu
 # methodology
 
 # system
+fs = [{"@id": "chemical", "@type": "sdo:chemical", "name": "test name", "description": "test description"}];
+test.facets(fs)
 
 # dataset
 
