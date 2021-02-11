@@ -19,14 +19,29 @@ data = report.data
 pub = data['pub']
 dst = data['set']
 ref = dst[0]['reference']
-
+subs = []
 chemicals = data['chem']
-for chemical in chemicals:
-    print(chemical)
-    #this is a for loop
-print(chemicals)
+chems = []
 
-#chemsubtances =
+# this is a for loop
+# the data pulled here "only" exists w/in the loop
+for chemical in chemicals:
+    subs.append(chemical['sub'])
+    chem = {}
+
+    chem.update({'name': chemical['name']})
+    chem.update({'description': chemical['description']})
+    chem.update({'compnum': chemical['compnum']})
+
+    chems.append(chem)
+    empty = ''
+
+print(subs)
+print(chems)
+exit()
+
+# chemsubtances =
+# compound info is the "sub" info,general info about the chems
 
 # create json-ld file
 test = SciData(sysid)
