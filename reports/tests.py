@@ -28,22 +28,15 @@ chems = []
 for chemical in chemicals:
     subs.append(chemical['sub'])
     chem = {}
-    empty = ''
-    null = 'null'
 
-    for chemical in [empty, null]:
-        continue
-
-    if chemical == empty:
-        continue
-    if chemical == null:
-        continue
-
+    # info that will have stuff in it
     chem.update({'name': chemical['name']})
     chem.update({'description': chemical['description']})
     chem.update({'compnum': chemical['compnum']})
-    chem.update({'comments': chemical['comments']})
-#
+
+    # may or may not have info in it
+    if chemical['comments'] is not None:
+        chem.update({'comments': chemical['comments']})
 
     chems.append(chem)
 
