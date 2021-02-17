@@ -28,19 +28,32 @@ chems = []
 for chemical in chemicals:
     subs.append(chemical['sub'])
     chem = {}
+    empty = ''
+    null = 'null'
+
+    for chemical in [empty, null]:
+        continue
+
+    if chemical == empty:
+        continue
+    if chemical == null:
+        continue
 
     chem.update({'name': chemical['name']})
     chem.update({'description': chemical['description']})
     chem.update({'compnum': chemical['compnum']})
+    chem.update({'comments': chemical['comments']})
+#
 
     chems.append(chem)
-    empty = ''
 
 print(subs)
 print(chems)
 exit()
 
-# chemsubtances =
+# chemsubtances
+
+
 # compound info is the "sub" info,general info about the chems
 
 # create json-ld file
