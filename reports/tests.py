@@ -26,7 +26,7 @@ chems = []
 # this is a for loop
 # the data pulled here "only" exists w/in the loop
 for chemical in chemicals:
-    subs.append(chemical['sub'])
+    subs.append(dict(chemical['sub']))
     chem = {}
 
     # info that will have stuff in it
@@ -80,8 +80,15 @@ test.description('Critically reviewed solubility data reported in the IUPAC Solu
 # methodology
 
 # system
-fs = [{"@id": "chemical", "@type": "sdo:chemical", "name": "test name", "description": "test description"}];
-test.facets(fs)
+chms = []
+fields = ['name', 'description', 'compnum']
+for chem in chems:
+    chm = {"@id": "chemical", "@type": "sdo:chemical"}
+    for field in fields:
+        chm.update({field: chem[field]})
+    chms.append(chm)
+
+test.facets(chms)
 
 # dataset
 
