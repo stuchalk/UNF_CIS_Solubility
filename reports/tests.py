@@ -6,7 +6,7 @@ import json
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "djangoProject.settings")
 django.setup()
 from reports.serializers import *
-from scidata.model import *
+from SciDataLib.SciData import *
 from datetime import datetime
 sysid = '58_1'
 rep = Reports.objects.get(sysid__exact=sysid)
@@ -40,9 +40,9 @@ for chemical in chemicals:
 
     chems.append(chem)
 
-print(subs)
-print(chems)
-exit()
+# print(subs)
+# print(chems)
+# exit()
 
 # chemsubtances
 
@@ -54,9 +54,9 @@ test = SciData(sysid)
 test.context(['https://stuchalk.github.io/scidata/contexts/sds.jsonld',
               'https://stuchalk.github.io/scidata/contexts/scidata.jsonld'])
 test.add_namespace({'w3i': 'https://w3id.org/skgo/modsci#'})
-test.base({"@base": "https://scidata.unf.edu/iupac/sds/" + sysid + "/"})
-test.version(1)
-test.generatedAt(str(datetime.now()))
+test.add_base("https://scidata.unf.edu/iupac/sds/" + sysid + "/")
+test.version('1')
+test.generatedat(str(datetime.now()))
 
 # add general metadata
 test.title('Solubility data from volume ' + pub['volume'])
