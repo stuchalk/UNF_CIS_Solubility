@@ -84,14 +84,14 @@ for chem in chems:
     chms.append(chm)
 test.facets(chms)
 
-subz = []
-sfields = ['name', 'id', 'casno', 'formula', 'molweight']
+subzs = []
+fields = ['name', 'id', 'casno', 'formula']
 for sub in subs:
     subz = {"@id": "compound", "@type": "sdo:compound"}
     for field in fields:
-        subz.update({field: subs[field]})
-    subz.append(subz)
-test.facets(subz)
+        subz.update({field: sub[field]})
+    subzs.append(subz)
+test.facets(subzs)
 
 # dataset
 
