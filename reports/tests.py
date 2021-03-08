@@ -39,11 +39,6 @@ for chemical in chemicals:
         chem.update({'comments': chemical['comments']})
 
     chems.append(chem)
-
-# print(subs)
-# print(chems)
-# exit()
-
 # chemsubtances
 
 
@@ -87,8 +82,16 @@ for chem in chems:
     for field in fields:
         chm.update({field: chem[field]})
     chms.append(chm)
-
 test.facets(chms)
+
+subz = []
+sfields = ['name', 'id', 'casno', 'formula', 'molweight']
+for sub in subs:
+    subz = {"@id": "compound", "@type": "sdo:compound"}
+    for field in fields:
+        subz.update({field: subs[field]})
+    subz.append(subz)
+test.facets(subz)
 
 # dataset
 
