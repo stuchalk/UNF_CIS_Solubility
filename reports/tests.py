@@ -12,8 +12,8 @@ sysid = '58_1'
 rep = Reports.objects.get(sysid__exact=sysid)
 report = ReportSerializer(rep)
 data = report.data
-# print(json.dumps(data, indent=4))
-# exit()
+print(json.dumps(data, indent=4))
+exit()
 
 # organize data
 pub = data['pub']
@@ -74,6 +74,9 @@ test.description('Critically reviewed solubility data reported in the IUPAC Solu
 
 # methodology
 
+# add the method info as an aspect under methodology of type procedure
+# test.aspects
+
 # system
 chms = []
 fields = ['name', 'description', 'compnum']
@@ -92,6 +95,8 @@ for sub in subs:
         subz.update({field: sub[field]})
     subzs.append(subz)
 test.facets(subzs)
+
+# add the chemical system
 
 # dataset
 

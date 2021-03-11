@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'solubility',
     'substances',
     'reports',
+    'rest_framework',
 ]
 
 MIDDLEWARE = [

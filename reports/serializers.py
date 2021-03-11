@@ -76,7 +76,7 @@ class ChemicalSerializer(serializers.ModelSerializer):
     class Meta:
         """ settings """
         model = Chemicals
-        depth = 2
+        depth = 3
         exclude = ['rep']
 
 
@@ -86,7 +86,7 @@ class IdentifierSerializer(serializers.ModelSerializer):
     class Meta:
         """ settings """
         model = Identifiers
-        depth = 1
+        depth = 2
 
 
 class SubstanceSystemSerializer(serializers.ModelSerializer):
@@ -96,30 +96,30 @@ class SubstanceSystemSerializer(serializers.ModelSerializer):
         """ settings """
         model = SubstancesSystems
         fields = '__all__'
-        depth = 2
+        depth = 3
 
 
 class SubstanceSerializer(serializers.ModelSerializer):
     """ substance serializer """
-    chemical = ChemicalSerializer(source='chemicals_set', many=True, required=False)
-    identifier = IdentifierSerializer(source='identifiers_set', many=True, required=False)
+    chemical = ChemicalSerializer(many=True, required=False)
+    identifiers = IdentifierSerializer()
 
     class Meta:
         """ settings """
         model = Substances
         fields = '__all__'
-        depth = 2
+        depth = 3
 
 
 class SystemSerializer(serializers.ModelSerializer):
     """ system serializer """
-    subsys = SubstanceSystemSerializer(source='substances_systems_set', many=True, required=False)
+    subsys = SubstanceSystemSerializer(source='substancessystems_set', many=True, required=False)
 
     class Meta:
         """ settings """
         model = Systems
         fields = '__all__'
-        depth = 0
+        depth = 3
 
 
 class ReferenceSerializer(serializers.ModelSerializer):
@@ -136,7 +136,7 @@ class DatasetSerializer(serializers.ModelSerializer):
     """ dataset serializer """
     series = DataseriesSerializer(source='dataseries_set', many=True, required=False)
     reference = ReferenceSerializer(many=False, required=True)
-    system = SystemSerializer(source='systems_set', many=True, required=False)
+    system = SystemSerializer()
 
     class Meta:
         """ settings """

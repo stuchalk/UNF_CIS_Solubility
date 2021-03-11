@@ -312,9 +312,9 @@ class AuthorsReports(models.Model):
 
 
 class Identifiers(models.Model):
-    """ indentifiers table model """
+    """ identifiers table model """
 
-    sub = models.ForeignKey(Substances, models.DO_NOTHING, db_column="substance_id")
+    substance = models.ForeignKey("Substances", models.DO_NOTHING, db_column="substance_id")
     type = models.CharField(max_length=12)
     value = models.CharField(max_length=1024)
     updated = models.DateTimeField()
