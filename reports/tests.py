@@ -101,11 +101,11 @@ test.facets(subzs)
 chemsystems = []
 fields = ['name']
 # system or chemical system
-for csyst in csysts:
-    chemsystem = {"@id": "system", "@type": "sdo:system"}
-    for field in fields:
-        chemsystem.update({field: csyst[field]})
-    chemsystems.append(chemsystem)
+chemsystem = {"@id": "system", "@type": "sdo:system"}
+for field in fields:
+    chemsystem.update({field: csyst[field]})
+    # add constituents here - loop over chemicals
+chemsystems.append(chemsystem)
 test.facets(chemsystems)
 
 #namespaces
