@@ -53,7 +53,7 @@ class DatapointSerializer(serializers.ModelSerializer):
     data = DataSerializer(source='data_set', many=True, required=False)
 
     class Meta:
-        """ datapoints """
+        """ settings """
         model = Datapoints
         fields = '__all__'
         depth = 0
@@ -64,7 +64,7 @@ class DataseriesSerializer(serializers.ModelSerializer):
     points = DatapointSerializer(source='datapoints_set', many=True, required=False)
 
     class Meta:
-        """ dataseries """
+        """ settings """
         model = Dataseries
         fields = '__all__'
         depth = 0
@@ -81,27 +81,18 @@ class ChemicalSerializer(serializers.ModelSerializer):
 
 
 class IdentifierSerializer(serializers.ModelSerializer):
-    """ indentifiers serializer """
+    """ identifiers serializer """
 
     class Meta:
         """ settings """
         model = Identifiers
         depth = 1
-
-
-class SubstanceSystemSerializer(serializers.ModelSerializer):
-    """ substance_system serializer """
-
-    class Meta:
-        """ settings """
-        model = SubstancesSystems
-        fields = '__all__'
-        depth = 2
+        exclude = ['sub']
 
 
 class SubstanceSerializer(serializers.ModelSerializer):
     """ substance serializer """
-    chemical = ChemicalSerializer(source='chemicals_set', many=True, required=False)
+    # chemical = ChemicalSerializer(source='chemicals_set', many=True, required=False)
     identifier = IdentifierSerializer(source='identifiers_set', many=True, required=False)
 
     class Meta:
@@ -111,9 +102,20 @@ class SubstanceSerializer(serializers.ModelSerializer):
         depth = 2
 
 
+class SubstanceSystemSerializer(serializers.ModelSerializer):
+    """ substance_system serializer """
+    substance = SubstanceSerializer()
+
+    class Meta:
+        """ settings """
+        model = SubstancesSystems
+        fields = '__all__'
+        depth = 2
+
+
 class SystemSerializer(serializers.ModelSerializer):
     """ system serializer """
-    subsys = SubstanceSystemSerializer(source='substances_systems_set', many=True, required=False)
+    subsys = SubstanceSystemSerializer(source='substancessystems_set', many=True, required=False)
 
     class Meta:
         """ settings """
@@ -136,7 +138,7 @@ class DatasetSerializer(serializers.ModelSerializer):
     """ dataset serializer """
     series = DataseriesSerializer(source='dataseries_set', many=True, required=False)
     reference = ReferenceSerializer(many=False, required=True)
-    system = SystemSerializer(source='systems_set', many=True, required=False)
+    system = SystemSerializer()
 
     class Meta:
         """ settings """
