@@ -1,5 +1,7 @@
 """ django unit test file"""
 import os
+from typing import List, Any
+
 import django
 import json
 
@@ -22,6 +24,7 @@ ref = dst[0]['reference']
 subs = []
 chemicals = data['chem']
 chems = []
+csyst = []
 
 # this is a for loop
 # the data pulled here "only" exists w/in the loop
@@ -75,7 +78,6 @@ test.description('Critically reviewed solubility data reported in the IUPAC Solu
 # methodology
 
 # add the method info as an aspect under methodology of type procedure
-# test.aspects
 
 # system
 chms = []
@@ -96,7 +98,20 @@ for sub in subs:
     subzs.append(subz)
 test.facets(subzs)
 
-# add the chemical system
+chemsystems = []
+fields = ['name']
+# system or chemical system
+for csyst in csysts:
+    chemsystem = {"@id": "system", "@type": "sdo:system"}
+    for field in fields:
+        chemsystem.update({field: csyst[field]})
+    chemsystems.append(chemsystem)
+test.facets(chemsystems)
+
+#namespaces
+#namespaces = 'sdo','"https://stuchalk.github.io/scidata/ontology/scidata.owl#",'
+#??
+#test.facet(namespaces)
 
 # dataset
 
