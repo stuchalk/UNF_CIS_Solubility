@@ -24,7 +24,7 @@ ref = dst[0]['reference']
 subs = []
 chemicals = data['chem']
 chems = []
-csyst = []
+csysts = []
 
 # this is a for loop
 # the data pulled here "only" exists w/in the loop
