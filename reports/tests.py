@@ -1,14 +1,12 @@
 """ django unit test file"""
 import os
-from typing import List, Any
-
 import django
 import json
 
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "djangoProject.settings")
 django.setup()
 from reports.serializers import *
-from SciDataLib.SciData import *
+from scidatalib.scidata import *
 from datetime import datetime
 sysid = '58_1'
 rep = Reports.objects.get(sysid__exact=sysid)
@@ -49,13 +47,12 @@ for chemical in chemicals:
 test = SciData(sysid)
 test.context(['https://stuchalk.github.io/scidata/contexts/sds.jsonld',
               'https://stuchalk.github.io/scidata/contexts/scidata.jsonld'])
-test.add_namespace({'w3i': 'https://w3id.org/skgo/modsci#'})
-test.add_base("https://scidata.unf.edu/iupac/sds/" + sysid + "/")
+test.namespaces({'w3i': 'https://w3id.org/skgo/modsci#'})
+test.base("https://scidata.unf.edu/iupac/sds/" + sysid + "/")
 test.version('1')
-test.generatedat(str(datetime.now()))
 
 # additional namespaces
-test.add_namespace({
+test.namespaces({
     "sdo": "https://stuchalk.github.io/scidata/ontology/scidata.owl#",
     "dc": "http://purl.org/dc/terms/",
     "qudt": "http://qudt.org/vocab/unit/",
@@ -76,8 +73,8 @@ for au in aulist:
 test.author(aus)
 
 test.publisher('The International Union of Pure and Applied Chemistry')
-test.add_keyword('Solubility')
-test.add_keyword('Solubility data series')
+test.keywords('Solubility')
+test.keywords('Solubility data series')
 test.discipline('w3i:Chemistry')
 test.subdiscipline('w3i:PhysicalChemistry')
 test.description('Critically reviewed solubility data reported in the IUPAC Solubility Data Series')
@@ -122,9 +119,9 @@ test.facets(chemsystems)
 # dataset
 
 # sources
-test.add_source([{"title": pub['title'], "year": pub['year'], "type": "Critically evaluate report"}])
+test.sources([{"title": pub['title'], "year": pub['year'], "type": "Critically evaluate report"}])
 if ref:
-    test.add_source([{"title": ref['title'], "year": ref['year'], "type": "Journal article", "doi": ref['doi']}])
+    test.sources([{"title": ref['title'], "year": ref['year'], "type": "Journal article", "doi": ref['doi']}])
 
 # rights
 test.rights("https://creativecommons.org/licenses/by-nc/4.0/", "NIST & IUPAC")
