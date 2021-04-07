@@ -85,7 +85,7 @@ test.description('Critically reviewed solubility data reported in the IUPAC Solu
 # SciData section
 
 # methodology
-test.aspects(data['method'])
+# test.aspects(data['method'])
 # add the method info as an aspect under methodology of type procedure
 
 # system
@@ -108,12 +108,14 @@ for sub in subs:
 test.facets(subzs)
 
 chemsystems = []
-fields = ['name']
+fields = ['name','type']
 # system or chemical system
 chemsystem = {"@id": "system", "@type": "sdo:system"}
 for field in fields:
-    chemsystem.update({field: csyst[field]})
-    # add constituents here - loop over chemicals
+    chemsystem.update({field: chemsystem[field]})
+    for constituent in chemsystem
+        constituent.append(dict[])
+
 chemsystems.append(chemsystem)
 test.facets(chemsystems)
 
