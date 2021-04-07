@@ -14,8 +14,6 @@ sysid = '58_1'
 rep = Reports.objects.get(sysid__exact=sysid)
 report = ReportSerializer(rep)
 data = report.data
-print(json.dumps(data, indent=4))
-exit()
 
 # organize data
 pub = data['pub']
@@ -73,6 +71,18 @@ test.discipline('w3i:Chemistry')
 test.subdiscipline('w3i:PhysicalChemistry')
 test.description('Critically reviewed solubility data reported in the IUPAC Solubility Data Series')
 
+# namespaces
+test.add_namespace({
+    "sdo": "https://stuchalk.github.io/scidata/ontology/scidata.owl#",
+    "dc": "http://purl.org/dc/terms/",
+    "qudt": "http://qudt.org/vocab/unit/",
+    "xsd": "http://www.w3.org/2001/XMLSchema#",
+    "gb": "https://goldbook.iupac.org/",
+    "so": "https://stuchalk.github.io/scidata/ontology/solubility.owl#",
+    "ss": "http://semanticscience.org/resource/",
+    "obo": "http://purl.obolibrary.org/obo/",
+    "afrl": "http://purl.allotrope.org/ontologies/role#"})
+
 # SciData section
 
 # methodology
@@ -94,7 +104,7 @@ fields = ['name', 'id', 'casno', 'formula']
 for sub in subs:
     subz = {"@id": "compound", "@type": "sdo:compound"}
     for field in fields:
-        subz.update({field: sub[field]})
+       subz.update({field: sub[field]})
     subzs.append(subz)
 test.facets(subzs)
 
@@ -107,11 +117,6 @@ for field in fields:
     # add constituents here - loop over chemicals
 chemsystems.append(chemsystem)
 test.facets(chemsystems)
-
-#namespaces
-#namespaces = 'sdo','"https://stuchalk.github.io/scidata/ontology/scidata.owl#",'
-#??
-#test.facet(namespaces)
 
 # dataset
 
