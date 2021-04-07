@@ -15,12 +15,13 @@ data = report.data
 
 # organize data
 pub = data['pub']
-dst = data['set']
-ref = dst[0]['reference']
+dst = data['set'][0]
+ref = dst['reference']
 subs = []
 chemicals = data['chem']
 chems = []
 csysts = []
+sys = dst['system']
 
 # this is a for loop
 # the data pulled here "only" exists w/in the loop
@@ -97,21 +98,35 @@ test.facets(chms)
 
 subzs = []
 fields = ['name', 'id', 'casno', 'formula']
-for sub in subs:
+# iterate over idents to get iupac and inchi
+idents = ['iupacname', 'inchikey']
+subsys = sys['subsys']
+for ss in subsys:
+    sub = ss['substance']
+    idees = sub['identifier']
     subz = {"@id": "compound", "@type": "sdo:compound"}
     for field in fields:
        subz.update({field: sub[field]})
+    for ident in idents:
+        for idee in idees:
+            if idee["type"] == ident:
+                subz.update({ident: idee['value']})
     subzs.append(subz)
+print(json.dumps(subzs, indent=4))
+exit()
 test.facets(subzs)
 
 chemsystems = []
-fields = ['name','type']
+fields = ['name','type','constituents']
 # system or chemical system
-chemsystem = {"@id": "system", "@type": "sdo:system"}
+chemsystem = {"@id": "chemicalsystem", "@type": "sdo:chemicalsystem"}
+chemsystem.update({'name': sys['name']})
+print(chemsystem)
+exit()
 for field in fields:
     chemsystem.update({field: chemsystem[field]})
-    for constituent in chemsystem
-        constituent.append(dict[])
+    for constituent in chemsystem:
+        pass
 
 chemsystems.append(chemsystem)
 test.facets(chemsystems)
