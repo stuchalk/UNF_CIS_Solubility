@@ -54,24 +54,7 @@ test.add_base("https://scidata.unf.edu/iupac/sds/" + sysid + "/")
 test.version('1')
 test.generatedat(str(datetime.now()))
 
-# add general metadata
-test.title('Solubility data from volume ' + pub['volume'])
-austr = data['set'][0]['reference']['authors']
-aulist = austr.split("; ")
-aus = []
-for au in aulist:
-    aus.append({'name': au})
-test.author(aus)
-
-
-test.publisher('The International Union of Pure and Applied Chemistry')
-test.add_keyword('Solubility')
-test.add_keyword('Solubility data series')
-test.discipline('w3i:Chemistry')
-test.subdiscipline('w3i:PhysicalChemistry')
-test.description('Critically reviewed solubility data reported in the IUPAC Solubility Data Series')
-
-# namespaces
+# additional namespaces
 test.add_namespace({
     "sdo": "https://stuchalk.github.io/scidata/ontology/scidata.owl#",
     "dc": "http://purl.org/dc/terms/",
@@ -83,10 +66,26 @@ test.add_namespace({
     "obo": "http://purl.obolibrary.org/obo/",
     "afrl": "http://purl.allotrope.org/ontologies/role#"})
 
+# add general metadata
+test.title('Solubility data from volume ' + pub['volume'])
+austr = data['set'][0]['reference']['authors']
+aulist = austr.split("; ")
+aus = []
+for au in aulist:
+    aus.append({'name': au})
+test.author(aus)
+
+test.publisher('The International Union of Pure and Applied Chemistry')
+test.add_keyword('Solubility')
+test.add_keyword('Solubility data series')
+test.discipline('w3i:Chemistry')
+test.subdiscipline('w3i:PhysicalChemistry')
+test.description('Critically reviewed solubility data reported in the IUPAC Solubility Data Series')
+
 # SciData section
 
 # methodology
-
+test.aspects(data['method'])
 # add the method info as an aspect under methodology of type procedure
 
 # system
