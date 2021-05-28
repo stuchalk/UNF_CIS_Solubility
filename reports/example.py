@@ -1,13 +1,14 @@
 """ django unit test file"""
 import os
 import django
-import json
+
 
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "djangoProject.settings")
 django.setup()
 from reports.serializers import *
 from scidatalib.scidata import *
-from datetime import datetime
+import json
+
 sysid = '58_1'
 rep = Reports.objects.get(sysid__exact=sysid)
 report = ReportSerializer(rep)
@@ -23,8 +24,8 @@ chems = []
 csysts = []
 sys = dst['system']
 
-# this is a for loop
-# the data pulled here "only" exists w/in the loop
+
+# get chemicals (substance instance) data and populate subs variable
 for chemical in chemicals:
     subs.append(dict(chemical['sub']))
     chem = {}
@@ -39,10 +40,6 @@ for chemical in chemicals:
         chem.update({'comments': chemical['comments']})
 
     chems.append(chem)
-# chemsubtances
-
-
-# compound info is the "sub" info,general info about the chems
 
 # create json-ld file
 test = SciData(sysid)
@@ -52,7 +49,7 @@ test.namespaces({'w3i': 'https://w3id.org/skgo/modsci#'})
 test.base("https://scidata.unf.edu/iupac/sds/" + sysid + "/")
 test.version('1')
 
-# additional namespaces
+# add additional namespaces
 test.namespaces({
     "sdo": "https://stuchalk.github.io/scidata/ontology/scidata.owl#",
     "dc": "http://purl.org/dc/terms/",
@@ -72,21 +69,43 @@ aus = []
 for au in aulist:
     aus.append({'name': au})
 test.author(aus)
-
 test.publisher('The International Union of Pure and Applied Chemistry')
 test.keywords('Solubility')
 test.keywords('Solubility data series')
 test.discipline('w3i:Chemistry')
 test.subdiscipline('w3i:PhysicalChemistry')
-test.description('Critically reviewed solubility data reported in the IUPAC Solubility Data Series')
+test.description('Critically reviewed solubility data reported '
+                 'in the IUPAC Solubility Data Series')
 
 # SciData section
 
 # methodology
-# test.aspects(data['method'])
-# add the method info as an aspect under methodology of type procedure
+# add the method info (data['method']) as procedure
+proc = [{"@id": "procedure", "description": data['method']}]
+test.aspects(proc)
 
 # system
+# add substances
+subs = []
+fields = ['name', 'id', 'casno', 'formula']
+# iterate over idents to get iupac and inchi
+idents = ['iupacname', 'inchikey']
+subsyss = sys['subsys']
+for subsys in subsyss:
+    subb = subsys['substance']
+    idees = subb['identifier']
+    sub = {"@id": "compound", "@type": "sdo:compound"}
+    for field in fields:
+        sub.update({field: subb[field]})
+    for ident in idents:
+        for idee in idees:
+            if idee["type"] == ident:
+                sub.update({ident: idee['value']})
+    del sub['id']
+    subs.append(sub)
+test.facets(subs)
+
+# add chemicals
 chms = []
 fields = ['name', 'description', 'compnum']
 for chem in chems:
@@ -96,33 +115,14 @@ for chem in chems:
     chms.append(chm)
 test.facets(chms)
 
-subzs = []
-fields = ['name', 'id', 'casno', 'formula']
-# iterate over idents to get iupac and inchi
-idents = ['iupacname', 'inchikey']
-subsys = sys['subsys']
-for ss in subsys:
-    sub = ss['substance']
-    idees = sub['identifier']
-    subz = {"@id": "compound", "@type": "sdo:compound"}
-    for field in fields:
-       subz.update({field: sub[field]})
-    for ident in idents:
-        for idee in idees:
-            if idee["type"] == ident:
-                subz.update({ident: idee['value']})
-    subzs.append(subz)
-print(json.dumps(subzs, indent=4))
-exit()
-test.facets(subzs)
-
+# add chemicalsystems
 chemsystems = []
-fields = ['name','type','constituents']
+fields = ['name', 'type', 'constituents']
 # system or chemical system
 chemsystem = {"@id": "chemicalsystem", "@type": "sdo:chemicalsystem"}
 chemsystem.update({'name': sys['name']})
-print(chemsystem)
-exit()
+# print(chemsystem)
+# exit()
 for field in fields:
     chemsystem.update({field: chemsystem[field]})
     for constituent in chemsystem:
@@ -134,9 +134,11 @@ test.facets(chemsystems)
 # dataset
 
 # sources
-test.sources([{"title": pub['title'], "year": pub['year'], "type": "Critically evaluate report"}])
+test.sources([{"title": pub['title'], "year": pub['year'],
+               "type": "Critically evaluate report"}])
 if ref:
-    test.sources([{"title": ref['title'], "year": ref['year'], "type": "Journal article", "doi": ref['doi']}])
+    test.sources([{"title": ref['title'], "year": ref['year'],
+                   "type": "Journal article", "doi": ref['doi']}])
 
 # rights
 test.rights("https://creativecommons.org/licenses/by-nc/4.0/", "NIST & IUPAC")
