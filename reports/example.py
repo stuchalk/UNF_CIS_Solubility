@@ -13,6 +13,10 @@ sysid = '58_1'
 rep = Reports.objects.get(sysid__exact=sysid)
 report = ReportSerializer(rep)
 data = report.data
+f = open(sysid + ".json", "w")
+f.write(json.dumps(data))
+print(json.dumps(data, indent=4))
+exit()
 
 # organize data
 pub = data['pub']
@@ -121,8 +125,8 @@ fields = ['name', 'type', 'constituents']
 # system or chemical system
 chemsystem = {"@id": "chemicalsystem", "@type": "sdo:chemicalsystem"}
 chemsystem.update({'name': sys['name']})
-# print(chemsystem)
-# exit()
+print(chemsystem)
+exit()
 for field in fields:
     chemsystem.update({field: chemsystem[field]})
     for constituent in chemsystem:
