@@ -15,8 +15,8 @@ report = ReportSerializer(rep)
 data = report.data
 f = open(sysid + ".json", "w")
 f.write(json.dumps(data))
-print(json.dumps(data, indent=4))
-exit()
+# print(json.dumps(data, indent=4))
+# exit()
 
 # organize data
 pub = data['pub']
@@ -121,17 +121,12 @@ test.facets(chms)
 
 # add chemicalsystems
 chemsystems = []
-fields = ['name', 'type', 'constituents']
+systype = {"1": "pure compound", "2": "binary system", "3": "ternary system", "4": "quaternary system"}
 # system or chemical system
 chemsystem = {"@id": "chemicalsystem", "@type": "sdo:chemicalsystem"}
 chemsystem.update({'name': sys['name']})
-print(chemsystem)
-exit()
-for field in fields:
-    chemsystem.update({field: chemsystem[field]})
-    for constituent in chemsystem:
-        pass
-
+chemsystem.update({'type': systype[str(sys['components'])]})
+chemsystem.update({'constituents': sys['components']})
 chemsystems.append(chemsystem)
 test.facets(chemsystems)
 
