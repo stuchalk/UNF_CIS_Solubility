@@ -119,6 +119,13 @@ for chem in chems:
     chms.append(chm)
 test.facets(chms)
 
+# generate constituents
+constituents = []
+for chem in chems:
+    constituent = {"@id": "constituent", "@type": "sdo:constituent"}
+    constituent.update({'compnum': chem['compnum']})
+    constituents.append(constituent)
+
 # add chemicalsystems
 chemsystems = []
 systype = {"1": "pure compound", "2": "binary system", "3": "ternary system", "4": "quaternary system"}
@@ -126,7 +133,7 @@ systype = {"1": "pure compound", "2": "binary system", "3": "ternary system", "4
 chemsystem = {"@id": "chemicalsystem", "@type": "sdo:chemicalsystem"}
 chemsystem.update({'name': sys['name']})
 chemsystem.update({'type': systype[str(sys['components'])]})
-chemsystem.update({'constituents': sys['components']})
+chemsystem.update({'constituents': constituents})
 chemsystems.append(chemsystem)
 test.facets(chemsystems)
 
