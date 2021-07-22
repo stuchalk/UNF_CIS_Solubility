@@ -27,7 +27,11 @@ chemicals = data['chem']
 chems = []
 csysts = []
 sys = dst['system']
-
+points = dst['series'][0]['points']
+conditions = []
+cond_properties = []
+cond_properties_baseunit = []
+cond_units = []
 
 # get chemicals (substance instance) data and populate subs variable
 for chemical in chemicals:
@@ -44,6 +48,15 @@ for chemical in chemicals:
         chem.update({'comments': chemical['comments']})
 
     chems.append(chem)
+
+# get conditions and related condition properties/units
+for point in points:
+    conditions.append(point['conditions'])
+for condition in conditions:
+    cond_properties.append(condition[0]['property'])
+    cond_units.append(condition[0]['unit'])
+for property in cond_properties:
+    cond_properties_baseunit.append(property['baseunit'])
 
 # create json-ld file
 test = SciData(sysid)
@@ -109,21 +122,12 @@ for subsys in subsyss:
     subs.append(sub)
 test.facets(subs)
 
-# add chemicals
-chms = []
-fields = ['name', 'description', 'compnum']
-for chem in chems:
-    chm = {"@id": "chemical", "@type": "sdo:chemical"}
-    for field in fields:
-        chm.update({field: chem[field]})
-    chms.append(chm)
-test.facets(chms)
-
-# generate constituents
+# add constituents
 constituents = []
 for chem in chems:
     constituent = {"@id": "constituent", "@type": "sdo:constituent"}
-    constituent.update({'compnum': chem['compnum']})
+    constituent.update({'compound': 'compound ' + str(chem['compnum'])})
+    constituent.update({'role': 'placeholder'})
     constituents.append(constituent)
 
 # add chemicalsystems
@@ -136,6 +140,47 @@ chemsystem.update({'type': systype[str(sys['components'])]})
 chemsystem.update({'constituents': constituents})
 chemsystems.append(chemsystem)
 test.facets(chemsystems)
+
+# add chemicals
+chms = []
+fields = ['name', 'description', 'compnum']
+for chem in chems:
+    chm = {"@id": "chemical", "@type": "sdo:chemical"}
+    for field in fields:
+        chm.update({field: chem[field]})
+    chms.append(chm)
+test.facets(chms)
+
+# add value array for conditions
+valuearray = []
+for point in points:
+    value = {"@id": "value", "@type": "sdo:numericValue"}
+    value.update({'datatype': 'float'})
+    # 'sigfigs' has been hard-coded to remove the decimal point from the significand
+    # if there is no decimal point in the significand the 'sigfigs' may be wrong
+    value.update({'sigfigs': len(str(point['conditions'][0]['significand']).replace('.', ''))})
+    value.update({'number': point['conditions'][0]['significand']})
+    value.update({'unit': point['conditions'][0]['unit']['symbol']})
+    value.update({'error': point['conditions'][0]['error']})
+    value.update({'errornote': 'placeholder'})
+    valuearray.append(value)
+
+# define name/number of conditions
+condish = []
+for point in points:
+    name = point['conditions'][0]['property']['name']
+    if name not in condish:
+        condish.append(name)
+
+# add conditions
+conds = []
+for condi in condish:
+    cond = {"@id": "condition", "@type": "sdo:condition"}
+    cond.update({'property': condi})
+    cond.update({'propertyref': 'placeholder'})
+    cond.update({'valuearray': valuearray})
+    conds.append(cond)
+test.facets(conds)
 
 # dataset
 
