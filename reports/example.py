@@ -29,9 +29,10 @@ csysts = []
 sys = dst['system']
 points = dst['series'][0]['points']
 conditions = []
-cond_properties = []
-cond_properties_baseunit = []
-cond_units = []
+# cond_properties = []
+# cond_properties_baseunit = []
+# cond_units = []
+data_points = []
 
 # get chemicals (substance instance) data and populate subs variable
 for chemical in chemicals:
@@ -52,11 +53,15 @@ for chemical in chemicals:
 # get conditions and related condition properties/units
 for point in points:
     conditions.append(point['conditions'])
-for condition in conditions:
-    cond_properties.append(condition[0]['property'])
-    cond_units.append(condition[0]['unit'])
-for property in cond_properties:
-    cond_properties_baseunit.append(property['baseunit'])
+# for condition in conditions:
+#     cond_properties.append(condition[0]['property'])
+#     cond_units.append(condition[0]['unit'])
+# for property in cond_properties:
+#     cond_properties_baseunit.append(property['baseunit'])
+
+# get data values
+for point in points:
+    data_points.append(point['data'])
 
 # create json-ld file
 test = SciData(sysid)
@@ -153,22 +158,22 @@ test.facets(chms)
 
 # add value array for conditions
 valuearray = []
-for point in points:
+for condition in conditions:
     value = {"@id": "value", "@type": "sdo:numericValue"}
     value.update({'datatype': 'float'})
     # 'sigfigs' has been hard-coded to remove the decimal point from the significand
     # if there is no decimal point in the significand the 'sigfigs' may be wrong
-    value.update({'sigfigs': len(str(point['conditions'][0]['significand']).replace('.', ''))})
-    value.update({'number': point['conditions'][0]['significand']})
-    value.update({'unit': point['conditions'][0]['unit']['symbol']})
-    value.update({'error': point['conditions'][0]['error']})
+    value.update({'sigfigs': len(str(condition[0]['significand']).replace('.', ''))})
+    value.update({'number': condition[0]['significand']})
+    value.update({'unit': condition[0]['unit']['symbol']})
+    value.update({'error': condition[0]['error']})
     value.update({'errornote': 'placeholder'})
     valuearray.append(value)
 
 # define name/number of conditions
 condish = []
-for point in points:
-    name = point['conditions'][0]['property']['name']
+for condition in conditions:
+    name = condition[0]['property']['name']
     if name not in condish:
         condish.append(name)
 
@@ -183,6 +188,44 @@ for condi in condish:
 test.facets(conds)
 
 # dataset
+# datagroup
+datagroup = []
+series = dst['series']
+title = ref['title']
+d_points = []
+for thing in data_points:
+    d_points.append('datapoint')
+for serie in series:
+    dataserie = {"@id": "dataseries", "@type": "sdo:dataseries"}
+    dataserie.update({'title': title})
+    dataserie.update({'system': chemsystem["@id"]})
+    dataserie.update({'datapoints': d_points})
+    datagroup.append(dataserie)
+test.datagroup(datagroup)
+
+# add data
+datums = []
+for data_p in data_points:
+    datum = {"@id": "datum", "@type": "sdo:exptdata"}
+    datum.update({'property': data_p[0]['property']['name']})
+    datum.update({'propertyref': 'placeholder'})
+    datum.update({'numericvalue': 'placeholder'})
+    datums.append(datum)
+
+# add datapoints
+datapoints = []
+fields = ['uid', 'conditions', 'data']
+x = 0
+for point in points:
+    datapoint = {"@id": "datapoint", "@type": "sdo:datapoint"}
+    datapoint.update({'uid': point['sysid_tablenum_rownum']})
+    datapoint.update({'conditions': valuearray[x]['@id']})
+    x += 1
+    datapoint.update({'data': datums})
+    datapoints.append(datapoint)
+    if x > len(valuearray):
+        break
+test.datapoint(datapoints)
 
 # sources
 test.sources([{"title": pub['title'], "year": pub['year'],
@@ -196,5 +239,4 @@ test.rights("https://creativecommons.org/licenses/by-nc/4.0/", "NIST & IUPAC")
 
 # generate JSON-LD
 output = test.output
-
 print(json.dumps(output, indent=4))
