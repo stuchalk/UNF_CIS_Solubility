@@ -3,8 +3,19 @@ from rest_framework import serializers
 from reports.models import *
 
 
+class QuantitySerializer(serializers.ModelSerializer):
+    """ quantity serializer """
+
+    class Meta:
+        """ settings """
+        model = Quantities
+        fields = '__all__'
+        depth = 1
+
+
 class PropertySerializer(serializers.ModelSerializer):
     """ property serializer """
+    quantity = QuantitySerializer(many=False, required=True)
 
     class Meta:
         """ settings """
@@ -43,8 +54,8 @@ class DataSerializer(serializers.ModelSerializer):
     class Meta:
         """ settings """
         model = Data
-        fields = '__all__'
         depth = 0
+        exclude = ['dataset', 'dataseries']
 
 
 class DatapointSerializer(serializers.ModelSerializer):
@@ -61,7 +72,7 @@ class DatapointSerializer(serializers.ModelSerializer):
 
 class DataseriesSerializer(serializers.ModelSerializer):
     """ dataseries serializer """
-    points = DatapointSerializer(source='datapoints_set', many=True, required=False)
+    datapoints = DatapointSerializer(source='datapoints_set', many=True, required=False)
 
     class Meta:
         """ settings """
@@ -87,7 +98,7 @@ class IdentifierSerializer(serializers.ModelSerializer):
         """ settings """
         model = Identifiers
         depth = 1
-        exclude = ['sub']
+        exclude = ['substance']
 
 
 class SubstanceSerializer(serializers.ModelSerializer):
@@ -136,9 +147,9 @@ class ReferenceSerializer(serializers.ModelSerializer):
 
 class DatasetSerializer(serializers.ModelSerializer):
     """ dataset serializer """
-    series = DataseriesSerializer(source='dataseries_set', many=True, required=False)
+    dataseries = DataseriesSerializer(source='dataseries_set', many=True, required=False)
     reference = ReferenceSerializer(many=False, required=True)
-    system = SystemSerializer()
+    system = SystemSerializer(many=False, required=False)
 
     class Meta:
         """ settings """
@@ -160,7 +171,7 @@ class ReportSerializer(serializers.ModelSerializer):
 
 
 class AuthorSerializer(serializers.ModelSerializer):
-    """ authors_reports serializer """
+    """ authors serializer """
 
     class Meta:
         """ settings """

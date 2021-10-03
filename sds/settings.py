@@ -79,14 +79,23 @@ WSGI_APPLICATION = 'sds.wsgi.application'
 # sds:sds2020
 
 DATABASES = {
-     'default': {
+    'default': {},
+    'nistsds': {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'nistsds',
         'USER': 'sds',
         'PASSWORD': 'sds2020',
         'HOST': '127.0.0.1',
         'PORT': '3307'
-     }
+     },
+    'nistsds2': {
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'nistsds2',
+        'USER': 'sds',
+        'PASSWORD': 'sds2020',
+        'HOST': '127.0.0.1',
+        'PORT': '3307'
+    }
 }
 
 

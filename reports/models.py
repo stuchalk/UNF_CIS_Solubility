@@ -16,11 +16,12 @@ class Authors(models.Model):
         managed = False
         db_table = 'authors'
 
+
 class AuthorsReports(models.Model):
-    """ authors table model """
+    """ authors_reports table model """
     id = models.SmallAutoField(primary_key=True)
-    author = models.ForeignKey(Authors, models.DO_NOTHING, db_column="author_id")
-    rep = models.ForeignKey("Reports", models.DO_NOTHING, db_column="report_id")
+    author = models.ForeignKey("Authors", models.DO_NOTHING, db_column="author_id")
+    report = models.ForeignKey("Reports", models.DO_NOTHING, db_column="report_id")
     name = models.CharField(max_length=255)
     sysid = models.CharField(max_length=20)
     role = models.CharField(max_length=9)
@@ -35,7 +36,7 @@ class AuthorsReports(models.Model):
 class Chemicals(models.Model):
     """ chemicals table model """
     description = models.TextField(blank=True, null=True)
-    sub = models.ForeignKey("Substances", models.DO_NOTHING, db_column="substance_id")
+    substance = models.ForeignKey("Substances", models.DO_NOTHING, db_column="substance_id")
     subid = models.CharField(max_length=50)
     sys_id = models.CharField(max_length=50, blank=True, null=True)
     rep = models.ForeignKey("Reports", models.DO_NOTHING, db_column="report_id")
@@ -153,8 +154,7 @@ class Datasets(models.Model):
 
 class Identifiers(models.Model):
     """ indentifiers table model """
-
-    sub = models.ForeignKey("Substances", models.DO_NOTHING, db_column="substance_id")
+    substance = models.ForeignKey("Substances", models.DO_NOTHING, db_column="substance_id")
     type = models.CharField(max_length=12)
     value = models.CharField(max_length=1024)
     updated = models.DateTimeField()
@@ -166,13 +166,12 @@ class Identifiers(models.Model):
 
 class Properties(models.Model):
     """ properties table model """
-    name = models.CharField(max_length=256)
-    symbol = models.CharField(max_length=32)
-    definition = models.CharField(max_length=512)
-    source = models.CharField(max_length=256)
-    baseunit = models.ForeignKey("Units", models.DO_NOTHING, db_column="unit_id")
-    quantity_id = models.SmallIntegerField(blank=True, null=True)
-    field = models.CharField(max_length=256)
+    name = models.CharField(max_length=256, db_collation='utf8_general_ci')
+    symbol = models.CharField(max_length=64, db_collation='utf8_general_ci')
+    datafield = models.CharField(max_length=255, blank=True, null=True)
+    definition = models.CharField(max_length=512, db_collation='utf8_general_ci')
+    source = models.CharField(max_length=256, db_collation='utf8_general_ci')
+    quantity = models.ForeignKey("Quantities", models.DO_NOTHING, db_column="quantity_id")
     updated = models.DateTimeField()
 
     class Meta:
@@ -197,6 +196,21 @@ class Publications(models.Model):
     class Meta:
         managed = False
         db_table = 'publications'
+
+
+class Quantities(models.Model):
+    """ quantities table model """
+    name = models.CharField(max_length=32, db_collation='utf8_general_ci')
+    symbol = models.CharField(max_length=8, db_collation='utf8_general_ci')
+    description = models.CharField(max_length=512, db_collation='utf8_general_ci')
+    siunit = models.ForeignKey("Units", models.DO_NOTHING, db_column="si_unit")
+    dim_symbol = models.CharField(max_length=16, db_collation='utf8_general_ci')
+    comment = models.CharField(max_length=512, db_collation='utf8_general_ci')
+    updated = models.DateTimeField()
+
+    class Meta:
+        managed = False
+        db_table = 'quantities'
 
 
 class References(models.Model):
@@ -238,7 +252,7 @@ class References(models.Model):
 
 class Reports(models.Model):
     """ reports table model """
-    pub = models.ForeignKey(Publications, models.DO_NOTHING, db_column="publication_id")
+    pub = models.ForeignKey("Publications", models.DO_NOTHING, db_column="publication_id")
     sysid = models.CharField(max_length=10)
     eval = models.IntegerField(blank=True, null=True)
     count = models.SmallIntegerField()
@@ -274,7 +288,7 @@ class Substances(models.Model):
 
 class SubstancesSystems(models.Model):
     """ substances_systems table model """
-    substance = models.ForeignKey(Substances, models.DO_NOTHING, db_column="substance_id")
+    substance = models.ForeignKey("Substances", models.DO_NOTHING, db_column="substance_id")
     system = models.ForeignKey("Systems", models.DO_NOTHING, db_column="system_id")
     sysid = models.CharField(max_length=10, blank=True, null=True)
     subid = models.CharField(max_length=10, blank=True, null=True)
@@ -291,8 +305,7 @@ class SubstancesSystems(models.Model):
 
 class Systems(models.Model):
     """ systems table model """
-    sysnmid = models.ForeignKey("Datasets", models.DO_NOTHING, db_column="sysnmid")
-    # sysnmid = models.IntegerField(blank=True, null=True)
+    sysnmid = models.IntegerField(blank=True, null=True)
     name = models.CharField(max_length=512)
     volume = models.IntegerField()
     publication_id = models.SmallIntegerField()

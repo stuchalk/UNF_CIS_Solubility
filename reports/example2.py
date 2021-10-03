@@ -10,7 +10,7 @@ from scidatalib.scidata import *
 import json
 
 sysid = '58_1'
-rep = Reports.objects.using('nistsds').get(sysid__exact=sysid)
+rep = Reports.objects.using('nistsds2').get(sysid__exact=sysid)
 report = ReportSerializer(rep)
 data = report.data
 f = open(sysid + ".json", "w")
@@ -27,7 +27,7 @@ chemicals = data['chem']
 chems = []
 csysts = []
 sys = dst['system']
-points = dst['series'][0]['points']
+points = dst['dataseries'][0]['datapoints']
 conditions = []
 # cond_properties = []
 # cond_properties_baseunit = []
@@ -36,7 +36,7 @@ data_points = []
 
 # get chemicals (substance instance) data and populate subs variable
 for chemical in chemicals:
-    subs.append(dict(chemical['sub']))
+    subs.append(dict(chemical['substance']))
     chem = {}
 
     # info that will have stuff in it
@@ -190,7 +190,7 @@ test.facets(conds)
 # dataset
 # datagroup
 datagroup = []
-series = dst['series']
+series = dst['dataseries']
 title = ref['title']
 d_points = []
 for thing in data_points:
