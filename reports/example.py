@@ -3,7 +3,7 @@ import os
 import django
 
 
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "djangoProject.settings")
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "sds.settings")
 django.setup()
 from reports.serializers import *
 from scidatalib.scidata import *

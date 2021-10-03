@@ -3,7 +3,7 @@ import os
 import django
 import json
 
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "djangoProject.settings")
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "sds.settings")
 django.setup()
 
 from django.core import serializers
