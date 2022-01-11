@@ -109,6 +109,7 @@ test.aspects(proc)
 # system
 # add substances
 subs = []
+roles = []
 fields = ['name', 'id', 'casno', 'formula']
 # iterate over idents to get iupac and inchi
 idents = ['iupacname', 'inchikey']
@@ -124,15 +125,24 @@ for subsys in subsyss:
             if idee["type"] == ident:
                 sub.update({ident: idee['value']})
     del sub['id']
+    roles.append(tuple((subsys['component_index'], subsys['issolvent'])))
     subs.append(sub)
 test.facets(subs)
+# print(roles)
+# exit()
 
 # add constituents
 constituents = []
 for chem in chems:
+    role = ''
+    for idx, issol in roles:
+        if idx == chem['compnum'] and issol == 1:
+            role = 'afrl:AFRL_0000269'
+        elif idx == chem['compnum'] and issol == 0:
+            role = 'afrl:AFRL_0000270'
     constituent = {"@id": "constituent", "@type": "sdo:constituent"}
-    constituent.update({'compound': 'compound ' + str(chem['compnum'])})
-    constituent.update({'role': 'placeholder'})
+    constituent.update({'compound': 'compound/' + str(chem['compnum']) + '/'})
+    constituent.update({'role': role})
     constituents.append(constituent)
 
 # add chemicalsystems
@@ -230,7 +240,7 @@ test.datapoint(datapoints)
 
 # sources
 test.sources([{"title": pub['title'], "year": pub['year'],
-               "type": "Critically evaluate report"}])
+               "type": "Critically evaluated report"}])
 if ref:
     test.sources([{"title": ref['title'], "year": ref['year'],
                    "type": "Journal article", "doi": ref['doi']}])
