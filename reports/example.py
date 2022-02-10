@@ -10,13 +10,13 @@ from scidatalib.scidata import *
 import json
 
 sysid = '58_1'
-rep = Reports.objects.using('nistsds').get(sysid__exact=sysid)
+rep = Reports.objects.get(sysid__exact=sysid)
 report = ReportSerializer(rep)
 data = report.data
 f = open(sysid + ".json", "w")
 f.write(json.dumps(data))
-# print(json.dumps(data, indent=4))
-# exit()
+print(json.dumps(data, indent=4))
+exit()
 
 # organize data
 pub = data['pub']

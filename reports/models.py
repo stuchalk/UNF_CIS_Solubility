@@ -19,7 +19,7 @@ class Authors(models.Model):
 
 class AuthorsReports(models.Model):
     """ authors_reports table model """
-    id = models.SmallAutoField(primary_key=True)
+    id = models.AutoField(primary_key=True)
     author = models.ForeignKey("Authors", models.DO_NOTHING, db_column="author_id")
     report = models.ForeignKey("Reports", models.DO_NOTHING, db_column="report_id")
     name = models.CharField(max_length=255)
@@ -35,6 +35,7 @@ class AuthorsReports(models.Model):
 
 class Chemicals(models.Model):
     """ chemicals table model """
+    id = models.AutoField(primary_key=True)
     description = models.TextField(blank=True, null=True)
     substance = models.ForeignKey("Substances", models.DO_NOTHING, db_column="substance_id")
     subid = models.CharField(max_length=50)
@@ -54,6 +55,7 @@ class Chemicals(models.Model):
 
 class Conditions(models.Model):
     """ conditions table model """
+    id = models.AutoField(primary_key=True)
     datapoint = models.ForeignKey("Datapoints", models.DO_NOTHING, db_column="datapoint_id")
     sysid_tablenum_rownum = models.CharField(max_length=32, blank=True, null=True)
     dataseries = models.ForeignKey("Dataseries", models.DO_NOTHING, db_column="dataseries_id")
@@ -78,6 +80,7 @@ class Conditions(models.Model):
 
 class Data(models.Model):
     """ data table model """
+    id = models.AutoField(primary_key=True)
     datapoint = models.ForeignKey("Datapoints", models.DO_NOTHING, db_column="datapoint_id")
     property = models.ForeignKey("Properties", models.DO_NOTHING, db_column="property_id")
     unit = models.ForeignKey("Units", models.DO_NOTHING, db_column="unit_id")
@@ -106,6 +109,7 @@ class Data(models.Model):
 
 class Datapoints(models.Model):
     """ datapoints table model """
+    id = models.AutoField(primary_key=True)
     dataset = models.ForeignKey("Datasets", models.DO_NOTHING, db_column="dataset_id")
     dataseries = models.ForeignKey("Dataseries", models.DO_NOTHING, db_column="dataseries_id")
     sysid = models.CharField(max_length=15, blank=True, null=True)
@@ -123,7 +127,7 @@ class Datapoints(models.Model):
 
 class Dataseries(models.Model):
     """ dataseries table model """
-    id = models.SmallAutoField(primary_key=True)
+    id = models.AutoField(primary_key=True)
     dataset = models.ForeignKey("Datasets", models.DO_NOTHING, db_column="dataset_id")
     sysid = models.CharField(max_length=15, blank=True, null=True)
     tablenum = models.SmallIntegerField(blank=True, null=True)
@@ -139,6 +143,7 @@ class Dataseries(models.Model):
 
 class Datasets(models.Model):
     """ datasets table model """
+    id = models.AutoField(primary_key=True)
     sysid = models.CharField(max_length=10)
     sysnmid = models.PositiveIntegerField()
     report = models.ForeignKey("Reports", models.DO_NOTHING, db_column="report_id")
@@ -154,6 +159,7 @@ class Datasets(models.Model):
 
 class Identifiers(models.Model):
     """ indentifiers table model """
+    id = models.AutoField(primary_key=True)
     substance = models.ForeignKey("Substances", models.DO_NOTHING, db_column="substance_id")
     type = models.CharField(max_length=12)
     value = models.CharField(max_length=1024)
@@ -166,6 +172,7 @@ class Identifiers(models.Model):
 
 class Properties(models.Model):
     """ properties table model """
+    id = models.SmallAutoField(primary_key=True)
     name = models.CharField(max_length=256, db_collation='utf8_general_ci')
     symbol = models.CharField(max_length=64, db_collation='utf8_general_ci')
     datafield = models.CharField(max_length=255, blank=True, null=True)
@@ -200,6 +207,7 @@ class Publications(models.Model):
 
 class Quantities(models.Model):
     """ quantities table model """
+    id = models.SmallAutoField(primary_key=True)
     name = models.CharField(max_length=32, db_collation='utf8_general_ci')
     symbol = models.CharField(max_length=8, db_collation='utf8_general_ci')
     description = models.CharField(max_length=512, db_collation='utf8_general_ci')
@@ -215,6 +223,7 @@ class Quantities(models.Model):
 
 class References(models.Model):
     """ references model """
+    id = models.AutoField(primary_key=True)
     refid = models.IntegerField(blank=True, null=True)
     report = models.ForeignKey("Reports", models.DO_NOTHING, db_column="report_id")
     method = models.TextField(blank=True, null=True)
@@ -252,6 +261,7 @@ class References(models.Model):
 
 class Reports(models.Model):
     """ reports table model """
+    id = models.AutoField(primary_key=True)
     pub = models.ForeignKey("Publications", models.DO_NOTHING, db_column="publication_id")
     sysid = models.CharField(max_length=10)
     eval = models.IntegerField(blank=True, null=True)
@@ -271,6 +281,7 @@ class Reports(models.Model):
 
 class Substances(models.Model):
     """ substances table model """
+    id = models.AutoField(primary_key=True)
     subid = models.CharField(max_length=512)
     casno = models.CharField(max_length=50, blank=True, null=True)
     name = models.CharField(max_length=256, blank=True, null=True)
@@ -288,6 +299,7 @@ class Substances(models.Model):
 
 class SubstancesSystems(models.Model):
     """ substances_systems table model """
+    id = models.AutoField(primary_key=True)
     substance = models.ForeignKey("Substances", models.DO_NOTHING, db_column="substance_id")
     system = models.ForeignKey("Systems", models.DO_NOTHING, db_column="system_id")
     sysid = models.CharField(max_length=10, blank=True, null=True)
@@ -305,6 +317,7 @@ class SubstancesSystems(models.Model):
 
 class Systems(models.Model):
     """ systems table model """
+    id = models.AutoField(primary_key=True)
     sysnmid = models.IntegerField(blank=True, null=True)
     name = models.CharField(max_length=512)
     volume = models.IntegerField()

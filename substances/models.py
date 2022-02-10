@@ -10,6 +10,7 @@ from django.db import models
 
 class Substances(models.Model):
     """Substances model"""
+    id = models.AutoField(primary_key=True)
     subid = models.CharField(max_length=512)
     casno = models.CharField(max_length=50, blank=True, null=True)
     name = models.CharField(max_length=256, blank=True, null=True)
@@ -27,6 +28,7 @@ class Substances(models.Model):
 
 class Chemicals(models.Model):
     """Chemicals model"""
+    id = models.AutoField(primary_key=True)
     description = models.TextField(blank=True, null=True)
     substances = models.ForeignKey(Substances, models.DO_NOTHING, db_column="substance_id")
     subid = models.CharField(max_length=50)
@@ -46,7 +48,8 @@ class Chemicals(models.Model):
 
 class Identifiers(models.Model):
     """ Identifiers table model """
-    substance_id = models.IntegerField()
+    id = models.AutoField(primary_key=True)
+    # substance_id = models.IntegerField()
     substances = models.ForeignKey(Substances, models.DO_NOTHING, db_column="substance_id")
     type = models.CharField(max_length=12)
     value = models.CharField(max_length=1024)
@@ -59,6 +62,7 @@ class Identifiers(models.Model):
 
 class Systems(models.Model):
     """ Systems table model """
+    id = models.AutoField(primary_key=True)
     sysnmid = models.IntegerField(blank=True, null=True)
     name = models.CharField(max_length=512)
     volume = models.IntegerField()
@@ -74,7 +78,7 @@ class Systems(models.Model):
 
 class SubstancesSystems(models.Model):
     """ Substances_systems table model """
-
+    id = models.AutoField(primary_key=True)
     substances = models.ForeignKey(Substances, models.DO_NOTHING, db_column="substance_id")
     systems = models.ForeignKey(Systems, models.DO_NOTHING, db_column="system_id")
     # substance_id = models.IntegerField(blank=True, null=True)
