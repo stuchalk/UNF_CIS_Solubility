@@ -135,20 +135,10 @@ class SystemSerializer(serializers.ModelSerializer):
         depth = 0
 
 
-class ReferenceSerializer(serializers.ModelSerializer):
-    """ reference serializer """
-
-    class Meta:
-        """ settings """
-        model = References
-        fields = '__all__'
-        depth = 1
-
-
 class DatasetSerializer(serializers.ModelSerializer):
     """ dataset serializer """
     dataseries = DataseriesSerializer(source='dataseries_set', many=True, required=False)
-    reference = ReferenceSerializer(many=False, required=True)
+    # reference = ReferenceSerializer(many=False, required=True)
     system = SystemSerializer(many=False, required=False)
 
     class Meta:
@@ -167,7 +157,29 @@ class ReportSerializer(serializers.ModelSerializer):
         """ settings """
         model = Reports
         fields = '__all__'
-        depth = 1
+        depth = 2
+
+
+class ReferenceReportSerializer(serializers.ModelSerializer):
+    """ references_reports serializer """
+    report = ReportSerializer()
+
+    class Meta:
+        """ settings """
+        model = ReferencesReports
+        fields = '__all__'
+        depth = 2
+
+
+class ReferenceSerializer(serializers.ModelSerializer):
+    """ reference serializer """
+    repref = ReferenceReportSerializer(source='referencesreports_set', many=True, required=False)
+
+    class Meta:
+        """ settings """
+        model = References
+        fields = '__all__'
+        depth = 0
 
 
 class AuthorSerializer(serializers.ModelSerializer):
@@ -190,3 +202,5 @@ class AuthorReportSerializer(serializers.ModelSerializer):
         model = AuthorsReports
         fields = '__all__'
         depth = 0
+
+

@@ -98,6 +98,8 @@ test.discipline('w3i:Chemistry')
 test.subdiscipline('w3i:PhysicalChemistry')
 test.description('Critically reviewed solubility data reported '
                  'in the IUPAC Solubility Data Series')
+# generate JSON-LD
+output = test.output
 
 # SciData section
 

@@ -225,7 +225,7 @@ class References(models.Model):
     """ references model """
     id = models.AutoField(primary_key=True)
     refid = models.IntegerField(blank=True, null=True)
-    report = models.ForeignKey("Reports", models.DO_NOTHING, db_column="report_id")
+    # report = models.ForeignKey("Reports", models.DO_NOTHING, db_column="report_id")
     method = models.TextField(blank=True, null=True)
     raw = models.TextField(blank=True, null=True)
     sysid = models.CharField(max_length=50, blank=True, null=True)
@@ -277,6 +277,21 @@ class Reports(models.Model):
     class Meta:
         managed = False
         db_table = 'reports'
+
+
+class ReferencesReports(models.Model):
+    """ reports references_reports join table model """
+    id = models.AutoField(primary_key=True)
+    reference = models.ForeignKey("References", models.DO_NOTHING, db_column="reference_id")
+    report = models.ForeignKey("Reports", models.DO_NOTHING, db_column="report_id")
+    # reference_id = models.IntegerField(blank=True, null=True)
+    # report_id = models.IntegerField(blank=True, null=True)
+    role = models.CharField(max_length=12, blank=True, null=True)
+    reference_num = models.SmallIntegerField(blank=True, null=True)
+
+    class Meta:
+        managed = False
+        db_table = 'references_reports'
 
 
 class Substances(models.Model):
