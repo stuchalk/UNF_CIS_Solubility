@@ -135,20 +135,10 @@ class SystemSerializer(serializers.ModelSerializer):
         depth = 0
 
 
-class ReferenceSerializer(serializers.ModelSerializer):
-    """ reference serializer """
-
-    class Meta:
-        """ settings """
-        model = References
-        fields = '__all__'
-        depth = 1
-
-
 class DatasetSerializer(serializers.ModelSerializer):
     """ dataset serializer """
     dataseries = DataseriesSerializer(source='dataseries_set', many=True, required=False)
-    reference = ReferenceSerializer(many=False, required=True)
+    # reference = ReferenceSerializer(many=False, required=True)
     system = SystemSerializer(many=False, required=False)
 
     class Meta:
@@ -158,16 +148,26 @@ class DatasetSerializer(serializers.ModelSerializer):
         exclude = ['report']
 
 
+class ReferencesReportsSerializer(serializers.ModelSerializer):
+    """ references_reports serializer """
+    class Meta:
+        """ settings """
+        model = ReferencesReports
+        # fields = '__all__'
+        exclude = ['report']
+        depth = 2
+
+
 class ReportSerializer(serializers.ModelSerializer):
     """ reports serializer """
     set = DatasetSerializer(source='datasets_set', many=True, required=False)
     chem = ChemicalSerializer(source='chemicals_set', many=True, required=False)
-
+    refs = ReferencesReportsSerializer(source='referencesreports_set', many=True, required=False)
     class Meta:
         """ settings """
         model = Reports
         fields = '__all__'
-        depth = 1
+        depth = 2
 
 
 class AuthorSerializer(serializers.ModelSerializer):
@@ -190,3 +190,5 @@ class AuthorReportSerializer(serializers.ModelSerializer):
         model = AuthorsReports
         fields = '__all__'
         depth = 0
+
+
