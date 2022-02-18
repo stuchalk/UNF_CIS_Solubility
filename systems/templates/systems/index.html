@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+
+{% block title %} Systems {% endblock %}
+{% block header %} System {% endblock %}
+
+{% block content %}
+    <h3>System</h3>
+    <ul>
+        <li> Substances: {{ subcount }}</li>
+        <li> Identifiers: {{ idcount }}</li>
+        <li> Systems: {{ syscount }}</li>
+    </ul>
+{% endblock %}

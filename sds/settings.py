@@ -38,7 +38,9 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'solubility',
+    'datasets',
     'substances',
+    'systems',
     'reports',
     'rest_framework',
 ]
