@@ -1,0 +1,25 @@
+<!-- incoming variables from publications (volumes) controller: data, display -->
+{% extends 'base.html' %}
+{% block title %} Volumes Index {% endblock %}
+{% block content %}
+    <div class="row">
+        <div class="col-md-8 offset-md-2 mt-2">
+            <div class="card">
+                <div class="card-header card-success">
+                    <h3 class="card-title mb-0">Select a Volume from the Solubility Data Series</h3>
+                </div>
+                <ul class="list-group responsive-reports">
+                    {% if display == 'volumes' %}
+                        {% for vol in vols %}
+                            <li class="list-group-item" style="padding: 5px 20px;"><a href="view/v{{ vol.volume }}">{{ vol.title }}</a></li>
+                        {% endfor %}
+                    {% else %}
+                        {% for vol in vols %}
+                            <li class="list-group-item" style="padding: 5px 20px;"><a href="../publications/view/{{ vol.id }}">{{ vol.title }}</a></li>
+                        {% endfor %}
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+    </div>
+{% endblock %}

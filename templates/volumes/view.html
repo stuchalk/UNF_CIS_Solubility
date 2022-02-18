@@ -1,0 +1,68 @@
+<!-- incoming variables from publications (volumes) controller: vol, syss -->
+{% extends 'base.html' %}
+{% load static %}
+{% block title %} Volumes Index {% endblock %}
+{% block content %}
+    <style>
+    .responsive-volume {
+        max-height: calc(100vh - 550px);
+	    min-height: calc(100vh - 550px);
+	    overflow-y: scroll;
+    }
+    </style>
+<div class="row">
+    <div class="col-md-4">
+        {% with "img/volimages/v"|add:vol.volume|add:".jpg" as imagepath %}
+        <img class="img-fluid shadow mt-3" src="{% static imagepath %}" alt="volume cover page"/>
+        {% endwith %}
+        <div class="card bg-light mt-3">
+            <div class="card-body mt-2 pt-1 pb-1">
+                <h5 class="card-title mb-2">
+                    Download Data&nbsp;&nbsp;
+                    <a href="view/{{ vol.id }}/xml"><img alt="link to XML output" style="height: 20px;" src="{% static 'img/xml.png' %}"/></a>
+                    <a href="view/{{ vol.id }}/json"><img alt="link to JSON output" style="height: 20px;" src="{% static 'img/json.png' %}"/></a>
+                    <a href="view/{{ vol.id }}/jsonld"><img alt="link to JSON-LD output" style="height: 20px;" src="{% static 'img/jsonld.png' %}"/></a>
+                </h5>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-8">
+        <div class="card bg-light mt-3">
+            <div class="card-body mt-2 pt-1 pb-2 clearfix">
+                <h5 class="card-title mb-2">{{ vol.title }}</h5>
+                <p class="mb-0">Published by: The <a href="{{ vol.url }}">{{ vol.publisher }} ({{ vol.year }})</a></p>
+                <a href="../" class="btn btn-success btn-sm float-right" role="button"><i class="bi bi-arrow-return-left"></i> Volume Index</a>
+                <p class="mb-0">Edited by: {{ vol.authors }}</p>
+            </div>
+        </div>
+        <div class="card mt-3">
+            <div class="card-header bg-success">
+                <div class="btn-toolbar clearfix" role="toolbar" aria-label="Toolbar with button groups">
+                    <div class="btn-group" role="group" aria-label="text search">
+                        <input id="search" placeholder="Search Systems in this Volume" class="form-control input-sm input-search" data-search-override="true" type="text"/>
+                    </div>
+                    <div class="btn-group" role="group" aria-label="letters group">
+                        {% for char in chars %}
+                            <button type="button" class="btn bg-light btn-sm browse pointer" href="#" char="{{ char }}">{{ char }}</button>
+                        {% endfor %}
+                        </div>
+                    <div class="btn-group float-right" role="group" aria-label="help">
+                        <button class="btn bg-light btn-sm" data-toggle="tooltip" title="Click a button to find by first letter or type something in the search box" data-placement="left" type="button" href="#">Help</button>
+                    </div>
+                </div>
+            </div>
+            <div id="results" class='card-body responsive-volume'>
+                {% for char, rows in syss.items %}
+                    <div id="{{ char }}" class='letter'>
+                        <ul class="list-group mt-1 mb-1">
+                        {% for sys in rows %}
+                            <li><a href="/reports/view/{{ sys.0 }}">{{ sys.1 }}</a></li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

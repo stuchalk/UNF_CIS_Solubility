@@ -8,4 +8,4 @@ def index(request):
     syss = Systems.objects.annotate(Upper(Substr('name', 1, 1)))
     syss.objects.filter(id=1)
 
-    return render(request, "systems/index.html", {'syss': syss})
+    return render(request, "../templates/systems/index.html", {'syss': syss})
