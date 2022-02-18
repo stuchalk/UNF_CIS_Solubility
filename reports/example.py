@@ -5,7 +5,7 @@ import django
 
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "sds.settings")
 django.setup()
-from reports.serializers import *
+from sds.serializers import *
 from scidatalib.scidata import *
 import json
 
@@ -15,8 +15,8 @@ report = ReportSerializer(rep)
 data = report.data
 f = open(sysid + ".json", "w")
 f.write(json.dumps(data))
-print(json.dumps(data, indent=4))
-exit()
+# print(json.dumps(data, indent=4))
+# exit()
 
 # organize data
 pub = data['pub']
@@ -98,8 +98,6 @@ test.discipline('w3i:Chemistry')
 test.subdiscipline('w3i:PhysicalChemistry')
 test.description('Critically reviewed solubility data reported '
                  'in the IUPAC Solubility Data Series')
-# generate JSON-LD
-output = test.output
 
 # SciData section
 
