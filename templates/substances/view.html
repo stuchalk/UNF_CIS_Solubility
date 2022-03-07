@@ -50,36 +50,30 @@
 	<div class="col-md-7 mt-2">
 		<div class="card card-default">
 			<div class="card-header">
-				<h2 class="card-title">Systems <span class='badge'><?php echo count($syss); ?></span>
-                <?php
-                echo $this->Html->link($this->Html->image('jsonld.png',['height'=>'20','alt'=>'JSON-LD','class'=>'btn-data']),$base.'substances/view/'.$sub['id'].'/jsonld',['escape'=>false,'target'=>'_blank','class'=>'pull-right']);
-                echo $this->Html->link($this->Html->image('json.png',['height'=>'20','alt'=>'JSON','class'=>'btn-data']),$base.'substances/view/'.$sub['id'].'/json',['escape'=>false,'target'=>'_blank','class'=>'pull-right']);
-                echo $this->Html->link($this->Html->image('xml.png',['height'=>'20','alt'=>'XML','class'=>'btn-data']),$base.'substances/view/'.$sub['id'].'/xml',['escape'=>false,'target'=>'_blank','class'=>'pull-right']);
-                ?>
-                </h2>
+				<h2 class="card-title">Systems ({{ syss|length }})</h2>
             </div>
 			<ul class="list-group responsive-systems">
-				<?php foreach($syss as $name=>$system) { ?>
-                <div class="list-group-item">
-                    <span class='showReport'><?php echo $name; ?></span>
-                    <?php if(!empty($system['reports'])) { ?>
-                    <span class='badge' title="Reports"><?php echo count($system['reports']); ?></span>
-                    <?php } ?>
-					<?php if(!empty($system['evals'])) { ?>
-                    <span class='badge badge-eval' title="Evaluations"><?php echo count($system['evals']); ?></span>
-                    <?php } ?>
-                    <div class='showHide'>
-						<?php
-						foreach($system['reports'] as $id=>$ref) {
-						    echo $this->Html->link($ref,'/reports/view/'.$id)."<br />";
-						}
-						foreach($system['evals'] as $id=>$title) {
-						    echo $this->Html->link($title,'/reports/view/'.$id)."<br />";
-						}
-						?>
-                    </div>
-                </div>
-                <?php } ?>
+{#				<?php foreach($syss as $name=>$system) { ?>#}
+{#                <div class="list-group-item">#}
+{#                    <span class='showReport'><?php echo $name; ?></span>#}
+{#                    <?php if(!empty($system['reports'])) { ?>#}
+{#                    <span class='badge' title="Reports"><?php echo count($system['reports']); ?></span>#}
+{#                    <?php } ?>#}
+{#					<?php if(!empty($system['evals'])) { ?>#}
+{#                    <span class='badge badge-eval' title="Evaluations"><?php echo count($system['evals']); ?></span>#}
+{#                    <?php } ?>#}
+{#                    <div class='showHide'>#}
+{#						<?php#}
+{#						foreach($system['reports'] as $id=>$ref) {#}
+{#						    echo $this->Html->link($ref,'/reports/view/'.$id)."<br />";#}
+{#						}#}
+{#						foreach($system['evals'] as $id=>$title) {#}
+{#						    echo $this->Html->link($title,'/reports/view/'.$id)."<br />";#}
+{#						}#}
+{#						?>#}
+{#                    </div>#}
+{#                </div>#}
+{#                <?php } ?>#}
 			</ul>
 		</div>
 	</div>

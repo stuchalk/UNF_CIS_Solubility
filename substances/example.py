@@ -10,7 +10,12 @@ from sds.models import *
 
 sub = Substances.objects.get(id=1)
 ids = sub.identifiers_set.values_list('type', 'value')
-syss = sub.systems_set.values_list('id', 'value')
+subids = sub.substancessystems_set.values_list('system_id', flat=True).distinct()
+print(subids)
+exit()
+
+syss = Systems.objects.filter(id=subids)
+
 print(syss)
 exit()
 idlist = {}
