@@ -1,0 +1,86 @@
+<!-- incoming variables from publications (volumes) controller: vol, syss -->
+{% extends 'base.html' %}
+{% load static %}
+{% block title %} Substance View {% endblock %}
+{% block content %}
+<div class="row">
+	<div class="col-md-5 mt-2">
+		<div class="card card-success">
+			<div class="card-header">
+				<h2 class="card-title clearfix">{{ sub.name }}</h2>
+			</div>
+			<div class="card-body">
+				<div class="center-block clearfix">
+{#                    <?php#}
+{#					if($sub['type']=="one") {#}
+{#                        $chem=[];#}
+{#                        (isset($sub['name'])) ? $chem['name']=$sub['name'] : $chem['name']="";#}
+{#                        (isset($sub['inchi'])) ? $chem['inchi']=$sub['inchi'] : $chem['inchi']="";#}
+{#                        (isset($sub['inchikey'])) ? $chem['inchikey']=$sub['inchikey'] : $chem['inchikey']="";#}
+{#                        (isset($sub['casrn'])) ? $chem['casrn']=$sub['casrn'] : $chem['casrn']="";#}
+{#                        echo $this->element('molecule',['index'=>0,'fontsize'=>14,'height'=>$pw*50,'named'=>false,'center'=>'yes']+$chem);#}
+{#                    } else { ?>#}
+{#                        <h4>This substance contains multiple compounds</h4>#}
+{#                    <?php } ?>#}
+				</div>
+				<div>
+					<ul>
+                        {% for key, values in ids.items %}
+                            {% if key == "iupacname" %}
+                                <li>IUPAC Name: {{ values|join:", " }}</li>
+                            {% elif key == "casrn" %}
+                                <li>CASRN: {{ values|join:", " }}</li>
+                            {% elif key == "inchi" %}
+                                <li>InChI: {{ values|join:", " }}</li>
+                            {% elif key == "inchikey" %}
+                                <li>InChIKey: {{ values|join:", " }}</li>
+                            {% elif key == "smiles" %}
+                                <li>SMILES: {{ values|join:", " }}</li>
+                            {% elif key == "pubchemId" %}
+                                <li>PubChem CID: {{ values|join:", " }}</li>
+                            {% elif key == "chemspiderId" %}
+                                <li>ChemSpider ID: {{ values|join:", " }}</li>
+                            {% endif %}
+                        {%  endfor %}
+{#					</ul>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="col-md-7 mt-2">
+		<div class="card card-default">
+			<div class="card-header">
+				<h2 class="card-title">Systems <span class='badge'><?php echo count($syss); ?></span>
+                <?php
+                echo $this->Html->link($this->Html->image('jsonld.png',['height'=>'20','alt'=>'JSON-LD','class'=>'btn-data']),$base.'substances/view/'.$sub['id'].'/jsonld',['escape'=>false,'target'=>'_blank','class'=>'pull-right']);
+                echo $this->Html->link($this->Html->image('json.png',['height'=>'20','alt'=>'JSON','class'=>'btn-data']),$base.'substances/view/'.$sub['id'].'/json',['escape'=>false,'target'=>'_blank','class'=>'pull-right']);
+                echo $this->Html->link($this->Html->image('xml.png',['height'=>'20','alt'=>'XML','class'=>'btn-data']),$base.'substances/view/'.$sub['id'].'/xml',['escape'=>false,'target'=>'_blank','class'=>'pull-right']);
+                ?>
+                </h2>
+            </div>
+			<ul class="list-group responsive-systems">
+				<?php foreach($syss as $name=>$system) { ?>
+                <div class="list-group-item">
+                    <span class='showReport'><?php echo $name; ?></span>
+                    <?php if(!empty($system['reports'])) { ?>
+                    <span class='badge' title="Reports"><?php echo count($system['reports']); ?></span>
+                    <?php } ?>
+					<?php if(!empty($system['evals'])) { ?>
+                    <span class='badge badge-eval' title="Evaluations"><?php echo count($system['evals']); ?></span>
+                    <?php } ?>
+                    <div class='showHide'>
+						<?php
+						foreach($system['reports'] as $id=>$ref) {
+						    echo $this->Html->link($ref,'/reports/view/'.$id)."<br />";
+						}
+						foreach($system['evals'] as $id=>$title) {
+						    echo $this->Html->link($title,'/reports/view/'.$id)."<br />";
+						}
+						?>
+                    </div>
+                </div>
+                <?php } ?>
+			</ul>
+		</div>
+	</div>
+</div>{% endblock %}

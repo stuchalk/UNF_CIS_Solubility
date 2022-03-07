@@ -8,17 +8,15 @@ os.environ.setdefault("DJANGO_SETTINGS_MODULE", "sds.settings")
 django.setup()
 from sds.models import *
 
-
-data = Substances.objects.all().values('id', 'name')
-chars = []
-subs = {}
-for s in data:
-    first = s['name'][0].upper()
-    if first not in subs.keys():
-        subs.update({first: []})
-        chars.append(first)
-    subs[first].append(tuple((s['id'], s['name'])))
-for char in chars:
-    for sub in subs[char]:
-        print(sub[0])
-        exit()
+sub = Substances.objects.get(id=1)
+ids = sub.identifiers_set.values_list('type', 'value')
+syss = sub.systems_set.values_list('id', 'value')
+print(syss)
+exit()
+idlist = {}
+print(ids)
+for idtype, value in ids:
+    if idtype not in idlist.keys():
+        idlist.update({idtype: []})
+    idlist[idtype].append(value)
+print(idlist)

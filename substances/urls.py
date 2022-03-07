@@ -4,5 +4,7 @@ from . import views
 
 
 urlpatterns = [
-    path("", views.index, name='index'),
+    path("", views.index, name='substance index'),
+    path("view/<subid>", views.view, name='substance view'),
+
 ]
