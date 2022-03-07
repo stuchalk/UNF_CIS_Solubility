@@ -1,6 +1,5 @@
 """ substance views file """
 from django.shortcuts import render, redirect
-from django.db.models.functions import *
 from sds.models import *
 
 
@@ -23,7 +22,8 @@ def view(request, volume=''):
             vol = Publications.objects.get(volume=volume[1:])
         else:
             vol = Publications.objects.get(id=volume)
-    sets = Datasets.objects.filter(sysid__contains=str(vol.id) + '_').select_related('system').all().order_by('system__name')
+    sets = Datasets.objects.filter(sysid__contains=str(vol.id) + '_').\
+        select_related('system').all().order_by('system__name')
     syss = {}
     chars = []
     for s in sets:
