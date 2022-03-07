@@ -1,24 +1,10 @@
-from django.db import models
-
-
-class Datasets(models.Model):
-    name = models.CharField(max_length=64)
-    sourcecode = models.CharField(max_length=16, blank=True, null=True)
-    source = models.CharField(max_length=64)
-    sourceurl = models.CharField(max_length=256)
-    datasetname = models.CharField(max_length=16, blank=True, null=True)
-    uniqueidformat = models.CharField(max_length=128, blank=True, null=True)
-    protected = models.CharField(max_length=3)
-    count = models.PositiveSmallIntegerField(blank=True, null=True)
-    updated = models.DateTimeField()
-
-    class Meta:
-        managed = False
-        db_table = 'datasets'
+""" crosswalks models """
+from sds.models import *
 
 
 class Contexts(models.Model):
-    dataset = models.ForeignKey("Datasets", models.DO_NOTHING, db_column="dataset_id")
+    """ model for the contexts table """
+    dataset = models.ForeignKey("sds.Datasets", models.DO_NOTHING, db_column="dataset_id")
     # dataset_id = models.IntegerField()
     name = models.CharField(max_length=64)
     description = models.CharField(max_length=128)
@@ -31,6 +17,7 @@ class Contexts(models.Model):
 
 
 class Nspaces(models.Model):
+    """ model for the nspaces table """
     id = models.SmallAutoField(primary_key=True)
     name = models.CharField(max_length=64)
     ns = models.CharField(max_length=8)
@@ -44,6 +31,7 @@ class Nspaces(models.Model):
 
 
 class Ontterms(models.Model):
+    """ model for the onterms table """
     id = models.SmallAutoField(primary_key=True)
     title = models.CharField(max_length=256)
     definition = models.CharField(max_length=2048, blank=True, null=True)
@@ -62,8 +50,9 @@ class Ontterms(models.Model):
 
 
 class Crosswalks(models.Model):
+    """ model for the crosswalks table """
     context = models.ForeignKey("Contexts", models.DO_NOTHING, db_column="context_id")
-    dataset = models.ForeignKey("Datasets", models.DO_NOTHING, db_column="dataset_id")
+    # dataset = models.ForeignKey("Datasets", models.DO_NOTHING, db_column="dataset_id")
     table = models.CharField(max_length=128, blank=True, null=True)
     field = models.CharField(max_length=256, blank=True, null=True)
     filter = models.CharField(max_length=128, blank=True, null=True)

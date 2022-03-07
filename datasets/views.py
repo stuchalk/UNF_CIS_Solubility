@@ -1,4 +1,6 @@
+""" dataset views file"""
 from django.shortcuts import render
+from sds.models import *
 
 
 def index(request):
@@ -7,4 +9,5 @@ def index(request):
     idcount = Identifiers.objects.count()
     syscount = Systems.objects.count()
 
-    return render(request, "../templates/substances/index.html", {'subcount': subcount, 'idcount': idcount, 'syscount': syscount})
+    return render(request, "../templates/substances/index.html",
+                  {'subcount': subcount, 'idcount': idcount, 'syscount': syscount})

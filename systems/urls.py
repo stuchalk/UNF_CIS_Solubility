@@ -1,4 +1,4 @@
-""" urls for the references app """
+""" urls for the systems app """
 from django.urls import path
 from . import views
 

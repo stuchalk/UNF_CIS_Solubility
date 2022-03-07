@@ -1,6 +1,6 @@
 """ serializers for substance data"""
 from rest_framework import serializers
-from substances.models import *
+from sds.models import *
 
 
 class ChemicalSerializer(serializers.ModelSerializer):

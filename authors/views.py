@@ -1,4 +1,4 @@
-""" substance views file """
+""" authors views file """
 from django.shortcuts import render
 from sds.models import *
 
