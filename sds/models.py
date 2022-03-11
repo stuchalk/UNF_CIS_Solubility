@@ -157,6 +157,35 @@ class Datasets(models.Model):
         db_table = 'datasets'
 
 
+class Evaluations(models.Model):
+    id = models.SmallAutoField(primary_key=True)
+    evalid = models.CharField(max_length=10, db_collation='utf8_general_ci', blank=True, null=True)
+    report_id = models.IntegerField()
+    title = models.CharField(max_length=256)
+    raw = models.TextField(db_collation='utf8_general_ci', blank=True, null=True)
+    sysid = models.CharField(max_length=10, db_collation='utf8_general_ci', blank=True, null=True)
+    data = models.IntegerField()
+    date = models.CharField(max_length=64, blank=True, null=True)
+    updated = models.IntegerField()
+
+    class Meta:
+        managed = False
+        db_table = 'evaluations'
+
+
+class EvaluationsReferences(models.Model):
+    evaluation_id = models.SmallIntegerField(blank=True, null=True)
+    evalid = models.CharField(max_length=50, blank=True, null=True)
+    reference_id = models.IntegerField(blank=True, null=True)
+    refid = models.CharField(max_length=50, blank=True, null=True)
+    citenum = models.CharField(max_length=8, blank=True, null=True)
+    updated = models.DateTimeField()
+
+    class Meta:
+        managed = False
+        db_table = 'evaluations_references'
+
+
 class Identifiers(models.Model):
     """ indentifiers table model """
     id = models.AutoField(primary_key=True)

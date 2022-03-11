@@ -23,7 +23,10 @@ def view(request, subid=0):
     sub = Substances.objects.get(id=subid)
     ids = sub.identifiers_set.values_list('type', 'value')
     subids = sub.substancessystems_set.values_list('system_id')
-    syss = Systems.objects.filter(id=subids)
+
+    syss = Systems.objects.all().filter(id__in=subids).values_list('id', 'name').order_by('name')
+    # rprts = Systems.objects.all().filter(id__in=subids).values_list('id', flat=True).order_by('name')
+    # sets = Datasets.objects.all()
     idlist = {}
     for idtype, value in ids:
         if idtype not in idlist.keys():

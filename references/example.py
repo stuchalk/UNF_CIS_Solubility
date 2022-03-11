@@ -8,6 +8,8 @@ os.environ.setdefault("DJANGO_SETTINGS_MODULE", "sds.settings")
 django.setup()
 from sds.models import *
 
-refs = References.objects.all().values_list('id', 'raw')
-print(refs)
+refid = 703
+ref = References.objects.get(id=refid)
+rprtids = ReferencesReports.objects.all().filter(reference_id=refid).values_list('report_id', flat=True)
+print(rprtids)
 exit()

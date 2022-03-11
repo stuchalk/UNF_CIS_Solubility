@@ -1,0 +1,60 @@
+<!-- incoming variables from publications (volumes) controller: vol, syss -->
+{% extends 'base.html' %}
+{% load static %}
+{% block title %} Reference View {% endblock %}
+{% block content %}
+<div class="row pt-3">
+    <div class="col-xs-12 col-sm-10 offset-sm-1 col-md-8 offset-md-2">
+        <div class="card panel-primary mb-3">
+            <div class="card-header pt-1 pb-1">
+                <h2 class="card-title mb-0">Solubility Article</h2>
+            </div>
+            <div class="card-body">
+                <a href="https://doi.org/{{ ref.doi }}" target="_blank">{{ ref.raw }}</a>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row">
+    {% if evals|length > 0 %}
+        {% if dsets|length > 0 %}
+            <div class="col-xs-12 col-md-6">
+        {% else %}
+            <div class="col-xs-12 col-sm-10 offset-sm-1 col-md-8 offset-md-2">
+        {% endif %}
+            <div class="card card-default">
+                <div class="card-header pt-1 pb-1">
+                    <h3 class="card-title mb-0">Evaluations from this Article</h3>
+                </div>
+                <ul class="list-group">
+                    {% for eval in evals %}
+                    <li class="list-group-item" style="padding: 5px 20px;">
+                        <a href="/reports/view/{{ eval.report_id }}">{{ eval.system__name }}</a>
+                    </li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+    {% endif %}
+    {% if dsets|length > 0 %}
+        {% if evals|length > 0 %}
+            <div class="col-xs-12 col-md-6">
+        {% else %}
+            <div class="col-xs-12 col-sm-10 offset-sm-1 col-md-8 offset-md-2">
+        {% endif %}
+            <div class="card card-default">
+                <div class="card-header pt-1 pb-1">
+                    <h3 class="card-title mb-0">Compilations from this Article</h3>
+                </div>
+                <ul class="list-group">
+                    {% for dset in dsets %}
+                    <li class="list-group-item" style="padding: 5px 20px;">
+                        <a href="/reports/view/{{ dset.report_id }}">{{ dset.system__name }}</a>
+                    </li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}
