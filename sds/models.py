@@ -159,6 +159,7 @@ class Datasets(models.Model):
 
 
 class Evaluations(models.Model):
+    """ evaluations table model """
     id = models.SmallAutoField(primary_key=True)
     evalid = models.CharField(max_length=10, db_collation='utf8_general_ci', blank=True, null=True)
     report_id = models.IntegerField()
@@ -175,6 +176,8 @@ class Evaluations(models.Model):
 
 
 class EvaluationsReferences(models.Model):
+    """ evaluations_references table model """
+    id = models.AutoField(primary_key=True)
     evaluation_id = models.SmallIntegerField(blank=True, null=True)
     evalid = models.CharField(max_length=50, blank=True, null=True)
     reference_id = models.IntegerField(blank=True, null=True)

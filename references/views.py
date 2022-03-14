@@ -20,8 +20,8 @@ def index(request):
 def view(request, refid=0):
     """ show data about a specific reference"""
     ref = References.objects.get(id=refid)
-    rprtids = ReferencesReports.objects.all().filter(reference_id=refid).values_list('report_id', flat=True)
-    rdsets = Datasets.objects.all().filter(report_id__in=rprtids).values('report_id', 'system__name')
+    rrptids = ReferencesReports.objects.all().filter(reference_id=refid).values_list('report_id', flat=True)
+    rdsets = Datasets.objects.all().filter(report_id__in=rrptids).values('report_id', 'system__name')
     evalids = EvaluationsReferences.objects.all().filter(reference_id=refid).values_list('evaluation_id', flat=True)
     erptids = Evaluations.objects.all().filter(id__in=evalids).values_list('report_id', flat=True)
     edsets = Datasets.objects.all().filter(id__in=erptids).values('report_id', 'system__name')

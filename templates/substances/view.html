@@ -25,7 +25,7 @@
                             Info0 = {
                                 width: "300",
                                 height: "200",
-                                src: "https://cactus.nci.nih.gov/chemical/structure/{{ ids.inchikey.0 }}/file?format=sdf&get3d=True",
+                                src: "https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/inchikey/{{ ids.inchikey }}/SDF?record_type=3d",
                                 debug: false,
                                 color: "#EEEEEE",
                                 addSelectionOptions: false,
@@ -60,21 +60,21 @@
                     </div>
                 <div>
 					<ul>
-                        {% for key, values in ids.items %}
+                        {% for key, value in ids.items %}
                             {% if key == "iupacname" %}
-                                <li>IUPAC Name: {{ values|join:", " }}</li>
+                                <li>IUPAC Name: {{ value }}</li>
                             {% elif key == "casrn" %}
-                                <li>CASRN: {{ values|join:", " }}</li>
+                                <li>CASRN: {{ value }}</li>
                             {% elif key == "inchi" %}
-                                <li>InChI: {{ values|join:", " }}</li>
+                                <li>InChI: {{ value }}</li>
                             {% elif key == "inchikey" %}
-                                <li>InChIKey: {{ values|join:", " }}</li>
+                                <li>InChIKey: {{ value }}</li>
                             {% elif key == "smiles" %}
-                                <li>SMILES: {{ values|join:", " }}</li>
+                                <li>SMILES: {{ value }}</li>
                             {% elif key == "pubchemId" %}
-                                <li>PubChem CID: {{ values|join:", " }}</li>
+                                <li>PubChem CID: {{ value }}</li>
                             {% elif key == "chemspiderId" %}
-                                <li>ChemSpider ID: {{ values|join:", " }}</li>
+                                <li>ChemSpider ID: {{ value }}</li>
                             {% endif %}
                         {%  endfor %}
 					</ul>
@@ -90,7 +90,12 @@
             </div>
 			<ul class="list-group responsivediv200">
                 {% for item in syss %}
-                    <a href="/systems/view/{{ item.0 }}" class="list-group-item list-group-item-small">{{ item.1 }}</a>
+                    <div class="list-group-item">
+                        <span class='showReport'>{{ item.1 }}</span>
+{#                        <?php if(!empty($system['reports'])) { ?>#}
+{#                        <span class='badge' title="Reports"><?php echo count($system['reports']); ?></span>#}
+                    <?php } ?>
+                    </div>
                 {% endfor %}
 			</ul>
 		</div>
