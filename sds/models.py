@@ -149,6 +149,7 @@ class Datasets(models.Model):
     report = models.ForeignKey("Reports", models.DO_NOTHING, db_column="report_id")
     reference = models.ForeignKey("References", models.DO_NOTHING, db_column="reference_id")
     system = models.ForeignKey("Systems", models.DO_NOTHING, db_column="system_id")
+    eval = models.IntegerField(blank=True, null=True)
     comments = models.CharField(max_length=256, blank=True, null=True)
     updated = models.DateTimeField()
 

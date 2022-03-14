@@ -156,6 +156,40 @@ class Migration(migrations.Migration):
             },
         ),
         migrations.CreateModel(
+            name='Evaluations',
+            fields=[
+                ('id', models.SmallAutoField(primary_key=True, serialize=False)),
+                ('evalid', models.CharField(blank=True, db_collation='utf8_general_ci', max_length=10, null=True)),
+                ('report_id', models.IntegerField()),
+                ('title', models.CharField(max_length=256)),
+                ('raw', models.TextField(blank=True, db_collation='utf8_general_ci', null=True)),
+                ('sysid', models.CharField(blank=True, db_collation='utf8_general_ci', max_length=10, null=True)),
+                ('data', models.IntegerField()),
+                ('date', models.CharField(blank=True, max_length=64, null=True)),
+                ('updated', models.IntegerField()),
+            ],
+            options={
+                'db_table': 'evaluations',
+                'managed': False,
+            },
+        ),
+        migrations.CreateModel(
+            name='EvaluationsReferences',
+            fields=[
+                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('evaluation_id', models.SmallIntegerField(blank=True, null=True)),
+                ('evalid', models.CharField(blank=True, max_length=50, null=True)),
+                ('reference_id', models.IntegerField(blank=True, null=True)),
+                ('refid', models.CharField(blank=True, max_length=50, null=True)),
+                ('citenum', models.CharField(blank=True, max_length=8, null=True)),
+                ('updated', models.DateTimeField()),
+            ],
+            options={
+                'db_table': 'evaluations_references',
+                'managed': False,
+            },
+        ),
+        migrations.CreateModel(
             name='Identifiers',
             fields=[
                 ('id', models.AutoField(primary_key=True, serialize=False)),
