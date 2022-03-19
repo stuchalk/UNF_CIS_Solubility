@@ -1,6 +1,7 @@
 """ substance views file """
 from django.shortcuts import render
 from sds.models import *
+import urllib.request, urllib.error
 
 
 def index(request):
@@ -45,5 +46,14 @@ def view(request, subid=0):
     erptsbysys = {}
     for rpt in erpts:
         erptsbysys.update({rpt['system_id']: rpt['report_id']})
+    # work out if pubchem has 3d version of sdf file
+    url = 'https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/inchikey/' + ids['inchikey'] + '/SDF?record_type=3d'
+    dim = 3
+    try:
+        conn = urllib.request.urlopen(url)
+    except urllib.error.HTTPError as e:
+        dim = 2
+
+    # send data to template
     return render(request, "../templates/substances/view.html",
-                  {'sub': sub, 'ids': ids, 'syss': syss, 'crpts': crptsbysys, 'erpts': erptsbysys})
+                  {'sub': sub, 'ids': ids, 'syss': syss, 'crpts': crptsbysys, 'erpts': erptsbysys, 'dim': dim})
