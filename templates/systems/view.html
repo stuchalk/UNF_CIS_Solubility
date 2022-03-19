@@ -1,0 +1,41 @@
+<!-- incoming variables from publications (volumes) controller: vol, syss -->
+{% extends 'base.html' %}
+{% load static %}
+{% block title %} System View {% endblock %}
+{% block content %}
+<div class="row">
+    <div class="col-12 mb-2 mt-2"><h3>System: {{ sys.name }}</h3></div>
+	<div class="col-md-5">
+		<div class="card card-default">
+			<div class="card-header h4">Substances</div>
+			<div class="card-body clearfix">
+				{% for url in suburls %}
+                    <p>{{ url }}</p>
+                {% endfor %}
+			</div>
+		</div>
+	</div>
+	<div class="col-md-7">
+        {% if evals != None %}
+            <div class="card card-default">
+                <div class="card-header h4">Evaluation</div>
+                <ul class="list-group eval-div">
+                    {% for eid in evals %}
+                        <a href="/reports/view/{{ eid.id }}" class="list-group-item">{{ sys.name }}</a>
+                    {% endfor %}
+                </ul>
+            </div>
+        {% endif %}
+        {% if rpts != None %}
+            <div class="card card-default mt-3">
+                <div class="card-header h4">Reports <span class="badge badge-success">{{ rpts|length }}</span></div>
+                <ul class="list-group report-div">
+                    {% for rpt in rpts %}
+                        <a href="/reports/view/{{ rpt.id }}" class="list-group-item">{{ rpt.referencesreports__reference__raw }}</a>
+                    {% endfor %}
+                </ul>
+            </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

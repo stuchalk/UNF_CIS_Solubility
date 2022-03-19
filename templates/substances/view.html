@@ -6,88 +6,66 @@
 <div class="row pt-3">
 	<div class="col-md-5">
 		<div class="card card-success">
-			<div class="card-header pt-1 pb-1">
-				<h3 class="card-title mb-0">{{ sub.name }}</h3>
-			</div>
-			<div class="card-body">
-                <div class="row">
-                    <div>
-                        <script type="text/javascript" src="/static/js/jsmol/JSmol.min.js"></script>
-                        <script type="text/javascript" src="/static/js/jsmol/js/JSmolJSV.js"></script>
-                        <script type='text/javascript'>
-                            jsvApplet = "jsvApplet0"
-                            $(document).ready(function(){
-                                $("#jsmol0").html(Jmol.getAppletHtml("jsmol0", Info0));
-                            });
-                            jmol_isReady = function(applet) {
-                                Jmol._getElement(applet, "appletdiv").style.border = "1px solid #D0D0D0"
-                            }
-                            Info0 = {
-                                width: "100%",
-                                height: "100%",
-                                src: "https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/inchikey/{{ ids.inchikey }}/SDF?record_type={{ dim }}d",
-                                debug: false,
-                                color: "#EEEEEE",
-                                addSelectionOptions: false,
-                                serverURL: "https://osdb.stuchalk.domains.unf.edu/js/jsmol/php/jsmol.php",
-                                use: "HTML5",
-                                coverImage: "",
-                                coverScript: "",
-                                deferApplet: false,
-                                deferUncover: false,
-                                jarPath: "java",
-                                j2sPath: "/static/js/jsmol/j2s",
-                                jarFile: "JmolApplet.jar",
-                                isSigned: false,
-                                readyFunction: jmol_isReady
-                            }
-                            jsvInfo = {
-                                width: 600,
-                                height: 400,
-                                debug: false,
-                                color: "0xC0C0C0",
-                                use: "HTML5",
-                                j2sPath: "/static/js/jsmol/j2s",
-                                script: null,
-                                initParams: null,
-                                disableJ2SLoadMonitor: true,
-                                disableInitialConsole: true,
-                                readyFunction: null,
-                                allowjavascript: true
-                            }
-                        </script>
-                    </div>
-                    <div id="jsmol0" class="col-xs-12 col-sm-8 offset-sm-2"></div>
-                    <div class="col-xs-12 col-sm-12 offset-sm-0">
-                        <ul>
-                            {% for key, value in ids.items %}
-                                {% if key == "iupacname" %}
-                                    <li>IUPAC Name: {{ value }}</li>
-                                {% elif key == "casrn" %}
-                                    <li>CASRN: {{ value }}</li>
-                                {% elif key == "inchi" %}
-                                    <li>InChI: {{ value }}</li>
-                                {% elif key == "inchikey" %}
-                                    <li>InChIKey: {{ value }}</li>
-                                {% elif key == "smiles" %}
-                                    <li>SMILES: {{ value }}</li>
-                                {% elif key == "pubchemId" %}
-                                    <li>PubChem CID: {{ value }}</li>
-                                {% elif key == "chemspiderId" %}
-                                    <li>ChemSpider ID: {{ value }}</li>
-                                {% endif %}
-                            {%  endfor %}
-                        </ul>
-                    </div>
-			    </div>
+			<div class="card-header h3">{{ sub.name }}</div>
+            <script type="text/javascript" src="/static/js/jsmol/JSmol.min.js"></script>
+            <script type="text/javascript" src="/static/js/jsmol/js/JSmolJSV.js"></script>
+            <script type='text/javascript'>
+                jsvApplet = "jsvApplet0"
+                $(document).ready(function(){
+                    $("#jsmol0").html(Jmol.getAppletHtml("jsmol0", Info0));
+                });
+                jmol_isReady = function(applet) {
+                    Jmol._getElement(applet, "appletdiv").style.border = "1px solid #D0D0D0"
+                }
+                Info0 = {
+                    width: "300",
+                    height: "200",
+                    src: "https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/inchikey/{{ ids.inchikey }}/SDF?record_type={{ dim }}d",
+                    debug: false,
+                    color: "#EEEEEE",
+                    addSelectionOptions: false,
+                    serverURL: "https://osdb.stuchalk.domains.unf.edu/js/jsmol/php/jsmol.php",
+                    use: "HTML5",
+                    coverImage: "",
+                    coverScript: "",
+                    deferApplet: false,
+                    deferUncover: false,
+                    jarPath: "java",
+                    j2sPath: "/static/js/jsmol/j2s",
+                    jarFile: "JmolApplet.jar",
+                    isSigned: false,
+                    readyFunction: jmol_isReady
+                }
+            </script>
+            <div class="row">
+                <div id="jsmol0" class="col-xs-8 offset-xs-2"></div>
+                <div class="col-xs-12 col-sm-12 offset-sm-0">
+                    <ul>
+                        {% for key, value in ids.items %}
+                            {% if key == "iupacname" %}
+                                <li>IUPAC Name: {{ value }}</li>
+                            {% elif key == "casrn" %}
+                                <li>CASRN: {{ value }}</li>
+                            {% elif key == "inchi" %}
+                                <li>InChI: {{ value }}</li>
+                            {% elif key == "inchikey" %}
+                                <li>InChIKey: {{ value }}</li>
+                            {% elif key == "smiles" %}
+                                <li>SMILES: {{ value }}</li>
+                            {% elif key == "pubchemId" %}
+                                <li>PubChem CID: {{ value }}</li>
+                            {% elif key == "chemspiderId" %}
+                                <li>ChemSpider ID: {{ value }}</li>
+                            {% endif %}
+                        {%  endfor %}
+                    </ul>
+                </div>
             </div>
-		</div>
+        </div>
 	</div>
 	<div class="col-md-7">
 		<div class="card card-default">
-			<div class="card-header pt-1 pb-1">
-				<h3 class="card-title mb-0">Systems ({{ syss|length }})</h3>
-            </div>
+			<div class="card-header h3">Systems <span class="badge badge-success">{{ syss|length }}</span></div>
 			<ul class="list-group responsivediv200">
                 {% for item in syss %}
                     <div class="list-group-item">

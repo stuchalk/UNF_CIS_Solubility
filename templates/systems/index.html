@@ -1,13 +1,58 @@
 {% extends 'base.html' %}
 
-{% block title %} Systems {% endblock %}
-{% block header %} System {% endblock %}
+{% block title %} Systems Index {% endblock %}
+{% block header %} Systems Index {% endblock %}
 
 {% block content %}
-    <h3>System</h3>
-    <ul>
-        <li> Substances: {{ subcount }}</li>
-        <li> Identifiers: {{ idcount }}</li>
-        <li> Systems: {{ syscount }}</li>
-    </ul>
+<div class="row">
+    <div class="col-xs-12 mt-2">
+        <div class="col-12"><h3>Systems</h3></div>
+        <div class="row">
+        <div class="col-xs-12 col-sm-4">
+            <div class="card card-primary mb-2">
+                <div class="card-header pt-1 pb-1">
+                    <h3 class="card-title mb-0">Browse</h3>
+                </div>
+                <div id="buttons" class="card-body">
+                    {% for char in chars %}
+                        <button type="button" class="btn bg-light btn-sm browse pointer" href="#" data-char="{{ char }}">{{ char }}</button>
+                    {% endfor %}
+				</div>
+            </div>
+            <div class="card card-success mb-2">
+                <div class="card-header pt-1 pb-1">
+                    <h3 class="card-title mb-0">Search</h3>
+                </div>
+                <div class="card-body">
+                    <input id="search" class="form-control" alt="search for systems" type="text" placeholder="Search systems...">
+                </div>
+            </div>
+            <div class="card card-info">
+                <div class="card-header pt-1 pb-1">
+                    <h3 class="card-title mb-0">Help</h3>
+                </div>
+                <div class="card-body text-justify">
+                    <p><b>Search:</b> Enter a string to find chemical system (case-sensitive)</p>
+                    <p><b>Browse:</b> Find all chemical systems by first letter</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-xs-12 col-sm-8">
+            <div class="card card-default">
+                <div id="results" class="card-body responsivediv200">
+                {% for char, rows in syss.items %}
+                    <div id='{{ char }}' class='letter{% if char != chars.0 %} hidden{% endif %}'>
+                        <ul class='list-unstyled list-compact'>
+                            {% for sys in rows %}
+                                <li><a href="/systems/view/{{ sys.0 }}">{{ sys.1 }}</a></li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                {% endfor %}
+                </div>
+            </div>
+        </div>
+        </div>
+    </div>
+</div>
 {% endblock %}

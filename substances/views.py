@@ -1,7 +1,8 @@
 """ substance views file """
+import urllib.error
+import urllib.request
 from django.shortcuts import render
 from sds.models import *
-import urllib.request, urllib.error
 
 
 def index(request):
@@ -25,11 +26,11 @@ def view(request, subid=0):
     # get identifiers
     idents = sub.identifiers_set.values('type', 'value')
     ids = {}
-    for id in idents:
-        if id['type'] not in ids.keys():
-            ids[id['type']] = id['value']
+    for iid in idents:
+        if iid['type'] not in ids.keys():
+            ids[iid['type']] = iid['value']
         else:
-            ids[id['type']] += ", " + id['value']
+            ids[iid['type']] += ", " + iid['value']
     # systems that this substance is a component in
     sysids = sub.substancessystems_set.values_list('system_id')
     syss = Systems.objects.all().filter(id__in=sysids).values_list('id', 'name').order_by('name')
@@ -50,8 +51,8 @@ def view(request, subid=0):
     url = 'https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/inchikey/' + ids['inchikey'] + '/SDF?record_type=3d'
     dim = 3
     try:
-        conn = urllib.request.urlopen(url)
-    except urllib.error.HTTPError as e:
+        urllib.request.urlopen(url)
+    except urllib.error.HTTPError:
         dim = 2
 
     # send data to template
