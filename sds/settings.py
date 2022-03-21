@@ -89,19 +89,11 @@ WSGI_APPLICATION = 'sds.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'stuchalk_nistsds2',
-        'USER': 'stuchalk_sol',
-        'PASSWORD': 'nistsol2022!',
+        'NAME': 'stuchalk_cissol',
+        'USER': 'stuchalk_cis',
+        'PASSWORD': 'chemistry2022!',
         'HOST': '67.205.149.97',
         'PORT': '3306'
-    },
-    'oldscidata': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'nistsds2',
-        'USER': 'sds',
-        'PASSWORD': 'sds2020',
-        'HOST': '127.0.0.1',
-        'PORT': '3307'
     }
 }
 
