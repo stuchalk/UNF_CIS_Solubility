@@ -9,5 +9,5 @@ def index(request):
     idcount = Identifiers.objects.count()
     syscount = Systems.objects.count()
 
-    return render(request, "../templates/substances/index.html",
+    return render(request, "../templates/datasets/index.html",
                   {'subcount': subcount, 'idcount': idcount, 'syscount': syscount})

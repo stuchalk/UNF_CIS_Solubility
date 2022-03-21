@@ -17,26 +17,22 @@ for id in idents:
     else:
         ids[id['type']] += ", " + id['value']
 sysids = sub.substancessystems_set.values_list('system_id', flat=True).distinct()
-print(ids)
-syss = Systems.objects.all().filter(id__in=sysids).values_list('id', 'name').order_by('name')
-rrpts = Datasets.objects.all().filter(system__in=sysids, eval=0).values('report_id', 'system_id', 'report__referencesreports__reference__raw')
-erpts = Datasets.objects.all().filter(system__in=sysids, eval=1).values('report_id', 'system_id')
-rrptsbysys = {}
-for rpt in rrpts:
-    if rpt['system_id'] not in rrptsbysys.keys():
-        rrptsbysys.update({rpt['system_id']: {}})
-    rrptsbysys[rpt['system_id']].update({rpt['report_id']: rpt['report__referencesreports__reference__raw']})
-erptsbysys = {}
-for rpt in erpts:
-    erptsbysys.update({rpt['system_id']: rpt['report_id']})
-print(rrptsbysys)
-print(erptsbysys)
-exit()
-
-idlist = {}
-print(ids)
-for idtype, value in ids:
-    if idtype not in idlist.keys():
-        idlist.update({idtype: []})
-    idlist[idtype].append(value)
-print(idlist)
+syslst = Systems.objects.all().filter(id__in=sysids).values('id', 'name').order_by('name')
+rrpts = Datasets.objects.all().filter(system__in=sysids, eval=0).values('system_id', 'report_id', 'report__referencesreports__reference__raw')
+erpts = Datasets.objects.all().filter(system__in=sysids, eval=1).values('system_id', 'report_id')
+syss = {}
+for sys in syslst:
+    if sys['id'] not in syss.keys():
+        syss.update({sys['id']: []})
+    syss[sys['id']].append(sys['name'])
+    elst = []
+    for erpt in erpts:
+        if erpt['system_id'] == sys['id']:
+            elst.append(erpt['report_id'])
+    syss[sys['id']].append(elst)
+    rlst = []
+    for rrpt in rrpts:
+        if rrpt['system_id'] == sys['id']:
+            rlst.append(tuple((rrpt['report_id'], rrpt['report__referencesreports__reference__raw'])))
+    syss[sys['id']].append(rlst)
+print(syss)

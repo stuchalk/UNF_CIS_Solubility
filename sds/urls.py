@@ -20,6 +20,7 @@ urlpatterns = [
     path('', include('solubility.urls')),
     path('authors/', include('authors.urls')),
     path('references/', include('references.urls')),
+    path('reports/', include('reports.urls')),
     path('substances/', include('substances.urls')),
     path('systems/', include('systems.urls')),
     path('volumes/', include('volumes.urls')),

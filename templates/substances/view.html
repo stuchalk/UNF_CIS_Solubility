@@ -4,78 +4,93 @@
 {% block title %} Substance View {% endblock %}
 {% block content %}
 <div class="row pt-3">
-	<div class="col-md-5">
+	<div class="col-md-4">
 		<div class="card card-success">
 			<div class="card-header h3">{{ sub.name }}</div>
-            <script type="text/javascript" src="/static/js/jsmol/JSmol.min.js"></script>
-            <script type="text/javascript" src="/static/js/jsmol/js/JSmolJSV.js"></script>
-            <script type='text/javascript'>
-                jsvApplet = "jsvApplet0"
-                $(document).ready(function(){
-                    $("#jsmol0").html(Jmol.getAppletHtml("jsmol0", Info0));
-                });
-                jmol_isReady = function(applet) {
-                    Jmol._getElement(applet, "appletdiv").style.border = "1px solid #D0D0D0"
-                }
-                Info0 = {
-                    width: "300",
-                    height: "200",
-                    src: "https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/inchikey/{{ ids.inchikey }}/SDF?record_type={{ dim }}d",
-                    debug: false,
-                    color: "#EEEEEE",
-                    addSelectionOptions: false,
-                    serverURL: "https://osdb.stuchalk.domains.unf.edu/js/jsmol/php/jsmol.php",
-                    use: "HTML5",
-                    coverImage: "",
-                    coverScript: "",
-                    deferApplet: false,
-                    deferUncover: false,
-                    jarPath: "java",
-                    j2sPath: "/static/js/jsmol/j2s",
-                    jarFile: "JmolApplet.jar",
-                    isSigned: false,
-                    readyFunction: jmol_isReady
-                }
-            </script>
-            <div class="row">
-                <div id="jsmol0" class="col-xs-8 offset-xs-2"></div>
-                <div class="col-xs-12 col-sm-12 offset-sm-0">
-                    <ul>
-                        {% for key, value in ids.items %}
-                            {% if key == "iupacname" %}
-                                <li>IUPAC Name: {{ value }}</li>
-                            {% elif key == "casrn" %}
-                                <li>CASRN: {{ value }}</li>
-                            {% elif key == "inchi" %}
-                                <li>InChI: {{ value }}</li>
-                            {% elif key == "inchikey" %}
-                                <li>InChIKey: {{ value }}</li>
-                            {% elif key == "smiles" %}
-                                <li>SMILES: {{ value }}</li>
-                            {% elif key == "pubchemId" %}
-                                <li>PubChem CID: {{ value }}</li>
-                            {% elif key == "chemspiderId" %}
-                                <li>ChemSpider ID: {{ value }}</li>
-                            {% endif %}
-                        {%  endfor %}
-                    </ul>
-                </div>
+            <div class="card-body">
+                <script type="text/javascript" src="/static/js/jsmol/JSmol.min.js"></script>
+                <script type="text/javascript" src="/static/js/jsmol/js/JSmolJSV.js"></script>
+                <script type='text/javascript'>
+                    jsvApplet = "jsvApplet0"
+                    $(document).ready(function(){
+                        $("#jsmol0").html(Jmol.getAppletHtml("jsmol0", Info0));
+                    });
+                    jmol_isReady = function(applet) {
+                        Jmol._getElement(applet, "appletdiv").style.border = "1px solid #D0D0D0"
+                    }
+                    Info0 = {
+                        width: "300",
+                        height: "200",
+                        src: "https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/inchikey/{{ ids.inchikey }}/SDF?record_type={{ dim }}d",
+                        debug: false,
+                        color: "#EEEEEE",
+                        addSelectionOptions: false,
+                        serverURL: "https://osdb.stuchalk.domains.unf.edu/js/jsmol/php/jsmol.php",
+                        use: "HTML5",
+                        coverImage: "",
+                        coverScript: "",
+                        deferApplet: false,
+                        deferUncover: false,
+                        jarPath: "java",
+                        j2sPath: "/static/js/jsmol/j2s",
+                        jarFile: "JmolApplet.jar",
+                        isSigned: false,
+                        readyFunction: jmol_isReady
+                    }
+                </script>
+                <div id="jsmol0" class="mb-3"></div>
+                <ul>
+                            {% for key, value in ids.items %}
+                                {% if key == "iupacname" %}
+                                    <li>IUPAC Name: {{ value }}</li>
+                                {% elif key == "casrn" %}
+                                    <li>CASRN: {{ value }}</li>
+                                {% elif key == "inchi" %}
+                                    <li>InChI: {{ value }}</li>
+                                {% elif key == "inchikey" %}
+                                    <li>InChIKey: {{ value }}</li>
+                                {% elif key == "smiles" %}
+                                    <li>SMILES: {{ value }}</li>
+                                {% elif key == "pubchemId" %}
+                                    <li>PubChem CID: {{ value }}</li>
+                                {% elif key == "chemspiderId" %}
+                                    <li>ChemSpider ID: {{ value }}</li>
+                                {% endif %}
+                            {%  endfor %}
+                        </ul>
             </div>
         </div>
 	</div>
-	<div class="col-md-7">
+	<div class="col-md-8">
 		<div class="card card-default">
 			<div class="card-header h3">Systems <span class="badge badge-success">{{ syss|length }}</span></div>
-			<ul class="list-group responsivediv200">
-                {% for item in syss %}
-                    <div class="list-group-item">
-                        <span class='showReport'>{{ item.1 }}</span>
-{#                        <?php if(!empty($system['reports'])) { ?>#}
-{#                        <span class='badge' title="Reports"><?php echo count($system['reports']); ?></span>#}
-                    <?php } ?>
+			<div class="list-group responsivediv200">
+                {% for sysid, data in syss.items %}
+                    <div class="list-group-item list-group-item-small">
+                        <span class='showreports' style="cursor: pointer;">{{ data.0 }}</span>
+                        {%  if data.2|length > 0 %}
+                            <span class='badge badge-success float-lg-right' title="Reports">{{ data.2|length }}</span>
+                        {% endif %}
+                        {%  if data.1|length > 0 %}
+                            <span class='badge badge-primary float-lg-right' title="Evaluations">{{ data.1|length }}</span>
+                        {% endif %}
+                        <br />
+                        <div class='sysreports hidden'>
+                            {%  if data.1|length > 0 %}
+                                {% for eval in data.1 %}
+                                    <a href="/reports/view/{{ eval }}" class>System Evaluation</a><br />
+                                {% endfor %}
+                            {% endif %}
+                            {%  if data.2|length > 0 %}
+                                {% for eval in data.2 %}
+                                    <a href="/reports/view/{{ eval.0 }}">{{ eval.1 }}</a><br />
+                                {% endfor %}
+                            {% endif %}
+                        </div>
                     </div>
                 {% endfor %}
-			</ul>
+            </div>
 		</div>
 	</div>
-</div>{% endblock %}
+</div>
+{% endblock %}

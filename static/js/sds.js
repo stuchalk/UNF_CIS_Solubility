@@ -37,9 +37,9 @@ $(document).ready(function() {
 		}
 	});
 	// show reports in list (substances/view)
-	$(".showReport").click(function (e) {
+	$(".showreports").on('click', function (e) {
 		e.preventDefault();
-		$(".showHide").hide();
-		$(this).nextAll(".showHide").toggle(); // requires element with class 'showHide' is a following sibling
+		$(".sysreports").hide();
+		$(this).siblings(".sysreports").show();
 	});
 })

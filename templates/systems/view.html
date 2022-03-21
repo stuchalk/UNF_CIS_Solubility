@@ -9,15 +9,50 @@
 		<div class="card card-default">
 			<div class="card-header h4">Substances</div>
 			<div class="card-body clearfix">
-				{% for url in suburls %}
-                    <p>{{ url }}</p>
+				<script type="text/javascript" src="/static/js/jsmol/JSmol.min.js"></script>
+                <script type="text/javascript" src="/static/js/jsmol/js/JSmolJSV.js"></script>
+                {% for sub in subs %}
+                    {%  with index=forloop.counter %}
+                        <script type='text/javascript'>
+                            jsvApplet = "jsvApplet{{ index }}"
+                            $(document).ready(function(){
+                                $("#jsmol{{ index }}").html(Jmol.getAppletHtml("jsmol{{ index }}", Info{{ index }}));
+                            });
+                            jmol_isReady = function(applet) {
+                                Jmol._getElement(applet, "appletdiv").style.border = "1px solid #D0D0D0"
+                            }
+                            Info{{ index }} = {
+                                width: "300",
+                                height: "200",
+                                src: "{{ sub.2 }}",
+                                debug: false,
+                                color: "#EEEEEE",
+                                addSelectionOptions: false,
+                                serverURL: "https://osdb.stuchalk.domains.unf.edu/js/jsmol/php/jsmol.php",
+                                use: "HTML5",
+                                coverImage: "",
+                                coverScript: "",
+                                deferApplet: false,
+                                deferUncover: false,
+                                jarPath: "java",
+                                j2sPath: "/static/js/jsmol/j2s",
+                                jarFile: "JmolApplet.jar",
+                                isSigned: false,
+                                readyFunction: jmol_isReady
+                            }
+                        </script>
+                        <div class="col-xs-12 text-center">
+                            <div id="jsmol{{ index }}"></div>
+                            <p><a href="/substances/view/{{ sub.0 }}">{{ sub.1 }}</a></p>
+                        </div>
+                    {% endwith %}
                 {% endfor %}
 			</div>
 		</div>
 	</div>
 	<div class="col-md-7">
-        {% if evals != None %}
-            <div class="card card-default">
+        {% if evals|length > 0 %}
+            <div class="card card-default mb-3">
                 <div class="card-header h4">Evaluation</div>
                 <ul class="list-group eval-div">
                     {% for eid in evals %}
@@ -27,7 +62,7 @@
             </div>
         {% endif %}
         {% if rpts != None %}
-            <div class="card card-default mt-3">
+            <div class="card card-default">
                 <div class="card-header h4">Reports <span class="badge badge-success">{{ rpts|length }}</span></div>
                 <ul class="list-group report-div">
                     {% for rpt in rpts %}

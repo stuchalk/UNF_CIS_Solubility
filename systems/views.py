@@ -6,7 +6,7 @@ from sds.models import *
 
 def index(request):
     """ present an overview page about the system in the sds """
-    data = Systems.objects.all().values('id', 'name')
+    data = Systems.objects.all().values('id', 'name').order_by('name')
     chars = []
     syss = {}
     for s in data:
@@ -23,17 +23,17 @@ def view(request, sysid=0):
     sys = Systems.objects.get(id=sysid)
     # substances that the system is part of
     subids = sys.substancessystems_set.values('substance_id')
-    subs = Substances.objects.all().filter(id__in=subids, identifiers__type='inchikey').\
-        values_list('id', 'identifiers__value')
-    suburls = []  # this will hold the urls to get the sdf file for each substance
+    sublst = Substances.objects.all().filter(id__in=subids, identifiers__type='inchikey').\
+        values_list('id', 'name', 'identifiers__value')
+    subs = []  # this will hold the names and urls to get the sdf file for each substance
     pcpath = 'https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/inchikey/'
-    for sub in subs:
-        url = pcpath + sub[1] + '/SDF?record_type=3d'
+    for sub in sublst:
+        url = pcpath + sub[2] + '/SDF?record_type=3d'
         try:
             urllib.request.urlopen(url)
         except urllib.error.HTTPError:
-            url = pcpath + sub[1] + '/SDF?record_type=2d'
-        suburls.append(url)
+            url = pcpath + sub[2] + '/SDF?record_type=2d'
+        subs.append(tuple((sub[0], sub[1], url)))
 
     # datasets this system is part of
     rptids = Datasets.objects.all().filter(system_id=sysid).values_list('report_id', flat=True)
@@ -43,4 +43,4 @@ def view(request, sysid=0):
     rpts = Reports.objects.all().filter(id__in=rptids, eval=0).values('id', 'referencesreports__reference__raw')
     # send data to template
     return render(request, "../templates/systems/view.html",
-                  {'sys': sys, 'suburls': suburls, 'evals': evals, 'rpts': rpts})
+                  {'sys': sys, 'subs': subs, 'evals': evals, 'rpts': rpts})

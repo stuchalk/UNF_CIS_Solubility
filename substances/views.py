@@ -8,7 +8,7 @@ from sds.models import *
 def index(request):
     """
     present an overview page about the substance in the sds"""
-    data = Substances.objects.all().values('id', 'name')
+    data = Substances.objects.all().values('id', 'name').order_by('name')
     chars = []
     subs = {}
     for s in data:
@@ -33,20 +33,29 @@ def view(request, subid=0):
             ids[iid['type']] += ", " + iid['value']
     # systems that this substance is a component in
     sysids = sub.substancessystems_set.values_list('system_id')
-    syss = Systems.objects.all().filter(id__in=sysids).values_list('id', 'name').order_by('name')
+    syslst = Systems.objects.all().filter(id__in=sysids).values('id', 'name').order_by('name')
     # get compilation report(s)
     crpts = Datasets.objects.all().filter(system__in=sysids, eval=0).values('report_id', 'system_id',
                                                                             'report__referencesreports__reference__raw')
-    crptsbysys = {}
-    for rpt in crpts:
-        if rpt['system_id'] not in crptsbysys.keys():
-            crptsbysys.update({rpt['system_id']: {}})
-        crptsbysys[rpt['system_id']].update({rpt['report_id']: rpt['report__referencesreports__reference__raw']})
-    # get evaluation report
+    # get compilation report
     erpts = Datasets.objects.all().filter(system__in=sysids, eval=1).values('report_id', 'system_id')
-    erptsbysys = {}
-    for rpt in erpts:
-        erptsbysys.update({rpt['system_id']: rpt['report_id']})
+    # agregate data for template
+    syss = {}
+    for sys in syslst:
+        if sys['id'] not in syss.keys():
+            syss.update({sys['id']: []})
+        syss[sys['id']].append(sys['name'])
+        elst = []
+        for erpt in erpts:
+            if erpt['system_id'] == sys['id']:
+                elst.append(erpt['report_id'])
+        syss[sys['id']].append(elst)
+        clst = []
+        for crpt in crpts:
+            if crpt['system_id'] == sys['id']:
+                clst.append(tuple((crpt['report_id'], crpt['report__referencesreports__reference__raw'])))
+        syss[sys['id']].append(clst)
+
     # work out if pubchem has 3d version of sdf file
     url = 'https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/inchikey/' + ids['inchikey'] + '/SDF?record_type=3d'
     dim = 3
@@ -57,4 +66,4 @@ def view(request, subid=0):
 
     # send data to template
     return render(request, "../templates/substances/view.html",
-                  {'sub': sub, 'ids': ids, 'syss': syss, 'crpts': crptsbysys, 'erpts': erptsbysys, 'dim': dim})
+                  {'sub': sub, 'ids': ids, 'syss': syss, 'dim': dim})
