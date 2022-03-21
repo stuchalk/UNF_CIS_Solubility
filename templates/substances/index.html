@@ -42,7 +42,7 @@
                 <div id="results" class="card-body responsivediv200">
                 {% for char, rows in subs.items %}
                     <div id='{{ char }}' class='letter{% if char != chars.0 %} hidden{% endif %}'>
-                        <ul class='list-unstyled list-compact'>
+                        <ul class='list-unstyled list-compact mb-0'>
                             {% for sub in rows %}
                                 <li><a href="/substances/view/{{ sub.0 }}">{{ sub.1 }}</a></li>
                             {% endfor %}
