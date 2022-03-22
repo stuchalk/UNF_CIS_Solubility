@@ -234,25 +234,6 @@ class Properties(models.Model):
         db_table = 'properties'
 
 
-class Publications(models.Model):
-    """ publications table model """
-    id = models.SmallAutoField(primary_key=True)
-    volumeid = models.CharField(max_length=50, blank=True, null=True)
-    publisher = models.CharField(max_length=128)
-    series = models.CharField(max_length=64)
-    volume = models.CharField(max_length=32, blank=True, null=True)
-    year = models.SmallIntegerField(blank=True, null=True)
-    title = models.CharField(max_length=256)
-    authors = models.CharField(max_length=512)
-    url = models.CharField(max_length=128)
-    citation = models.CharField(max_length=128, blank=True, null=True)
-    updated = models.DateTimeField()
-
-    class Meta:
-        managed = False
-        db_table = 'publications'
-
-
 class Quantities(models.Model):
     """ quantities table model """
     id = models.SmallAutoField(primary_key=True)
@@ -312,6 +293,7 @@ class References(models.Model):
     class Meta:
         managed = False
         db_table = 'references'
+        verbose_name_plural = "references"
 
     def __str__(self):
         return f"{self.title}"
@@ -320,7 +302,7 @@ class References(models.Model):
 class Reports(models.Model):
     """ reports table model """
     id = models.AutoField(primary_key=True)
-    pub = models.ForeignKey("Publications", models.DO_NOTHING, db_column="publication_id")
+    vol = models.ForeignKey("Volumes", models.DO_NOTHING, db_column="volume_id")
     sysid = models.CharField(max_length=10)
     eval = models.IntegerField(blank=True, null=True)
     count = models.SmallIntegerField()
@@ -365,6 +347,7 @@ class Substances(models.Model):
     class Meta:
         managed = False
         db_table = 'substances'
+        verbose_name_plural = "substances"
 
     def __str__(self):
         return f"{self.name}"
@@ -394,7 +377,7 @@ class Systems(models.Model):
     sysnmid = models.IntegerField(blank=True, null=True)
     name = models.CharField(max_length=512)
     volume = models.IntegerField()
-    publication_id = models.SmallIntegerField()
+    volume_id = models.SmallIntegerField()
     components = models.PositiveIntegerField(blank=True, null=True)
     comments = models.CharField(max_length=256, blank=True, null=True)
     updated = models.DateTimeField()
@@ -421,3 +404,19 @@ class Units(models.Model):
     class Meta:
         managed = False
         db_table = 'units'
+
+
+class Volumes(models.Model):
+    """ publications table model """
+    id = models.SmallAutoField(primary_key=True)
+    volume = models.CharField(max_length=32, blank=True, null=True)
+    year = models.SmallIntegerField(blank=True, null=True)
+    title = models.CharField(max_length=256)
+    authors = models.CharField(max_length=512)
+    url = models.CharField(max_length=128)
+    updated = models.DateTimeField()
+
+    class Meta:
+        managed = False
+        db_table = 'volumes'
+        verbose_name_plural = "volumes"
