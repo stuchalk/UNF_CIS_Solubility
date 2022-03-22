@@ -193,14 +193,14 @@ class EvaluationsReferences(models.Model):
 class Identifiers(models.Model):
     """ indentifiers table model """
     # reference types enum list
-    ISTR = 'IS'
-    IKEY = 'IK'
-    CASR = 'RN'
-    CSML = 'CS'
+    ISTR = 'inchi'
+    IKEY = 'inchikey'
+    CASR = 'casrn'
+    CSML = 'smiles'
     TYPE_CHOICES = [
         (ISTR, 'InChI'),
         (IKEY, 'InChIKey'),
-        (CASR, 'CAS Rgistry Number'),
+        (CASR, 'CAS Registry Number'),
         (CSML, 'Canonical SMILES')
     ]
     id = models.AutoField(primary_key=True)
@@ -253,23 +253,23 @@ class Quantities(models.Model):
 class References(models.Model):
     """ references model """
     # reference types enum list
-    JART = 'JA'
-    BOOK = 'BK'
-    DISS = 'DS'
-    THES = 'TS'
-    REPT = 'RS'
-    COMM = 'CM'
-    CHAP = 'CH'
-    PATN = 'PT'
+    JART = 'paper'
+    BOOK = 'book'
+    DISS = 'dissertation'
+    THES = 'thesis'
+    REPT = 'report'
+    COMM = 'communication'
+    CHAP = 'chapter'
+    PATN = 'patent'
     TYPE_CHOICES = [
-        (JART, 'Journal article'),
         (BOOK, 'Book'),
-        (DISS, 'Dissertation'),
-        (THES, 'Thesis'),
-        (REPT, 'Report'),
+        (CHAP, 'Book Chapter'),
         (COMM, 'Communication'),
-        (CHAP, 'Chapter'),
-        (PATN, 'Patent')
+        (DISS, 'Dissertation'),
+        (JART, 'Journal article'),
+        (PATN, 'Patent'),
+        (REPT, 'Report'),
+        (THES, 'Thesis')
     ]
     # fields
     id = models.AutoField(primary_key=True)
