@@ -2,6 +2,12 @@
     display: none;
 }
 
+.browse {
+	display: inline;
+	cursor: pointer;
+	font-family:'Lucida Console', monospace;
+}
+
 mark {
     background-color: lightgreen;
     color: black;

@@ -3,11 +3,12 @@ $(document).ready(function() {
 	// click a button to show a list be letter
 	$(".browse").click(function () {
 		let letter = $(this).attr('data-char');
-		$('.letter').addClass('hidden');
-		$('#' + letter).removeClass('hidden');
+		$('.letter').hide();
+		$('#' + letter).show();
 	});
 	// search for resources via data on the page
 	$("#search").on('input', function () {
+		e.preventDefault();
 		let val = $(this).val();
 		let letters = $(".letter");
 		if (val.length < 3) {
