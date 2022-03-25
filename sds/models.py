@@ -1,5 +1,6 @@
 """ django models file for reports app """
 from django.db import models
+from django.utils.translation import gettext_lazy as _
 
 
 class Authors(models.Model):
@@ -252,25 +253,18 @@ class Quantities(models.Model):
 
 class References(models.Model):
     """ references model """
-    # reference types enum list
-    JART = 'paper'
-    BOOK = 'book'
-    DISS = 'dissertation'
-    THES = 'thesis'
-    REPT = 'report'
-    COMM = 'communication'
-    CHAP = 'chapter'
-    PATN = 'patent'
-    TYPE_CHOICES = [
-        (BOOK, 'Book'),
-        (CHAP, 'Book Chapter'),
-        (COMM, 'Communication'),
-        (DISS, 'Dissertation'),
-        (JART, 'Journal article'),
-        (PATN, 'Patent'),
-        (REPT, 'Report'),
-        (THES, 'Thesis')
-    ]
+
+    class RefTypes(models.TextChoices):
+        # reference types enum list
+        JART = 'paper', _('Journal article')
+        BOOK = 'book', _('Book')
+        DISS = 'dissertation', _('Dissertation')
+        THES = 'thesis', _('Thesis')
+        REPT = 'report', _('Report')
+        COMM = 'communication', _('Communication')
+        CHAP = 'chapter', _('Book Chapter')
+        PATN = 'patent', _('Patent')
+
     # fields
     id = models.AutoField(primary_key=True)
     raw = models.TextField(blank=True, null=True)
@@ -286,7 +280,7 @@ class References(models.Model):
     title = models.CharField(max_length=1024, blank=True, null=True)
     url = models.CharField(max_length=1024, blank=True, null=True)
     doi = models.CharField(max_length=256, blank=True, null=True)
-    type = models.CharField(max_length=15, choices=TYPE_CHOICES, default=JART)
+    type = models.CharField(max_length=15, choices=RefTypes.choices, default='paper')
     comments = models.CharField(max_length=512, blank=True, null=True)
     updated = models.DateTimeField()
 
@@ -355,36 +349,61 @@ class Substances(models.Model):
 
 class SubstancesSystems(models.Model):
     """ substances_systems table model """
+
+    class CompNums(models.TextChoices):
+        # component options enum list
+        UND = 'undefined', _('Change me!')
+        ONE = '1', _('Component 1')
+        TWO = '2', _('Component 2')
+        THR = '3', _('Component 3')
+        FOR = '4', _('Component 4')
+
+    class Roles(models.TextChoices):
+        # component options enum list
+        UND = 'undefined', _('Change me!')
+        SOL = 'solute', _('Solute')
+        SVT = 'solvent', _('Solvent')
+        MUT = 'mutual', _('Mutual solubility')
+
+    # fields
     id = models.AutoField(primary_key=True)
     substance = models.ForeignKey("Substances", models.DO_NOTHING, db_column="substance_id")
     system = models.ForeignKey("Systems", models.DO_NOTHING, db_column="system_id")
-    sysid = models.CharField(max_length=10, blank=True, null=True)
-    subid = models.CharField(max_length=10, blank=True, null=True)
-    sysnmid = models.CharField(max_length=10, blank=True, null=True)
-    component_index = models.IntegerField(blank=True, null=True)
-    issolvent = models.IntegerField(db_column='isSolvent', blank=True, null=True)  # Field name made lowercase.
-    comment = models.TextField()
+    compnum = models.CharField(max_length=9, choices=CompNums.choices, default='undefined')
+    role = models.CharField(max_length=9, choices=Roles.choices, default='undefined')
     updated = models.DateTimeField()
 
     class Meta:
         managed = False
         db_table = 'substances_systems'
+        verbose_name_plural = "subsyss"
+
+    def __str__(self):
+        return f'{self.system.name} ({self.role})'
 
 
 class Systems(models.Model):
     """ systems table model """
+
+    class CompOpts(models.TextChoices):
+        BIN = (2, _('Binary mixture'))
+        TER = (3, _('Ternary mixture'))
+        QTN = (4, _('Quaternary mixture'))
+
+    # fields
     id = models.AutoField(primary_key=True)
-    sysnmid = models.IntegerField(blank=True, null=True)
-    name = models.CharField(max_length=512)
-    volume = models.IntegerField()
-    volume_id = models.SmallIntegerField()
-    components = models.PositiveIntegerField(blank=True, null=True)
-    comments = models.CharField(max_length=256, blank=True, null=True)
+    name = models.CharField(max_length=256, db_collation='utf8_general_ci')
+    vol = models.ForeignKey("Volumes", models.DO_NOTHING, db_column="volume_id")
+    components = models.PositiveIntegerField(choices=CompOpts.choices, default=2)
     updated = models.DateTimeField()
 
     class Meta:
         managed = False
         db_table = 'systems'
+        verbose_name_plural = "systems"
+
+    def __str__(self):
+        return f"{self.name}"
 
 
 class Units(models.Model):
@@ -420,3 +439,6 @@ class Volumes(models.Model):
         managed = False
         db_table = 'volumes'
         verbose_name_plural = "volumes"
+
+    def __str__(self):
+        return f"{self.volume}"
