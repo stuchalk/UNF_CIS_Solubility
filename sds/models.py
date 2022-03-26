@@ -196,17 +196,15 @@ class Identifiers(models.Model):
     # reference types enum list
     ISTR = 'inchi'
     IKEY = 'inchikey'
-    CASR = 'casrn'
     CSML = 'smiles'
     TYPE_CHOICES = [
         (ISTR, 'InChI'),
         (IKEY, 'InChIKey'),
-        (CASR, 'CAS Registry Number'),
         (CSML, 'Canonical SMILES')
     ]
     id = models.AutoField(primary_key=True)
     substance = models.ForeignKey("Substances", models.DO_NOTHING, db_column="substance_id")
-    type = models.CharField(max_length=12, choices=TYPE_CHOICES, default=CASR)
+    type = models.CharField(max_length=12, choices=TYPE_CHOICES, default=ISTR)
     value = models.CharField(max_length=1024)
     updated = models.DateTimeField()
 
@@ -255,7 +253,7 @@ class References(models.Model):
     """ references model """
 
     class RefTypes(models.TextChoices):
-        # reference types enum list
+        """ reference types enum list """
         JART = 'paper', _('Journal article')
         BOOK = 'book', _('Book')
         DISS = 'dissertation', _('Dissertation')
@@ -351,7 +349,7 @@ class SubstancesSystems(models.Model):
     """ substances_systems table model """
 
     class CompNums(models.TextChoices):
-        # component options enum list
+        """ component number options enum list """
         UND = 'undefined', _('Change me!')
         ONE = '1', _('Component 1')
         TWO = '2', _('Component 2')
@@ -359,7 +357,7 @@ class SubstancesSystems(models.Model):
         FOR = '4', _('Component 4')
 
     class Roles(models.TextChoices):
-        # component options enum list
+        """ role options enum list """
         UND = 'undefined', _('Change me!')
         SOL = 'solute', _('Solute')
         SVT = 'solvent', _('Solvent')
@@ -385,7 +383,8 @@ class SubstancesSystems(models.Model):
 class Systems(models.Model):
     """ systems table model """
 
-    class CompOpts(models.TextChoices):
+    class CompOpts(models.IntegerChoices):
+        """ component options enum list """
         BIN = (2, _('Binary mixture'))
         TER = (3, _('Ternary mixture'))
         QTN = (4, _('Quaternary mixture'))

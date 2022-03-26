@@ -5,7 +5,7 @@
 {% block content %}
 <div class="row">
     <div class="col-12 mb-2 mt-2"><h3>System: {{ sys.name }}</h3></div>
-	<div class="col-md-5">
+	<div class="col-xs-3">
 		<div class="card card-default">
 			<div class="card-header h4">Substances</div>
 			<div class="card-body clearfix">
@@ -41,16 +41,18 @@
                                 readyFunction: jmol_isReady
                             }
                         </script>
-                        <div class="col-xs-12 text-center">
+                        <div class="col-xs-12">
+                            <p class="font-weight-bold{% if not forloop.first %} mt-3{% endif %}">
+                                Component {{ index }}: <a href="/substances/view/{{ sub.0 }}">{{ sub.1 }}</a>
+                            </p>
                             <div id="jsmol{{ index }}"></div>
-                            <p><a href="/substances/view/{{ sub.0 }}">{{ sub.1 }}</a></p>
                         </div>
                     {% endwith %}
                 {% endfor %}
 			</div>
 		</div>
 	</div>
-	<div class="col-md-7">
+	<div class="col-md-9">
         {% if evals|length > 0 %}
             <div class="card card-default mb-3">
                 <div class="card-header h4">Evaluation</div>

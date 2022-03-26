@@ -316,7 +316,7 @@ class Migration(migrations.Migration):
             name='SubstancesSystems',
             fields=[
                 ('id', models.AutoField(primary_key=True, serialize=False)),
-                ('compnum', models.CharField(choices=[('undefined', 'Change me!'), ('1', 'Component 1'), ('2', 'Component 2'), ('3', 'Component 3'), ('4', 'Component 4')], default='undefined', max_length=9)),
+                ('compnum', models.CharField(choices=[('undefined', 'Change me!'), (1, 'Component 1'), (2, 'Component 2'), (3, 'Component 3'), (4, 'Component 4')], default='undefined', max_length=9)),
                 ('role', models.CharField(choices=[('undefined', 'Change me!'), ('solute', 'Solute'), ('solvent', 'Solvent'), ('mutual', 'Mutual solubility')], default='undefined', max_length=9)),
                 ('updated', models.DateTimeField()),
             ],
@@ -331,7 +331,7 @@ class Migration(migrations.Migration):
             fields=[
                 ('id', models.AutoField(primary_key=True, serialize=False)),
                 ('name', models.CharField(db_collation='utf8_general_ci', max_length=256)),
-                ('components', models.PositiveIntegerField(choices=[('2', 'Binary mixture'), ('3', 'Ternary mixture'), ('4', 'Quaternary mixture')], default=2)),
+                ('components', models.PositiveIntegerField(choices=[(2, 'Binary mixture'), (3, 'Ternary mixture'), (4, 'Quaternary mixture')], default=2)),
                 ('updated', models.DateTimeField()),
             ],
             options={

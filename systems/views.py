@@ -1,3 +1,4 @@
+""" view functions for the systems table """
 import urllib.error
 import urllib.request
 from django.shortcuts import render
@@ -22,7 +23,7 @@ def view(request, sysid=0):
     """ show data about a specific system """
     sys = Systems.objects.get(id=sysid)
     # substances that the system is part of
-    subids = sys.substancessystems_set.values('substance_id')
+    subids = sys.substancessystems_set.values('substance_id').order_by('compnum')
     sublst = Substances.objects.all().filter(id__in=subids, identifiers__type='inchikey').\
         values_list('id', 'name', 'identifiers__value')
     subs = []  # this will hold the names and urls to get the sdf file for each substance
