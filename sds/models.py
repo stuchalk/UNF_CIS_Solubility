@@ -12,7 +12,7 @@ class Authors(models.Model):
     address = models.CharField(max_length=256, blank=True, null=True)
     email = models.CharField(max_length=64, blank=True, null=True)
     orcid = models.CharField(max_length=20, blank=True, null=True)
-    updated = models.DateTimeField()
+    updated = models.DateTimeField(auto_now_add=True)
 
     class Meta:
         managed = False
@@ -25,12 +25,18 @@ class Authors(models.Model):
 
 class AuthorsReports(models.Model):
     """ authors_reports table model """
+
+    class RoleOpts(models.TextChoices):
+        """ component options enum list """
+        EV = ('evaluator', _('Critical evaluator'))
+        CM = ('compiler', _('Compiler'))
+
     id = models.AutoField(primary_key=True)
     author = models.ForeignKey("Authors", models.DO_NOTHING, db_column="author_id")
     report = models.ForeignKey("Reports", models.DO_NOTHING, db_column="report_id")
-    role = models.CharField(max_length=9)
+    role = models.CharField(max_length=9, choices=RoleOpts.choices, default='compiler')
     order = models.PositiveIntegerField()
-    updated = models.DateTimeField()
+    updated = models.DateTimeField(auto_now_add=True)
 
     class Meta:
         managed = False
@@ -50,7 +56,7 @@ class Chemicals(models.Model):
     purity = models.CharField(max_length=128, blank=True, null=True)
     compnum = models.IntegerField(blank=True, null=True)
     comments = models.CharField(max_length=255, blank=True, null=True)
-    updated = models.DateTimeField()
+    updated = models.DateTimeField(auto_now_add=True)
 
     class Meta:
         managed = False
@@ -79,7 +85,7 @@ class Conditions(models.Model):
     heading = models.CharField(max_length=50, blank=True, null=True)
     note = models.TextField(blank=True, null=True)
     exact = models.IntegerField()
-    updated = models.DateTimeField()
+    updated = models.DateTimeField(auto_now_add=True)
 
     class Meta:
         managed = False
@@ -108,7 +114,7 @@ class Data(models.Model):
     component = models.CharField(max_length=50, blank=True, null=True)
     heading = models.CharField(max_length=50, blank=True, null=True)
     note = models.TextField()
-    updated = models.DateTimeField()
+    updated = models.DateTimeField(auto_now_add=True)
 
     class Meta:
         managed = False
@@ -126,7 +132,7 @@ class Datapoints(models.Model):
     sysid_tablenum_rownum = models.CharField(max_length=32, blank=True, null=True)
     rownum = models.SmallIntegerField(blank=True, null=True)
     row_index = models.SmallIntegerField(blank=True, null=True)
-    updated = models.DateTimeField()
+    updated = models.DateTimeField(auto_now_add=True)
 
     class Meta:
         managed = False
@@ -142,7 +148,7 @@ class Dataseries(models.Model):
     sysid_tablenum = models.CharField(max_length=10, blank=True, null=True)
     type = models.CharField(max_length=20)
     heading = models.CharField(max_length=512)
-    updated = models.DateTimeField()
+    updated = models.DateTimeField(auto_now_add=True)
 
     class Meta:
         managed = False
@@ -159,7 +165,7 @@ class Datasets(models.Model):
     system = models.ForeignKey("Systems", models.DO_NOTHING, db_column="system_id")
     eval = models.IntegerField(blank=True, null=True)
     comments = models.CharField(max_length=256, blank=True, null=True)
-    updated = models.DateTimeField()
+    updated = models.DateTimeField(auto_now_add=True)
 
     class Meta:
         managed = False
@@ -176,7 +182,7 @@ class Evaluations(models.Model):
     sysid = models.CharField(max_length=10, db_collation='utf8_general_ci', blank=True, null=True)
     data = models.IntegerField()
     date = models.CharField(max_length=64, blank=True, null=True)
-    updated = models.IntegerField()
+    updated = models.DateTimeField(auto_now_add=True)
 
     class Meta:
         managed = False
@@ -191,7 +197,7 @@ class EvaluationsReferences(models.Model):
     reference_id = models.IntegerField(blank=True, null=True)
     refid = models.CharField(max_length=50, blank=True, null=True)
     citenum = models.CharField(max_length=8, blank=True, null=True)
-    updated = models.DateTimeField()
+    updated = models.DateTimeField(auto_now_add=True)
 
     class Meta:
         managed = False
@@ -213,7 +219,7 @@ class Identifiers(models.Model):
     substance = models.ForeignKey("Substances", models.DO_NOTHING, db_column="substance_id")
     type = models.CharField(max_length=12, choices=TYPE_CHOICES, default=ISTR)
     value = models.CharField(max_length=1024)
-    updated = models.DateTimeField()
+    updated = models.DateTimeField(auto_now_add=True)
 
     class Meta:
         managed = False
@@ -233,7 +239,7 @@ class Properties(models.Model):
     definition = models.CharField(max_length=512, db_collation='utf8_general_ci')
     source = models.CharField(max_length=256, db_collation='utf8_general_ci')
     quantity = models.ForeignKey("Quantities", models.DO_NOTHING, db_column="quantity_id")
-    updated = models.DateTimeField()
+    updated = models.DateTimeField(auto_now_add=True)
 
     class Meta:
         managed = False
@@ -249,7 +255,7 @@ class Quantities(models.Model):
     siunit = models.ForeignKey("Units", models.DO_NOTHING, db_column="si_unit")
     dim_symbol = models.CharField(max_length=16, db_collation='utf8_general_ci')
     comment = models.CharField(max_length=512, db_collation='utf8_general_ci')
-    updated = models.DateTimeField()
+    updated = models.DateTimeField(auto_now_add=True)
 
     class Meta:
         managed = False
@@ -287,7 +293,7 @@ class References(models.Model):
     doi = models.CharField(max_length=256, blank=True, null=True)
     type = models.CharField(max_length=15, choices=RefTypes.choices, default='paper')
     comments = models.CharField(max_length=512, blank=True, null=True)
-    updated = models.DateTimeField()
+    updated = models.DateTimeField(auto_now_add=True)
 
     class Meta:
         managed = False
@@ -314,7 +320,7 @@ class Reports(models.Model):
     variables = models.CharField(max_length=512, blank=True, null=True)
     method = models.TextField(blank=True, null=True)
     comments = models.CharField(max_length=1024)
-    updated = models.DateTimeField()
+    updated = models.DateTimeField(auto_now_add=True)
 
     class Meta:
         managed = False
@@ -337,7 +343,7 @@ class ReferencesReports(models.Model):
     reference = models.ForeignKey("References", models.DO_NOTHING, db_column="reference_id")
     report = models.ForeignKey("Reports", models.DO_NOTHING, db_column="report_id")
     type = models.CharField(max_length=12, choices=TypeOpts.choices, default='original')
-    updated = models.DateTimeField(blank=True, null=True)
+    updated = models.DateTimeField(auto_now_add=True)
 
     class Meta:
         managed = False
@@ -356,7 +362,7 @@ class Substances(models.Model):
     formula = models.CharField(max_length=1024, blank=True, null=True)
     formula_html = models.CharField(max_length=1024, blank=True, null=True)
     molweight = models.FloatField(blank=True, null=True)
-    updated = models.DateTimeField()
+    updated = models.DateTimeField(auto_now_add=True)
 
     class Meta:
         managed = False
@@ -391,7 +397,7 @@ class SubstancesSystems(models.Model):
     system = models.ForeignKey("Systems", models.DO_NOTHING, db_column="system_id")
     compnum = models.CharField(max_length=9, choices=CompNums.choices, default='undefined')
     role = models.CharField(max_length=9, choices=Roles.choices, default='undefined')
-    updated = models.DateTimeField()
+    updated = models.DateTimeField(auto_now_add=True)
 
     class Meta:
         managed = False
@@ -416,7 +422,7 @@ class Systems(models.Model):
     name = models.CharField(max_length=256, db_collation='utf8_general_ci')
     vol = models.ForeignKey("Volumes", models.DO_NOTHING, db_column="volume_id")
     components = models.PositiveIntegerField(choices=CompOpts.choices, default=2)
-    updated = models.DateTimeField()
+    updated = models.DateTimeField(auto_now_add=True)
 
     class Meta:
         managed = False
@@ -439,7 +445,7 @@ class Units(models.Model):
     factor = models.FloatField()
     si_equivalent = models.CharField(max_length=32, blank=True, null=True)
     unitstring = models.CharField(max_length=32, blank=True, null=True)
-    updated = models.DateTimeField()
+    updated = models.DateTimeField(auto_now_add=True)
 
     class Meta:
         managed = False
@@ -454,7 +460,7 @@ class Volumes(models.Model):
     title = models.CharField(max_length=256)
     authors = models.CharField(max_length=512)
     url = models.CharField(max_length=128)
-    updated = models.DateTimeField()
+    updated = models.DateTimeField(auto_now_add=True)
 
     class Meta:
         managed = False
