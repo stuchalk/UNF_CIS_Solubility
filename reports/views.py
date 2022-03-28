@@ -15,9 +15,9 @@ def view(request, repid=0):
     rep = Reports.objects.get(id=repid)
     report = ReportSerializer(rep)
     data = report.data
-    sysid = data['sysid']
-    pub = data['pub']
-    sys = data['set'][0]['system']
+    sysid = data['sys']
+    vol = data['vol']
+    sys = data['set'][0]['sys']
     subs = []
     for temp in sys['subsys']:
         if temp['sysid'] == sysid:
@@ -30,7 +30,7 @@ def view(request, repid=0):
     chems = data['chem']
     refs = data['refs']
     cmplrs = data['authrep']
-    return render(request, "../templates/reports/view.html", {'sys': sys, 'pub': pub, 'subs': subs,
+    return render(request, "../templates/reports/view.html", {'sys': sys, 'vol': vol, 'subs': subs,
                                                               'method': method, 'chems': chems, 'refs': refs,
                                                               'cmplrs': cmplrs})
 

@@ -132,7 +132,7 @@ class SystemSerializer(serializers.ModelSerializer):
         """ settings """
         model = Systems
         fields = '__all__'
-        depth = 0
+        depth = 2
 
 
 class DatasetSerializer(serializers.ModelSerializer):

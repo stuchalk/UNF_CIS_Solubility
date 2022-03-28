@@ -11,11 +11,16 @@ class Authors(models.Model):
     institution = models.CharField(max_length=256, blank=True, null=True)
     address = models.CharField(max_length=256, blank=True, null=True)
     email = models.CharField(max_length=64, blank=True, null=True)
+    orcid = models.CharField(max_length=20, blank=True, null=True)
     updated = models.DateTimeField()
 
     class Meta:
         managed = False
         db_table = 'authors'
+        verbose_name_plural = "authors"
+
+    def __str__(self):
+        return f"{self.name}"
 
 
 class AuthorsReports(models.Model):
@@ -23,15 +28,17 @@ class AuthorsReports(models.Model):
     id = models.AutoField(primary_key=True)
     author = models.ForeignKey("Authors", models.DO_NOTHING, db_column="author_id")
     report = models.ForeignKey("Reports", models.DO_NOTHING, db_column="report_id")
-    name = models.CharField(max_length=255)
-    sysid = models.CharField(max_length=20)
     role = models.CharField(max_length=9)
-    order = models.PositiveIntegerField(blank=True, null=True)
+    order = models.PositiveIntegerField()
     updated = models.DateTimeField()
 
     class Meta:
         managed = False
         db_table = 'authors_reports'
+        verbose_name_plural = "author report (joins)"
+
+    def __str__(self):
+        return f"{self.author.name} - Vol. {self.report.vol}, page {self.report.page}"
 
 
 class Chemicals(models.Model):
@@ -288,42 +295,54 @@ class References(models.Model):
         verbose_name_plural = "references"
 
     def __str__(self):
-        return f"{self.title}"
+        return f"{self.raw}"
 
 
 class Reports(models.Model):
     """ reports table model """
+
+    class TypeOpts(models.TextChoices):
+        """ component options enum list """
+        EV = ('evaluation', _('System evaluation'))
+        CM = ('compilation', _('Compilation'))
+
     id = models.AutoField(primary_key=True)
     vol = models.ForeignKey("Volumes", models.DO_NOTHING, db_column="volume_id")
-    sysid = models.CharField(max_length=10)
-    eval = models.IntegerField(blank=True, null=True)
-    count = models.SmallIntegerField()
+    page = models.CharField(max_length=8)
+    sys = models.ForeignKey("Systems", models.DO_NOTHING, db_column="system_id")
+    type = models.CharField(max_length=11, choices=TypeOpts.choices, default='compilation')
     variables = models.CharField(max_length=512, blank=True, null=True)
     method = models.TextField(blank=True, null=True)
-    remarks = models.TextField(blank=True, null=True)
-    title = models.CharField(max_length=256)
-    page = models.CharField(max_length=8)
-    comment = models.CharField(max_length=2048)
+    comments = models.CharField(max_length=1024)
     updated = models.DateTimeField()
 
     class Meta:
         managed = False
         db_table = 'reports'
+        verbose_name_plural = "reports"
+
+    def __str__(self):
+        return f'{self.sys.name} (Vol. {self.vol.volume}, page {self.page})'
 
 
 class ReferencesReports(models.Model):
     """ reports references_reports join table model """
+
+    class TypeOpts(models.TextChoices):
+        """ component options enum list """
+        EV = ('original', _('Original Measurements Paper'))
+        CM = ('supplmental', _('Method Reference Paper'))
+
     id = models.AutoField(primary_key=True)
     reference = models.ForeignKey("References", models.DO_NOTHING, db_column="reference_id")
     report = models.ForeignKey("Reports", models.DO_NOTHING, db_column="report_id")
-    # reference_id = models.IntegerField(blank=True, null=True)
-    # report_id = models.IntegerField(blank=True, null=True)
-    role = models.CharField(max_length=12, blank=True, null=True)
-    reference_num = models.SmallIntegerField(blank=True, null=True)
+    type = models.CharField(max_length=12, choices=TypeOpts.choices, default='original')
+    updated = models.DateTimeField(blank=True, null=True)
 
     class Meta:
         managed = False
         db_table = 'references_reports'
+        verbose_name_plural = "refreps"
 
 
 class Substances(models.Model):
@@ -400,6 +419,7 @@ class Systems(models.Model):
         managed = False
         db_table = 'systems'
         verbose_name_plural = "systems"
+
 
     def __str__(self):
         return f"{self.name}"

@@ -36,12 +36,10 @@ def view(request, sysid=0):
             url = pcpath + sub[2] + '/SDF?record_type=2d'
         subs.append(tuple((sub[0], sub[1], url)))
 
-    # datasets this system is part of
-    rptids = Datasets.objects.all().filter(system_id=sysid).values_list('report_id', flat=True)
     # eval that this system is analyzed in
-    evals = Reports.objects.all().filter(id__in=rptids, eval=1).values('id')
+    evals = Reports.objects.all().filter(sys=sysid, type='evaluation').values('id')
     # reports this system
-    rpts = Reports.objects.all().filter(id__in=rptids, eval=0).values('id', 'referencesreports__reference__raw')
+    rpts = Reports.objects.all().filter(sys=sysid, type='compilation').values('id', 'referencesreports__reference__raw')
     # send data to template
     return render(request, "../templates/systems/view.html",
                   {'sys': sys, 'subs': subs, 'evals': evals, 'rpts': rpts})
