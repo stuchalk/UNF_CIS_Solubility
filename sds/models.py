@@ -35,7 +35,7 @@ class AuthorsReports(models.Model):
     class Meta:
         managed = False
         db_table = 'authors_reports'
-        verbose_name_plural = "author report (joins)"
+        verbose_name_plural = "authors/reports (join)"
 
     def __str__(self):
         return f"{self.author.name} - Vol. {self.report.vol}, page {self.report.page}"
@@ -44,21 +44,21 @@ class AuthorsReports(models.Model):
 class Chemicals(models.Model):
     """ chemicals table model """
     id = models.AutoField(primary_key=True)
-    description = models.TextField(blank=True, null=True)
     substance = models.ForeignKey("Substances", models.DO_NOTHING, db_column="substance_id")
-    subid = models.CharField(max_length=50)
-    sys_id = models.CharField(max_length=50, blank=True, null=True)
-    rep = models.ForeignKey("Reports", models.DO_NOTHING, db_column="report_id")
+    report = models.ForeignKey("Reports", models.DO_NOTHING, db_column="report_id")
+    supplier = models.CharField(max_length=128, blank=True, null=True)
+    purity = models.CharField(max_length=128, blank=True, null=True)
     compnum = models.IntegerField(blank=True, null=True)
-    name = models.CharField(max_length=128)
     comments = models.CharField(max_length=255, blank=True, null=True)
-    notes = models.CharField(max_length=255)
-    compnumcheck = models.IntegerField()
     updated = models.DateTimeField()
 
     class Meta:
         managed = False
         db_table = 'chemicals'
+        verbose_name_plural = "chemicals"
+
+    def __str__(self):
+        return f'{self.substance.name} - Vol. {self.report.vol.volume}, page {self.report.page}'
 
 
 class Conditions(models.Model):
@@ -342,13 +342,16 @@ class ReferencesReports(models.Model):
     class Meta:
         managed = False
         db_table = 'references_reports'
-        verbose_name_plural = "refreps"
+        verbose_name_plural = "refs/reports (join)"
+
+    def __str__(self):
+        return f"{self.reference.raw} - Vol. {self.report.vol}, page {self.report.page}"
 
 
 class Substances(models.Model):
     """ substances table model """
     id = models.AutoField(primary_key=True)
-    casno = models.CharField(max_length=50, blank=True, null=True)
+    casno = models.CharField(max_length=50, blank=True, null=True, unique=True)
     name = models.CharField(max_length=256, blank=True, null=True)
     formula = models.CharField(max_length=1024, blank=True, null=True)
     formula_html = models.CharField(max_length=1024, blank=True, null=True)
@@ -393,7 +396,7 @@ class SubstancesSystems(models.Model):
     class Meta:
         managed = False
         db_table = 'substances_systems'
-        verbose_name_plural = "subsyss"
+        verbose_name_plural = "subs/systems (join)"
 
     def __str__(self):
         return f'{self.system.name} ({self.role})'
@@ -419,7 +422,6 @@ class Systems(models.Model):
         managed = False
         db_table = 'systems'
         verbose_name_plural = "systems"
-
 
     def __str__(self):
         return f"{self.name}"
