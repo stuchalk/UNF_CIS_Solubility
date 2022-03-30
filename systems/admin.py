@@ -9,7 +9,7 @@ class SystemsAdmin(admin.ModelAdmin):
     """ systems table admin config """
     list_display = ('name', 'components', 'volume')
     ordering = ('name',)
-    search_fields = ('name', 'volume')
+    search_fields = ('name',)
 
 
 @admin.register(SubstancesSystems)
