@@ -89,7 +89,7 @@ class Conditions(models.Model):
         verbose_name_plural = "conditions"
 
     def __str__(self):
-        return f"{self.quantity.name}: {self.text} {self.unit.name}"
+        return f"{self.quantity.name}: {self.text} {self.unit.symbol}"
 
 
 class Data(models.Model):

@@ -19,32 +19,32 @@ class DatasetsAdmin(admin.ModelAdmin):
 class DataseriesAdmin(admin.ModelAdmin):
     list_display = ('heading', 'seriesnum', 'dataset')
     ordering = ('heading', 'dataset')
-    search_fields = ('heading', )
+    search_fields = ('heading',)
 
 
 @admin.register(Datapoints)
 class DatapointsAdmin(admin.ModelAdmin):
     list_display = ('title', 'dataset', 'dataseries')
     ordering = ('dataset', 'dataseries')
-    search_fields = ('title', )
+    search_fields = ('title',)
 
 
-@admin.register(Quantities)
-class QuantitiesAdmin(admin.ModelAdmin):
-    list_display = ('name', 'symbol', 'baseunit')
-    ordering = ('name',)
-    search_fields = ('name', )
-
-
-@admin.register(Units)
-class UnitsAdmin(admin.ModelAdmin):
-    list_display = ('name', 'symbol', 'type')
-    ordering = ('name',)
-    search_fields = ('name', )
-
-
-@admin.register(Conditions)
-class ConditionsAdmin(admin.ModelAdmin):
-    list_display = ('quantity', 'text', 'unit')
-    ordering = ('quantity',)
-    search_fields = ('quantity', )
+# @admin.register(Quantities)
+# class QuantitiesAdmin(admin.ModelAdmin):
+#     list_display = ('name', 'symbol', 'baseunit')
+#     ordering = ('name',)
+#     search_fields = ('name',)
+#
+#
+# @admin.register(Units)
+# class UnitsAdmin(admin.ModelAdmin):
+#     list_display = ('name', 'symbol', 'type')
+#     ordering = ('name',)
+#     search_fields = ('name',)
+#
+#
+# @admin.register(Conditions)
+# class ConditionsAdmin(admin.ModelAdmin):
+#     list_display = ('quantity',)
+#     ordering = ('quantity',)
+#     search_fields = ('quantity',)
