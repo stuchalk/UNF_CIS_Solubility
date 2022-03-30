@@ -13,17 +13,6 @@ class QuantitySerializer(serializers.ModelSerializer):
         depth = 1
 
 
-class PropertySerializer(serializers.ModelSerializer):
-    """ property serializer """
-    quantity = QuantitySerializer(many=False, required=True)
-
-    class Meta:
-        """ settings """
-        model = Properties
-        fields = '__all__'
-        depth = 1
-
-
 class UnitSerializer(serializers.ModelSerializer):
     """ unit serializer """
 
@@ -36,7 +25,7 @@ class UnitSerializer(serializers.ModelSerializer):
 
 class ConditionSerializer(serializers.ModelSerializer):
     """ condition serializer """
-    property = PropertySerializer(many=False, required=True)
+    quantity = QuantitySerializer(many=False, required=True)
     unit = UnitSerializer(many=False, required=True)
 
     class Meta:
@@ -48,7 +37,7 @@ class ConditionSerializer(serializers.ModelSerializer):
 
 class DataSerializer(serializers.ModelSerializer):
     """ data serializer """
-    property = PropertySerializer(many=False, required=True)
+    quantity = QuantitySerializer(many=False, required=True)
     unit = UnitSerializer(many=False, required=True)
 
     class Meta:

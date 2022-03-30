@@ -1,7 +1,6 @@
 """ django models file for reports app """
 from django.db import models
 from django.utils.translation import gettext_lazy as _
-from django.db.models.functions import Substr
 
 
 class Authors(models.Model):
@@ -45,7 +44,7 @@ class AuthorsReports(models.Model):
         verbose_name_plural = "authors/reports (join)"
 
     def __str__(self):
-        return f"{self.author.name} - Vol. {self.report.vol}, page {self.report.page}"
+        return f"{self.author.name} - Vol. {self.report.volume}, page {self.report.page}"
 
 
 class Chemicals(models.Model):
@@ -65,27 +64,23 @@ class Chemicals(models.Model):
         verbose_name_plural = "chemicals"
 
     def __str__(self):
-        return f'{self.substance.name} - Vol. {self.report.vol.volume}, page {self.report.page}'
+        return f'{self.substance.name} - Vol. {self.report.volume.volume}, page {self.report.page}'
 
 
 class Conditions(models.Model):
     """ conditions table model """
     id = models.AutoField(primary_key=True)
-    datapoint = models.ForeignKey("Datapoints", models.DO_NOTHING, db_column="datapoint_id")
-    sysid_tablenum_rownum = models.CharField(max_length=32, blank=True, null=True)
-    dataseries = models.ForeignKey("Dataseries", models.DO_NOTHING, db_column="dataseries_id")
-    sysid_tablenum = models.CharField(max_length=15, blank=True, null=True)
-    property = models.ForeignKey("Properties", models.DO_NOTHING, db_column="property_id")
-    unit = models.ForeignKey("Units", models.DO_NOTHING, db_column="unit_id")
+    datapoint = models.ForeignKey("Datapoints", models.DO_NOTHING, db_column="datapoint_id", blank=True)
+    dataseries = models.ForeignKey("Dataseries", models.DO_NOTHING, db_column="dataseries_id", blank=True)
+    quantity = models.ForeignKey("Quantities", models.DO_NOTHING, db_column="quantity_id")
+    text = models.CharField(max_length=16)
     significand = models.CharField(max_length=16)
     exponent = models.IntegerField()
     error = models.CharField(max_length=16, blank=True, null=True)
     error_type = models.CharField(max_length=8, blank=True, null=True)
-    accuracy = models.IntegerField()
-    component = models.CharField(max_length=50, blank=True, null=True)
-    heading = models.CharField(max_length=50, blank=True, null=True)
-    note = models.TextField(blank=True, null=True)
-    exact = models.IntegerField()
+    unit = models.ForeignKey("Units", models.DO_NOTHING, db_column="unit_id")
+    accuracy = models.PositiveIntegerField()
+    compnum = models.CharField(max_length=50, blank=True, null=True)
     updated = models.DateTimeField(auto_now_add=True)
 
     class Meta:
@@ -93,28 +88,24 @@ class Conditions(models.Model):
         db_table = 'conditions'
         verbose_name_plural = "conditions"
 
+    def __str__(self):
+        return f"{self.quantity.name}: {self.text} {self.unit.name}"
+
 
 class Data(models.Model):
     """ data table model """
     id = models.AutoField(primary_key=True)
     datapoint = models.ForeignKey("Datapoints", models.DO_NOTHING, db_column="datapoint_id")
-    property = models.ForeignKey("Properties", models.DO_NOTHING, db_column="property_id")
+    quantity = models.ForeignKey("Quantities", models.DO_NOTHING, db_column="quantity_id")
     unit = models.ForeignKey("Units", models.DO_NOTHING, db_column="unit_id")
-    sysid_tablenum_rownum = models.CharField(max_length=32)
-    str_property = models.CharField(max_length=512)
     dataset = models.ForeignKey("Datasets", models.DO_NOTHING, db_column="dataset_id")
     dataseries = models.ForeignKey("Dataseries", models.DO_NOTHING, db_column="dataseries_id")
-    sysid_tablenum = models.CharField(max_length=15)
-    dataformat = models.CharField(max_length=5)
     significand = models.TextField()
     exponent = models.TextField()
     error = models.TextField()
     error_type = models.CharField(max_length=8)
-    unit_string = models.CharField(max_length=16, blank=True, null=True)
     accuracy = models.TextField()
-    exact = models.IntegerField()
     component = models.CharField(max_length=50, blank=True, null=True)
-    heading = models.CharField(max_length=50, blank=True, null=True)
     note = models.TextField()
     updated = models.DateTimeField(auto_now_add=True)
 
@@ -144,11 +135,18 @@ class Datapoints(models.Model):
 
 class Dataseries(models.Model):
     """ dataseries table model """
+
+    class TypeOpts(models.TextChoices):
+        """ component options enum list """
+        IS = ('independent set', _('Independent Data Series'))
+        SM = ('spectrum', _('Instrument Spectrum'))
+        CR = ('chromatogram', _('LC/GC/IC/SFC Chromatogram'))
+
     id = models.AutoField(primary_key=True)
     heading = models.CharField(max_length=128)
     dataset = models.ForeignKey("Datasets", models.DO_NOTHING, db_column="dataset_id")
     seriesnum = models.PositiveIntegerField()
-    type = models.CharField(max_length=20, db_collation='utf8_general_ci')
+    type = models.CharField(max_length=20, choices=TypeOpts.choices, default='independent set')
     updated = models.DateTimeField(auto_now_add=True)
 
     class Meta:
@@ -176,38 +174,6 @@ class Datasets(models.Model):
 
     def __str__(self):
         return f"{self.title}"
-
-
-class Evaluations(models.Model):
-    """ evaluations table model """
-    id = models.SmallAutoField(primary_key=True)
-    evalid = models.CharField(max_length=10, db_collation='utf8_general_ci', blank=True, null=True)
-    report_id = models.IntegerField()
-    title = models.CharField(max_length=256)
-    raw = models.TextField(db_collation='utf8_general_ci', blank=True, null=True)
-    sysid = models.CharField(max_length=10, db_collation='utf8_general_ci', blank=True, null=True)
-    data = models.IntegerField()
-    date = models.CharField(max_length=64, blank=True, null=True)
-    updated = models.DateTimeField(auto_now_add=True)
-
-    class Meta:
-        managed = False
-        db_table = 'evaluations'
-
-
-class EvaluationsReferences(models.Model):
-    """ evaluations_references table model """
-    id = models.AutoField(primary_key=True)
-    evaluation_id = models.SmallIntegerField(blank=True, null=True)
-    evalid = models.CharField(max_length=50, blank=True, null=True)
-    reference_id = models.IntegerField(blank=True, null=True)
-    refid = models.CharField(max_length=50, blank=True, null=True)
-    citenum = models.CharField(max_length=8, blank=True, null=True)
-    updated = models.DateTimeField(auto_now_add=True)
-
-    class Meta:
-        managed = False
-        db_table = 'evaluations_references'
 
 
 class Identifiers(models.Model):
@@ -253,36 +219,23 @@ class Journals(models.Model):
         return f'{self.abbrev}'
 
 
-class Properties(models.Model):
-    """ properties table model """
-    id = models.SmallAutoField(primary_key=True)
-    name = models.CharField(max_length=256, db_collation='utf8_general_ci')
-    symbol = models.CharField(max_length=64, db_collation='utf8_general_ci')
-    datafield = models.CharField(max_length=255, blank=True, null=True)
-    definition = models.CharField(max_length=512, db_collation='utf8_general_ci')
-    source = models.CharField(max_length=256, db_collation='utf8_general_ci')
-    quantity = models.ForeignKey("Quantities", models.DO_NOTHING, db_column="quantity_id")
-    updated = models.DateTimeField(auto_now_add=True)
-
-    class Meta:
-        managed = False
-        db_table = 'properties'
-
-
 class Quantities(models.Model):
     """ quantities table model """
     id = models.SmallAutoField(primary_key=True)
-    name = models.CharField(max_length=32, db_collation='utf8_general_ci')
-    symbol = models.CharField(max_length=8, db_collation='utf8_general_ci')
-    description = models.CharField(max_length=512, db_collation='utf8_general_ci')
-    siunit = models.ForeignKey("Units", models.DO_NOTHING, db_column="si_unit")
-    dim_symbol = models.CharField(max_length=16, db_collation='utf8_general_ci')
-    comment = models.CharField(max_length=512, db_collation='utf8_general_ci')
+    name = models.CharField(max_length=32)
+    symbol = models.CharField(max_length=8)
+    description = models.CharField(max_length=512)
+    baseunit = models.ForeignKey("Units", models.DO_NOTHING, db_column="baseunit_id", blank=True, null=True)
+    comment = models.CharField(max_length=512, blank=True)
     updated = models.DateTimeField(auto_now_add=True)
 
     class Meta:
         managed = False
         db_table = 'quantities'
+        verbose_name_plural = "quantities"
+
+    def __str__(self):
+        return f"{self.name}"
 
 
 class References(models.Model):
@@ -303,7 +256,6 @@ class References(models.Model):
     id = models.AutoField(primary_key=True)
     citation = models.CharField(max_length=400, blank=True, null=True)
     journal = models.ForeignKey("Journals", models.DO_NOTHING, db_column="journal_id")
-    # journal = models.CharField(max_length=128, blank=True, null=True)
     publisher = models.CharField(max_length=256, blank=True, null=True)
     abbrev = models.CharField(max_length=128, blank=True, null=True)
     authors = models.CharField(max_length=2048, blank=True, null=True)
@@ -375,7 +327,7 @@ class ReferencesReports(models.Model):
         verbose_name_plural = "refs/reports (join)"
 
     def __str__(self):
-        return f"{self.reference.raw} - Vol. {self.report.vol}, page {self.report.page}"
+        return f"{self.reference.citation} - Vol. {self.report.volume}, page {self.report.page}"
 
 
 class Substances(models.Model):
@@ -443,7 +395,7 @@ class Systems(models.Model):
 
     # fields
     id = models.AutoField(primary_key=True)
-    name = models.CharField(max_length=256, db_collation='utf8_general_ci')
+    name = models.CharField(max_length=256)
     volume = models.ForeignKey("Volumes", models.DO_NOTHING, db_column="volume_id")
     components = models.PositiveIntegerField(choices=CompOpts.choices, default=2)
     updated = models.DateTimeField(auto_now_add=True)
@@ -459,21 +411,30 @@ class Systems(models.Model):
 
 class Units(models.Model):
     """ unit table model """
+
+    class TypeOpts(models.TextChoices):
+        """ component options enum list """
+        SI = ('si', _('SI Base Unit'))
+        SD = ('siderived', _('SI Derived Unit'))
+        SA = ('siallowed', _('SI Allowed Unit'))
+        CG = ('cgs', _('Centimetre–gram–second Unit System'))
+        IM = ('imperial', _('Imperial Unit System'))
+
     id = models.SmallAutoField(primary_key=True)
     name = models.CharField(max_length=256)
-    quantity_id = models.SmallIntegerField(blank=True, null=True)
+    quantity = models.ForeignKey("Quantities", models.DO_NOTHING, db_column="quantity_id")
     symbol = models.CharField(max_length=100, blank=True, null=True)
-    type = models.CharField(max_length=9, blank=True, null=True)
-    unitsml_id = models.CharField(max_length=10, blank=True, null=True)
-    exact = models.IntegerField()
-    factor = models.FloatField()
-    si_equivalent = models.CharField(max_length=32, blank=True, null=True)
-    unitstring = models.CharField(max_length=32, blank=True, null=True)
+    type = models.CharField(max_length=9, choices=TypeOpts.choices, default='si')
+    qudt = models.CharField(max_length=32, blank=True, null=True)
     updated = models.DateTimeField(auto_now_add=True)
 
     class Meta:
         managed = False
         db_table = 'units'
+        verbose_name_plural = "units"
+
+    def __str__(self):
+        return f"{self.name}"
 
 
 class Volumes(models.Model):
