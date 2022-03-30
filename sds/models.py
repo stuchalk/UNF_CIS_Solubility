@@ -299,8 +299,9 @@ class References(models.Model):
 
     # fields
     id = models.AutoField(primary_key=True)
-    raw = models.TextField(blank=True, null=True)
-    journal = models.CharField(max_length=128, blank=True, null=True)
+    citation = models.CharField(max_length=400, blank=True, null=True)
+    journal = models.ForeignKey("Journals", models.DO_NOTHING, db_column="journal_id")
+    # journal = models.CharField(max_length=128, blank=True, null=True)
     publisher = models.CharField(max_length=256, blank=True, null=True)
     abbrev = models.CharField(max_length=128, blank=True, null=True)
     authors = models.CharField(max_length=2048, blank=True, null=True)
@@ -322,7 +323,7 @@ class References(models.Model):
         verbose_name_plural = "references"
 
     def __str__(self):
-        return f"{self.raw}"
+        return f"{self.citation}"
 
 
 class Reports(models.Model):
