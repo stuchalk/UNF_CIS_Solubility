@@ -1,7 +1,7 @@
 """ django models file for reports app """
 from django.db import models
 from django.utils.translation import gettext_lazy as _
-
+from django.db.models.functions import Substr
 
 class Authors(models.Model):
     """ authors table model """
@@ -90,6 +90,7 @@ class Conditions(models.Model):
     class Meta:
         managed = False
         db_table = 'conditions'
+        verbose_name_plural = "conditions"
 
 
 class Data(models.Model):
@@ -119,24 +120,25 @@ class Data(models.Model):
     class Meta:
         managed = False
         db_table = 'data'
+        verbose_name_plural = "data"
 
 
 class Datapoints(models.Model):
     """ datapoints table model """
     id = models.AutoField(primary_key=True)
+    title = models.CharField(max_length=128)
     dataset = models.ForeignKey("Datasets", models.DO_NOTHING, db_column="dataset_id")
     dataseries = models.ForeignKey("Dataseries", models.DO_NOTHING, db_column="dataseries_id")
-    sysid = models.CharField(max_length=15, blank=True, null=True)
-    tablenum = models.SmallIntegerField(blank=True, null=True)
-    sysid_tablenum = models.CharField(max_length=10, blank=True, null=True)
-    sysid_tablenum_rownum = models.CharField(max_length=32, blank=True, null=True)
     rownum = models.SmallIntegerField(blank=True, null=True)
-    row_index = models.SmallIntegerField(blank=True, null=True)
     updated = models.DateTimeField(auto_now_add=True)
 
     class Meta:
         managed = False
         db_table = 'datapoints'
+        verbose_name_plural = "datapoints"
+
+    def __str__(self):
+        return f"{self.title}"
 
 
 class Dataseries(models.Model):
@@ -153,6 +155,7 @@ class Dataseries(models.Model):
     class Meta:
         managed = False
         db_table = 'dataseries'
+        verbose_name_plural = "dataseries"
 
 
 class Datasets(models.Model):
@@ -162,11 +165,15 @@ class Datasets(models.Model):
     description = models.CharField(max_length=256)
     report = models.ForeignKey("Reports", models.DO_NOTHING, db_column="report_id")
     comments = models.CharField(max_length=256, blank=True, null=True)
-    updated = models.DateTimeField()
+    updated = models.DateTimeField(auto_now_add=True)
 
     class Meta:
         managed = False
         db_table = 'datasets'
+        verbose_name_plural = "datasets"
+
+    def __str__(self):
+        return f"{self.title}"
 
 
 class Evaluations(models.Model):
@@ -225,6 +232,23 @@ class Identifiers(models.Model):
 
     def __str__(self):
         return f'{self.type} ({self.substance.name})'
+
+
+class Journals(models.Model):
+    id = models.AutoField(primary_key=True)
+    name = models.CharField(max_length=256)
+    abbrev = models.CharField(max_length=128)
+    publisher = models.CharField(max_length=128)
+    homepage = models.CharField(max_length=256)
+    updated = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        managed = False
+        db_table = 'journals'
+        verbose_name_plural = "journals"
+
+    def __str__(self):
+        return f'{self.abbrev}'
 
 
 class Properties(models.Model):

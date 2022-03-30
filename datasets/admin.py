@@ -11,3 +11,10 @@ class DatasetsAdmin(admin.ModelAdmin):
     list_display = ('title', 'description', 'report')
     ordering = ('title', 'report')
     search_fields = ('title', 'description')
+
+
+@admin.register(Datapoints)
+class DatapointsAdmin(admin.ModelAdmin):
+    list_display = ('title', 'dataset', 'dataseries')
+    ordering = ('dataset', 'dataseries')
+    search_fields = ('title', )
