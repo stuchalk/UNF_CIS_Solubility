@@ -352,7 +352,7 @@ class Reports(models.Model):
         verbose_name_plural = "reports"
 
     def __str__(self):
-        return f'{self.sys.name} (Vol. {self.vol.volume}, page {self.page})'
+        return f'{self.system.name} (Vol. {self.volume.volume}, page {self.page})'
 
 
 class ReferencesReports(models.Model):
