@@ -3,6 +3,7 @@ from django.db import models
 from django.utils.translation import gettext_lazy as _
 from django.db.models.functions import Substr
 
+
 class Authors(models.Model):
     """ authors table model """
     id = models.SmallAutoField(primary_key=True)
@@ -127,8 +128,8 @@ class Datapoints(models.Model):
     """ datapoints table model """
     id = models.AutoField(primary_key=True)
     title = models.CharField(max_length=128)
-    dataset = models.ForeignKey("Datasets", models.DO_NOTHING, db_column="dataset_id")
-    dataseries = models.ForeignKey("Dataseries", models.DO_NOTHING, db_column="dataseries_id")
+    dataset = models.ForeignKey("Datasets", models.DO_NOTHING, db_column="dataset_id", blank=True, null=True)
+    dataseries = models.ForeignKey("Dataseries", models.DO_NOTHING, db_column="dataseries_id", blank=True, null=True)
     rownum = models.SmallIntegerField(blank=True, null=True)
     updated = models.DateTimeField(auto_now_add=True)
 
@@ -144,18 +145,19 @@ class Datapoints(models.Model):
 class Dataseries(models.Model):
     """ dataseries table model """
     id = models.AutoField(primary_key=True)
+    heading = models.CharField(max_length=128)
     dataset = models.ForeignKey("Datasets", models.DO_NOTHING, db_column="dataset_id")
-    sysid = models.CharField(max_length=15, blank=True, null=True)
-    tablenum = models.SmallIntegerField(blank=True, null=True)
-    sysid_tablenum = models.CharField(max_length=10, blank=True, null=True)
-    type = models.CharField(max_length=20)
-    heading = models.CharField(max_length=512)
+    seriesnum = models.PositiveIntegerField()
+    type = models.CharField(max_length=20, db_collation='utf8_general_ci')
     updated = models.DateTimeField(auto_now_add=True)
 
     class Meta:
         managed = False
         db_table = 'dataseries'
         verbose_name_plural = "dataseries"
+
+    def __str__(self):
+        return f"{self.heading} (Dataset - {self.dataset.title})"
 
 
 class Datasets(models.Model):
@@ -335,9 +337,9 @@ class Reports(models.Model):
         CM = ('compilation', _('Compilation'))
 
     id = models.AutoField(primary_key=True)
-    vol = models.ForeignKey("Volumes", models.DO_NOTHING, db_column="volume_id")
+    volume = models.ForeignKey("Volumes", models.DO_NOTHING, db_column="volume_id")
     page = models.CharField(max_length=8)
-    sys = models.ForeignKey("Systems", models.DO_NOTHING, db_column="system_id")
+    system = models.ForeignKey("Systems", models.DO_NOTHING, db_column="system_id")
     type = models.CharField(max_length=11, choices=TypeOpts.choices, default='compilation')
     variables = models.CharField(max_length=512, blank=True, null=True)
     method = models.TextField(blank=True, null=True)
@@ -442,7 +444,7 @@ class Systems(models.Model):
     # fields
     id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=256, db_collation='utf8_general_ci')
-    vol = models.ForeignKey("Volumes", models.DO_NOTHING, db_column="volume_id")
+    volume = models.ForeignKey("Volumes", models.DO_NOTHING, db_column="volume_id")
     components = models.PositiveIntegerField(choices=CompOpts.choices, default=2)
     updated = models.DateTimeField(auto_now_add=True)
 

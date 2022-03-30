@@ -13,6 +13,13 @@ class DatasetsAdmin(admin.ModelAdmin):
     search_fields = ('title', 'description')
 
 
+@admin.register(Dataseries)
+class DataseriesAdmin(admin.ModelAdmin):
+    list_display = ('heading', 'seriesnum', 'dataset')
+    ordering = ('heading', 'dataset')
+    search_fields = ('heading', )
+
+
 @admin.register(Datapoints)
 class DatapointsAdmin(admin.ModelAdmin):
     list_display = ('title', 'dataset', 'dataseries')

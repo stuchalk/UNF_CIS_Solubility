@@ -101,9 +101,21 @@ class IdentifierSerializer(serializers.ModelSerializer):
         exclude = ['substance']
 
 
+class SubstanceSystemSerializer(serializers.ModelSerializer):
+    """ substance_system serializer """
+    # substance = SubstanceSerializer(source='substances_set', many=True, required=True)
+    # system = SystemSerializer(source='systems_set', many=True, required=True)
+
+    class Meta:
+        """ settings """
+        model = SubstancesSystems
+        fields = '__all__'
+        depth = 2
+
+
 class SubstanceSerializer(serializers.ModelSerializer):
     """ substance serializer """
-    # chemical = ChemicalSerializer(source='chemicals_set', many=True, required=False)
+    subsys = SubstanceSystemSerializer(source='substancessystems_set', many=True, required=False)
     identifier = IdentifierSerializer(source='identifiers_set', many=True, required=False)
 
     class Meta:
@@ -115,23 +127,11 @@ class SubstanceSerializer(serializers.ModelSerializer):
 
 class SystemSerializer(serializers.ModelSerializer):
     """ system serializer """
-    # subsys = SubstanceSystemSerializer(source='substancessystems_set', many=True, required=False)
+    subsys = SubstanceSystemSerializer(source='substancessystems_set', many=True, required=True)
 
     class Meta:
         """ settings """
         model = Systems
-        depth = 2
-        exclude = ['vol ']
-
-
-class SubstanceSystemSerializer(serializers.ModelSerializer):
-    """ substance_system serializer """
-    substance = SubstanceSerializer()
-    system = SystemSerializer()
-
-    class Meta:
-        """ settings """
-        model = SubstancesSystems
         fields = '__all__'
         depth = 2
 
@@ -139,7 +139,7 @@ class SubstanceSystemSerializer(serializers.ModelSerializer):
 class DatasetSerializer(serializers.ModelSerializer):
     """ dataset serializer """
     dataseries = DataseriesSerializer(source='dataseries_set', many=True, required=False)
-    # reference = ReferenceSerializer(many=False, required=True)
+    datapoints = DatapointSerializer(source='datapoints_set', many=True, required=True)
     system = SystemSerializer(many=False, required=False)
 
     class Meta:
@@ -149,12 +149,32 @@ class DatasetSerializer(serializers.ModelSerializer):
         exclude = ['report']
 
 
-class ReferencesReportsSerializer(serializers.ModelSerializer):
+class JournalSerializer(serializers.ModelSerializer):
+    """ journals serializer """
+
+    class Meta:
+        """ settings """
+        model = Journals
+        fields = '__all__'
+        depth = 1
+
+
+class ReferencesSerializer(serializers.ModelSerializer):
     """ references_reports serializer """
+    ref = JournalSerializer(source='journals_set', many=True, required=False)
+
+    class Meta:
+        """ settings """
+        model = References
+        depth = 2
+
+
+class ReferencesReportsSerializer(serializers.ModelSerializer):
+    """ references serializer """
+
     class Meta:
         """ settings """
         model = ReferencesReports
-        # fields = '__all__'
         exclude = ['report']
         depth = 2
 

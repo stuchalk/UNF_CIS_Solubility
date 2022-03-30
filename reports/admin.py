@@ -4,6 +4,6 @@ from sds.models import Reports
 
 @admin.register(Reports)
 class ReportsAdmin(admin.ModelAdmin):
-    list_display = ('vol', 'sys', 'type', 'page')
-    ordering = ('vol', 'sys', 'page')
-    search_fields = ('vol', 'type', 'page')
+    list_display = ('volume', 'system', 'type', 'page')
+    ordering = ('volume', 'system', 'page')
+    search_fields = ('volume', 'type', 'page')
