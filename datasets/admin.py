@@ -29,22 +29,22 @@ class DatapointsAdmin(admin.ModelAdmin):
     search_fields = ('title',)
 
 
-# @admin.register(Quantities)
-# class QuantitiesAdmin(admin.ModelAdmin):
-#     list_display = ('name', 'symbol', 'baseunit')
-#     ordering = ('name',)
-#     search_fields = ('name',)
-#
-#
-# @admin.register(Units)
-# class UnitsAdmin(admin.ModelAdmin):
-#     list_display = ('name', 'symbol', 'type')
-#     ordering = ('name',)
-#     search_fields = ('name',)
-#
-#
-# @admin.register(Conditions)
-# class ConditionsAdmin(admin.ModelAdmin):
-#     list_display = ('quantity',)
-#     ordering = ('quantity',)
-#     search_fields = ('quantity',)
+@admin.register(Quantities)
+class QuantitiesAdmin(admin.ModelAdmin):
+    list_display = ('name', 'symbol', 'baseunit')
+    ordering = ('name',)
+    search_fields = ('name',)
+
+
+@admin.register(Units)
+class UnitsAdmin(admin.ModelAdmin):
+    list_display = ('name', 'symbol', 'type')
+    ordering = ('name',)
+    search_fields = ('name',)
+
+
+@admin.register(Conditions)
+class ConditionsAdmin(admin.ModelAdmin):
+    list_display = ('quantity',)
+    ordering = ('quantity',)
+    search_fields = ('quantity',)

@@ -96,23 +96,26 @@ class Data(models.Model):
     """ data table model """
     id = models.AutoField(primary_key=True)
     datapoint = models.ForeignKey("Datapoints", models.DO_NOTHING, db_column="datapoint_id")
-    quantity = models.ForeignKey("Quantities", models.DO_NOTHING, db_column="quantity_id")
-    unit = models.ForeignKey("Units", models.DO_NOTHING, db_column="unit_id")
     dataset = models.ForeignKey("Datasets", models.DO_NOTHING, db_column="dataset_id")
     dataseries = models.ForeignKey("Dataseries", models.DO_NOTHING, db_column="dataseries_id")
+    quantity = models.ForeignKey("Quantities", models.DO_NOTHING, db_column="quantity_id")
+    text = models.CharField(max_length=16)
     significand = models.TextField()
     exponent = models.TextField()
     error = models.TextField()
-    error_type = models.CharField(max_length=8)
-    accuracy = models.TextField()
-    component = models.CharField(max_length=50, blank=True, null=True)
-    note = models.TextField()
+    error_type = models.CharField(max_length=8, blank=True, null=True)
+    unit = models.ForeignKey("Units", models.DO_NOTHING, db_column="unit_id")
+    accuracy = models.PositiveIntegerField(default=1)
+    compnum = models.IntegerField(blank=True, null=True)
     updated = models.DateTimeField(auto_now_add=True)
 
     class Meta:
         managed = False
         db_table = 'data'
         verbose_name_plural = "data"
+
+    def __str__(self):
+        return f"{self.quantity.name}: {self.text} {self.unit.symbol}"
 
 
 class Datapoints(models.Model):
