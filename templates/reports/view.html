@@ -9,11 +9,11 @@
     </div>
     <div class="col-6">
         <div class="card card-success">
-            <div class="card-header"><h4>Metadata</h4></div>
+            <div class="card-header font-weight-bold">Metadata</div>
             <div class="card-body">
                 <h5>Components:</h5>
                 <p>{% for chem in chems %}
-                    ({{ chem.compnum }}) {{ chem.name }},
+                    ({{ chem.compnum }}) {{ chem.substance.name }},
                     {% autoescape off %}{{ chem.substance.formula_html }}{% endautoescape %}; [{{ chem.substance.casno }}]
                     <a href="https://webbook.nist.gov/cgi/cbook.cgi?ID={{ chem.substance.casno }}" target="_blank">
                         NIST WebBook</a>
@@ -21,28 +21,31 @@
                 {% endfor %}</p>
                 <h5>Original Measurements</h5>
                 <p>{% for ref in refs %}
-                    {% if ref.role == 'original' %}
-                        <a href="{{ ref.reference.url }}">{{ ref.reference.raw }}</a>
+                    {% if ref.type == 'original' %}
+                        <a href="{{ ref.reference.url }}">{{ ref.reference.citation }}</a>
                         {% if not forloop.last %}<br/>{% endif %}
                     {% endif %}
                 {% endfor %}</p>
-                <h5>Variables:</h5>
+                {% if vars|length > 0 %}
+                    <h5>Variables:</h5>
+                    <p>{{ vars }}</p>
+                {% endif %}
                 <h5>Prepared by:</h5>
                 <p>{% for cmplr in cmplrs %}
-                    {% if cmplr.role == 'preparer' %}
+                    {% if cmplr.role == 'compiler' %}
                         {{ cmplr.author.name }}
                         {% if not forloop.last %}<br/>{% endif %}
                     {% endif %}
                 {% endfor %}</p>
                 <h5>Method/Apparatus/Procedure:</h5>
-                <p>{% if method|length > 0 %}
+                <p class="text-justify">{% if method|length > 0 %}
                     {{ method }}
                 {% else %}
                     NA
                 {% endif %}</p>
-                <h5>Source and Purity of Materials:</h5>
+                <h5>So urce and Purity of Materials:</h5>
                 <p>{% for chem in chems %}
-                    {{ chem.description }}
+                    ({{ chem.compnum }}) {{ chem.purity }}
                     {% if not forloop.last %}<br/>{% endif %}
                 {% endfor %}</p>
                 </div>
@@ -50,8 +53,23 @@
     </div>
     <div class="col-6">
         <div class="card card-info">
-            <div class="card-header">Experiment Data</div>
+            <div class="card-header font-weight-bold">Experimental Data</div>
+            <div class="card-body">
+                {% if series|length > 0 %}
+                    <h5>Table 1</h5>
+                    <div class="table table-striped"></div>
+                {% endif %}
+                {% if points|length > 0 %}
+                    <h5>Datapoints</h5>
+                    <div class="table table-striped">
+
+                    </div>
+                {% endif %}
+            </div>
         </div>
+    </div>
+    <div class="col-12">
+        <pre> {% debug %} </pre>
     </div>
 </div>
 {% endblock %}

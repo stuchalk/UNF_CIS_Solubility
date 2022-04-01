@@ -10,5 +10,10 @@ import json
 
 rep = Reports.objects.get(id=1)
 report = ReportSerializer(rep)
-print(json.dumps(report.data, indent=4))
+data = report.data
+sys = data['system']
+vol = data['volume']
+sysid = sys['id']
+dset = data['set']
+print(dset)
 exit()

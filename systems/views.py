@@ -37,9 +37,10 @@ def view(request, sysid=0):
         subs.append(tuple((sub[0], sub[1], url)))
 
     # eval that this system is analyzed in
-    evals = Reports.objects.all().filter(sys=sysid, type='evaluation').values('id')
+    evals = Reports.objects.all().filter(system_id=sysid, type='evaluation').values('id')
     # reports this system
-    rpts = Reports.objects.all().filter(sys=sysid, type='compilation').values('id', 'referencesreports__reference__raw')
+    rpts = Reports.objects.all().filter(system_id=sysid, type='compilation').\
+        values('id', 'referencesreports__reference__citation')
     # send data to template
     return render(request, "../templates/systems/view.html",
                   {'sys': sys, 'subs': subs, 'evals': evals, 'rpts': rpts})

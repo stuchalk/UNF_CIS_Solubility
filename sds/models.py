@@ -69,15 +69,24 @@ class Chemicals(models.Model):
 
 class Conditions(models.Model):
     """ conditions table model """
+
+    class TypeOpts(models.TextChoices):
+        """ error types enum list """
+        AB = ('absolute', _('Absolute'))
+        RL = ('relative', _('Relative'))
+        SD = ('SD', _('Std. Dev.'))
+        RS = ('%RSD', _('% RSD'))
+        CI = ('CI', _('Conf. Interval'))
+
     id = models.AutoField(primary_key=True)
     datapoint = models.ForeignKey("Datapoints", models.DO_NOTHING, db_column="datapoint_id", blank=True)
     dataseries = models.ForeignKey("Dataseries", models.DO_NOTHING, db_column="dataseries_id", blank=True)
-    cquantity = models.ForeignKey("Quantities", models.DO_NOTHING, db_column="quantity_id")
+    quantity = models.ForeignKey("Quantities", models.DO_NOTHING, db_column="quantity_id")
     text = models.CharField(max_length=16)
     significand = models.CharField(max_length=16)
     exponent = models.IntegerField()
     error = models.CharField(max_length=16, blank=True, null=True)
-    error_type = models.CharField(max_length=8, blank=True, null=True)
+    error_type = models.CharField(max_length=8, choices=TypeOpts.choices, blank=True, null=True)
     unit = models.ForeignKey("Units", models.DO_NOTHING, db_column="unit_id")
     accuracy = models.PositiveIntegerField()
     compnum = models.CharField(max_length=50, blank=True, null=True)
@@ -89,21 +98,28 @@ class Conditions(models.Model):
         verbose_name_plural = "conditions"
 
     def __str__(self):
-        return f"{self.cquantity.name}: {self.text} {self.unit.symbol}"
+        return f"{self.quantity.name}"
 
 
 class Data(models.Model):
     """ data table model """
+
+    class TypeOpts(models.TextChoices):
+        """ error types enum list """
+        AB = ('absolute', _('Absolute'))
+        RL = ('relative', _('Relative'))
+        SD = ('SD', _('Std. Dev.'))
+        RS = ('%RSD', _('% RSD'))
+        CI = ('CI', _('Conf. Interval'))
+
     id = models.AutoField(primary_key=True)
     datapoint = models.ForeignKey("Datapoints", models.DO_NOTHING, db_column="datapoint_id")
-    dataset = models.ForeignKey("Datasets", models.DO_NOTHING, db_column="dataset_id")
-    dataseries = models.ForeignKey("Dataseries", models.DO_NOTHING, db_column="dataseries_id")
-    dquantity = models.ForeignKey("Quantities", models.DO_NOTHING, db_column="quantity_id")
+    quantity = models.ForeignKey("Quantities", models.DO_NOTHING, db_column="quantity_id")
     text = models.CharField(max_length=16)
-    significand = models.TextField()
-    exponent = models.TextField()
-    error = models.TextField()
-    error_type = models.CharField(max_length=8, blank=True, null=True)
+    significand = models.CharField(max_length=16)
+    exponent = models.IntegerField()
+    error = models.CharField(max_length=16, blank=True, null=True)
+    error_type = models.CharField(max_length=8, choices=TypeOpts.choices, blank=True, null=True)
     unit = models.ForeignKey("Units", models.DO_NOTHING, db_column="unit_id")
     accuracy = models.PositiveIntegerField(default=1)
     compnum = models.IntegerField(blank=True, null=True)
@@ -115,7 +131,7 @@ class Data(models.Model):
         verbose_name_plural = "data"
 
     def __str__(self):
-        return f"{self.dquantity.name}: {self.text} {self.unit.symbol}"
+        return f"{self.quantity.name}: {self.text} {self.unit.symbol}"
 
 
 class Datapoints(models.Model):
@@ -181,6 +197,7 @@ class Datasets(models.Model):
 
 class Identifiers(models.Model):
     """ indentifiers table model """
+
     # reference types enum list
     ISTR = 'inchi'
     IKEY = 'inchikey'
@@ -399,7 +416,7 @@ class Systems(models.Model):
     # fields
     id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=256)
-    volume = models.ForeignKey("Volumes", models.DO_NOTHING, db_column="volume_id")
+    # volume = models.ForeignKey("Volumes", models.DO_NOTHING, db_column="volume_id")
     components = models.PositiveIntegerField(choices=CompOpts.choices, default=2)
     updated = models.DateTimeField(auto_now_add=True)
 
@@ -425,7 +442,7 @@ class Units(models.Model):
 
     id = models.SmallAutoField(primary_key=True)
     name = models.CharField(max_length=256)
-    uquantity = models.ForeignKey("Quantities", models.DO_NOTHING, db_column="quantity_id")
+    quantity = models.ForeignKey("Quantities", models.DO_NOTHING, db_column="quantity_id")
     symbol = models.CharField(max_length=100, blank=True, null=True)
     type = models.CharField(max_length=9, choices=TypeOpts.choices, default='si')
     qudt = models.CharField(max_length=32, blank=True, null=True)
@@ -437,7 +454,7 @@ class Units(models.Model):
         verbose_name_plural = "units"
 
     def __str__(self):
-        return f"{self.name}"
+        return f"{self.symbol}"
 
 
 class Volumes(models.Model):

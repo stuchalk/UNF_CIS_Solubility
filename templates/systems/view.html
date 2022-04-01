@@ -68,7 +68,7 @@
                 <div class="card-header h4">Reports <span class="badge badge-success">{{ rpts|length }}</span></div>
                 <ul class="list-group report-div">
                     {% for rpt in rpts %}
-                        <a href="/reports/view/{{ rpt.id }}" class="list-group-item">{{ rpt.referencesreports__reference__raw }}</a>
+                        <a href="/reports/view/{{ rpt.id }}" class="list-group-item">{{ rpt.referencesreports__reference__citation }}</a>
                     {% endfor %}
                 </ul>
             </div>

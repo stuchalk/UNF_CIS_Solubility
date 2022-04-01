@@ -43,8 +43,8 @@ class DataSerializer(serializers.ModelSerializer):
     class Meta:
         """ settings """
         model = Data
-        depth = 0
-        exclude = ['dataset', 'dataseries']
+        fields = '__all__'
+        depth = 1
 
 
 class DatapointSerializer(serializers.ModelSerializer):
@@ -76,7 +76,7 @@ class ChemicalSerializer(serializers.ModelSerializer):
     class Meta:
         """ settings """
         model = Chemicals
-        depth = 2
+        depth = 3
         exclude = ['report']
 
 
@@ -86,30 +86,29 @@ class IdentifierSerializer(serializers.ModelSerializer):
     class Meta:
         """ settings """
         model = Identifiers
-        depth = 1
-        exclude = ['substance']
-
-
-class SubstanceSystemSerializer(serializers.ModelSerializer):
-    """ substance_system serializer """
-    # substance = SubstanceSerializer(source='substances_set', many=True, required=True)
-    # system = SystemSerializer(source='systems_set', many=True, required=True)
-
-    class Meta:
-        """ settings """
-        model = SubstancesSystems
         fields = '__all__'
-        depth = 2
+        depth = 1
 
 
 class SubstanceSerializer(serializers.ModelSerializer):
     """ substance serializer """
-    subsys = SubstanceSystemSerializer(source='substancessystems_set', many=True, required=False)
-    identifier = IdentifierSerializer(source='identifiers_set', many=True, required=False)
+    # subsys = SubstanceSystemSerializer(source='substancessystems_set', many=True, required=False)
+    idents = IdentifierSerializer(source='identifiers_set', many=True, required=True)
 
     class Meta:
         """ settings """
         model = Substances
+        fields = '__all__'
+        depth = 2
+
+
+class SubstanceSystemSerializer(serializers.ModelSerializer):
+    """ substance_system serializer """
+    substance = SubstanceSerializer()
+
+    class Meta:
+        """ settings """
+        model = SubstancesSystems
         fields = '__all__'
         depth = 2
 
@@ -122,7 +121,7 @@ class SystemSerializer(serializers.ModelSerializer):
         """ settings """
         model = Systems
         fields = '__all__'
-        depth = 2
+        depth = 0
 
 
 class DatasetSerializer(serializers.ModelSerializer):

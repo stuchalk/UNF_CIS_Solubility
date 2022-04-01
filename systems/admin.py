@@ -7,7 +7,7 @@ from sds.models import SubstancesSystems
 @admin.register(Systems)
 class SystemsAdmin(admin.ModelAdmin):
     """ systems table admin config """
-    list_display = ('name', 'components', 'volume')
+    list_display = ('name', 'components')
     ordering = ('name',)
     search_fields = ('name',)
 
@@ -18,3 +18,4 @@ class SubstancesSystemsAdmin(admin.ModelAdmin):
     list_display = ('system', 'substance', 'role')
     ordering = ('system',)
     search_fields = ('system', 'substance')
+    list_filter = ('system',)
