@@ -45,6 +45,6 @@ class UnitsAdmin(admin.ModelAdmin):
 
 @admin.register(Conditions)
 class ConditionsAdmin(admin.ModelAdmin):
-    list_display = ('quantity',)
-    ordering = ('quantity',)
-    search_fields = ('quantity',)
+    list_display = ('cquantity',)
+    ordering = ('cquantity',)
+    search_fields = ('cquantity',)

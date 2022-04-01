@@ -72,7 +72,7 @@ class Conditions(models.Model):
     id = models.AutoField(primary_key=True)
     datapoint = models.ForeignKey("Datapoints", models.DO_NOTHING, db_column="datapoint_id", blank=True)
     dataseries = models.ForeignKey("Dataseries", models.DO_NOTHING, db_column="dataseries_id", blank=True)
-    quantity = models.ForeignKey("Quantities", models.DO_NOTHING, db_column="quantity_id")
+    cquantity = models.ForeignKey("Quantities", models.DO_NOTHING, db_column="quantity_id")
     text = models.CharField(max_length=16)
     significand = models.CharField(max_length=16)
     exponent = models.IntegerField()
@@ -89,7 +89,7 @@ class Conditions(models.Model):
         verbose_name_plural = "conditions"
 
     def __str__(self):
-        return f"{self.quantity.name}: {self.text} {self.unit.symbol}"
+        return f"{self.cquantity.name}: {self.text} {self.unit.symbol}"
 
 
 class Data(models.Model):
@@ -98,7 +98,7 @@ class Data(models.Model):
     datapoint = models.ForeignKey("Datapoints", models.DO_NOTHING, db_column="datapoint_id")
     dataset = models.ForeignKey("Datasets", models.DO_NOTHING, db_column="dataset_id")
     dataseries = models.ForeignKey("Dataseries", models.DO_NOTHING, db_column="dataseries_id")
-    quantity = models.ForeignKey("Quantities", models.DO_NOTHING, db_column="quantity_id")
+    dquantity = models.ForeignKey("Quantities", models.DO_NOTHING, db_column="quantity_id")
     text = models.CharField(max_length=16)
     significand = models.TextField()
     exponent = models.TextField()
@@ -115,7 +115,7 @@ class Data(models.Model):
         verbose_name_plural = "data"
 
     def __str__(self):
-        return f"{self.quantity.name}: {self.text} {self.unit.symbol}"
+        return f"{self.dquantity.name}: {self.text} {self.unit.symbol}"
 
 
 class Datapoints(models.Model):
@@ -425,7 +425,7 @@ class Units(models.Model):
 
     id = models.SmallAutoField(primary_key=True)
     name = models.CharField(max_length=256)
-    quantity = models.ForeignKey("Quantities", models.DO_NOTHING, db_column="quantity_id")
+    uquantity = models.ForeignKey("Quantities", models.DO_NOTHING, db_column="quantity_id")
     symbol = models.CharField(max_length=100, blank=True, null=True)
     type = models.CharField(max_length=9, choices=TypeOpts.choices, default='si')
     qudt = models.CharField(max_length=32, blank=True, null=True)
