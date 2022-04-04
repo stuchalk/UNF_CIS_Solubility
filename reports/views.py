@@ -29,7 +29,12 @@ def view(request, repid=0):
     for chem in chems:
         subs.update({chem['compnum']: chem['substance']})
     refs = data['refs']
+    mrefs = []
+    for ref in refs:
+        if ref['type'] == 'supplemental':
+            mrefs.append(ref);
+
     cmplrs = data['authrep']
     return render(request, "../templates/reports/view.html",
                   {'sys': sys, 'vol': vol, 'subs': subs, 'vars': variables, 'series': series, 'points': points,
-                   'method': method, 'chems': chems, 'refs': refs, 'cmplrs': cmplrs})
+                   'method': method, 'chems': chems, 'refs': refs, 'mrefs': mrefs, 'cmplrs': cmplrs})

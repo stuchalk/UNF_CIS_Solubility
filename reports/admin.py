@@ -7,3 +7,4 @@ class ReportsAdmin(admin.ModelAdmin):
     list_display = ('volume', 'system', 'type', 'page')
     ordering = ('volume', 'system', 'page')
     search_fields = ('volume', 'type', 'page')
+    list_filter = ('volume',)

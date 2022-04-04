@@ -7,7 +7,7 @@
     <div class="col-12 mb-2 mt-2">
         <h3 class="text-center text-primary">Solubility System: {{ vol.name }} from Vol. {{ vol.volume }}</h3>
     </div>
-    <div class="col-6">
+    <div class="col-5">
         <div class="card card-success">
             <div class="card-header font-weight-bold">Metadata</div>
             <div class="card-body">
@@ -33,8 +33,8 @@
                 <h5>Prepared by:</h5>
                 <p>{% for cmplr in cmplrs %}
                     {% if cmplr.role == 'compiler' %}
-                        {{ cmplr.author.name }}
-                        {% if not forloop.last %}<br/>{% endif %}
+                        {% if forloop.last %}and {% endif %}
+                        {{ cmplr.author.name }}{% if not forloop.last %}, {% endif %}
                     {% endif %}
                 {% endfor %}</p>
                 <h5>Method/Apparatus/Procedure:</h5>
@@ -43,21 +43,69 @@
                 {% else %}
                     NA
                 {% endif %}</p>
-                <h5>So urce and Purity of Materials:</h5>
+                {% if chems|length > 0 %}
+                <h5>Source and Purity of Materials:</h5>
                 <p>{% for chem in chems %}
                     ({{ chem.compnum }}) {{ chem.purity }}
                     {% if not forloop.last %}<br/>{% endif %}
                 {% endfor %}</p>
-                </div>
+                {% endif %}
+                {% if mrefs != None %}
+                <h5>References</h5>
+                    <p>{% for mref in mrefs %}
+                        [{{ mref.methodrefnum }}] <a href="{{ mref.reference.url }}">{{ mref.reference.citation }}</a>
+                        {% if not forloop.last %}<br/>{% endif %}
+                    {% endfor %}</p>
+                {% endif %}
+            </div>
         </div>
     </div>
-    <div class="col-6">
+    <div class="col-7">
         <div class="card card-info">
             <div class="card-header font-weight-bold">Experimental Data</div>
             <div class="card-body">
                 {% if series|length > 0 %}
-                    <h4>Table 1</h4>
-                    <div class="table table-striped"></div>
+                    {% for table in series %}
+                        {% with tablenum=forloop.counter %}
+                            <div class="text-center font-weight-bold">{{ table.heading }}</div>
+                            <table class="table table-striped">
+                                <!-- header -->
+                                {% for point in table.datapoints %}
+                                    {% with pointnum=forloop.counter %}
+                                        {% if pointnum == 1 %}
+                                            <thead><tr>
+                                            {% for cond in point.conditions %}
+                                            <th class="font-weight-bold" scope="col">{{ cond.quantity.symbol }} ({{ cond.unit.symbol }})</th>
+                                            {% endfor %}
+                                            {% for data in point.data %}
+                                            <th class="font-weight-bold" scope="col">{{ data.quantity.symbol }}
+                                                {% if data.compnum != None %}<sub>{{ data.compnum }}</sub>{% endif %}
+                                                ({{ data.unit.symbol }})</th>
+                                            {% endfor %}
+                                            </tr></thead>
+                                        {% endif %}
+                                    {% endwith %}
+                                {% endfor %}
+                                <!-- body -->
+                                <tbody>
+                                {% for point in table.datapoints %}
+                                    <tr>
+                                        {% for cond in point.conditions %}
+                                            <td>{{ cond.text }}
+                                                {%  if cond.error != None %}(± {{ cond.error }}){%  endif %}
+                                            </td>
+                                        {% endfor %}
+                                        {% for data in point.data %}
+                                            <td>{{ data.text }}
+                                                {%  if data.error != None %}(± {{ data.error }}){%  endif %}
+                                            </td>
+                                        {% endfor %}
+                                    </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                        {% endwith %}
+                    {% endfor %}
                 {% endif %}
                 {% if points|length > 0 %}
                     <h4>Datapoints</h4>
@@ -78,8 +126,8 @@
             </div>
         </div>
     </div>
-    <div class="col-12">
-        <pre> {% debug %} </pre>
-    </div>
+{#    <div class="col-12">#}
+{#        <pre> {% debug %} </pre>#}
+{#    </div>#}
 </div>
 {% endblock %}

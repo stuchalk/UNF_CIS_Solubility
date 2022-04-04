@@ -19,6 +19,7 @@ class ReferencesReportsAdmin(admin.ModelAdmin):
     search_fields = ('report', 'type')
 
 
+
 @admin.register(Journals)
 class JournalsAdmin(admin.ModelAdmin):
     list_display = ('name', 'abbrev', 'publisher')

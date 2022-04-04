@@ -131,7 +131,7 @@ class Data(models.Model):
         verbose_name_plural = "data"
 
     def __str__(self):
-        return f"{self.quantity.name: {self.text} {self.unit.symbol}}"
+        return f"{{self.quantity.name: {self.text} {self.unit.symbol}}}"
 
 
 class Datapoints(models.Model):
@@ -292,6 +292,7 @@ class References(models.Model):
 
     class Meta:
         managed = False
+        ordering = ['title']
         db_table = 'references'
         verbose_name_plural = "references"
 
@@ -332,18 +333,20 @@ class ReferencesReports(models.Model):
     class TypeOpts(models.TextChoices):
         """ component options enum list """
         EV = ('original', _('Original Measurements Paper'))
-        CM = ('supplmental', _('Method Reference Paper'))
+        CM = ('supplemental', _('Method Reference Paper'))
 
     id = models.AutoField(primary_key=True)
     reference = models.ForeignKey("References", models.DO_NOTHING, db_column="reference_id")
     report = models.ForeignKey("Reports", models.DO_NOTHING, db_column="report_id")
     type = models.CharField(max_length=12, choices=TypeOpts.choices, default='original')
+    methodrefnum = models.PositiveIntegerField(default=1)
     updated = models.DateTimeField(auto_now_add=True)
 
     class Meta:
         managed = False
         db_table = 'references_reports'
         verbose_name_plural = "refs/reports (join)"
+
 
     def __str__(self):
         return f"{self.reference.citation} - Vol. {self.report.volume}, page {self.report.page}"

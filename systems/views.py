@@ -39,7 +39,7 @@ def view(request, sysid=0):
     # eval that this system is analyzed in
     evals = Reports.objects.all().filter(system_id=sysid, type='evaluation').values('id')
     # reports this system
-    rpts = Reports.objects.all().filter(system_id=sysid, type='compilation').\
+    rpts = Reports.objects.all().filter(system_id=sysid, type='compilation', referencesreports__type='original').\
         values('id', 'referencesreports__reference__citation')
     # send data to template
     return render(request, "../templates/systems/view.html",
