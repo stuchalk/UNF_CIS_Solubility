@@ -7,7 +7,7 @@ $(document).ready(function() {
 		$('#' + letter).show();
 	});
 	// search for resources via data on the page
-	$("#search").on('input', function () {
+	$("#search").on('input', function (e) {
 		e.preventDefault();
 		let val = $(this).val();
 		let letters = $(".letter");

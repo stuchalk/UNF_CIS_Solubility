@@ -43,4 +43,4 @@ def view(request, sysid=0):
         values('id', 'referencesreports__reference__citation')
     # send data to template
     return render(request, "../templates/systems/view.html",
-                  {'sys': sys, 'subs': subs, 'evals': evals, 'rpts': rpts})
+                  {'sys': sys, 'subs': subs, 'evals': evals, 'rpts': rpts, 'subids': subids})

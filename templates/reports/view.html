@@ -56,14 +56,24 @@
             <div class="card-header font-weight-bold">Experimental Data</div>
             <div class="card-body">
                 {% if series|length > 0 %}
-                    <h5>Table 1</h5>
+                    <h4>Table 1</h4>
                     <div class="table table-striped"></div>
                 {% endif %}
                 {% if points|length > 0 %}
-                    <h5>Datapoints</h5>
-                    <div class="table table-striped">
-
-                    </div>
+                    <h4>Datapoints</h4>
+                    {% for point in points %}
+                        {% with num=forloop.counter %}
+                            <h5>Point {{ num }}</h5>
+                            <ul>
+                            {% for cond in point.conditions %}
+                                <li>{{ cond.quantity.name }}: {{ cond.text }} {{ cond.unit.symbol }}</li>
+                            {% endfor %}
+                            {% for data in point.data %}
+                                <li>{{ data.quantity.name }}: {{ data.text }} {{ data.unit.symbol }}</li>
+                            {% endfor %}
+                            </ul>
+                        {% endwith %}
+                    {% endfor %}
                 {% endif %}
             </div>
         </div>

@@ -16,6 +16,7 @@ class IdentifiersAdmin(admin.ModelAdmin):
     list_display = ('type', 'value')
     ordering = ('value',)
     search_fields = ('type', 'value')
+    list_filter = ('substance',)
 
 
 @admin.register(Chemicals)

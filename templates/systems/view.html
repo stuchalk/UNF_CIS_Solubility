@@ -7,7 +7,7 @@
     <div class="col-12 mb-2 mt-2"><h3>System: {{ sys.name }}</h3></div>
 	<div class="col-xs-3">
 		<div class="card card-default">
-			<div class="card-header h4">Substances</div>
+            <div class="card-header h4">Substances  <span class="badge badge-success">{{ subs|length }}</span></div>
 			<div class="card-body clearfix">
 				<script type="text/javascript" src="/static/js/jsmol/JSmol.min.js"></script>
                 <script type="text/javascript" src="/static/js/jsmol/js/JSmolJSV.js"></script>
@@ -66,13 +66,23 @@
         {% if rpts != None %}
             <div class="card card-default">
                 <div class="card-header h4">Reports <span class="badge badge-success">{{ rpts|length }}</span></div>
-                <ul class="list-group report-div">
-                    {% for rpt in rpts %}
-                        <a href="/reports/view/{{ rpt.id }}" class="list-group-item">{{ rpt.referencesreports__reference__citation }}</a>
-                    {% endfor %}
-                </ul>
+                <div class="card-body report-div">
+                    <div class="list-group list-group-flush">
+                        {% for rpt in rpts %}
+                            <a href="/reports/view/{{ rpt.id }}" class="list-group-item list-group-item-small">{{ rpt.referencesreports__reference__citation }}</a>
+                        {% endfor %}
+                    </div>
+                </div>
             </div>
         {% endif %}
     </div>
+{#    <div class="col-xs-12">#}
+{#        <div class="card card-default">#}
+{#            <div class="card-header h4">Debug</div>#}
+{#            <div class="card-body">#}
+{#                <pre> {% debug %} </pre>#}
+{#            </div>#}
+{#        </div>#}
+{#    </div>#}
 </div>
 {% endblock %}

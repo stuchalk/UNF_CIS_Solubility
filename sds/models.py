@@ -131,7 +131,7 @@ class Data(models.Model):
         verbose_name_plural = "data"
 
     def __str__(self):
-        return f"{self.quantity.name}: {self.text} {self.unit.symbol}"
+        return f"{self.quantity.name: {self.text} {self.unit.symbol}}"
 
 
 class Datapoints(models.Model):
@@ -198,18 +198,16 @@ class Datasets(models.Model):
 class Identifiers(models.Model):
     """ indentifiers table model """
 
-    # reference types enum list
-    ISTR = 'inchi'
-    IKEY = 'inchikey'
-    CSML = 'smiles'
-    TYPE_CHOICES = [
-        (ISTR, 'InChI'),
-        (IKEY, 'InChIKey'),
-        (CSML, 'Canonical SMILES')
-    ]
+
+    class TypeOpts(models.TextChoices):
+        """ component options enum list """
+        IN = ('inchi', _('InChI'))
+        KY = ('inchikey', _('InChIKey'))
+        SM = ('smiles', _('Canonical SMILES'))
+
     id = models.AutoField(primary_key=True)
     substance = models.ForeignKey("Substances", models.DO_NOTHING, db_column="substance_id")
-    type = models.CharField(max_length=12, choices=TYPE_CHOICES, default=ISTR)
+    type = models.CharField(max_length=12, choices=TypeOpts.choices, default='inchi')
     value = models.CharField(max_length=1024)
     updated = models.DateTimeField(auto_now_add=True)
 
@@ -223,6 +221,7 @@ class Identifiers(models.Model):
 
 
 class Journals(models.Model):
+    """ journals table model """
     id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=256)
     abbrev = models.CharField(max_length=128)
