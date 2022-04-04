@@ -28,6 +28,7 @@ class DatapointsAdmin(admin.ModelAdmin):
     list_display = ('title', 'dataset', 'dataseries')
     ordering = ('dataset', 'dataseries')
     search_fields = ('title',)
+    list_filter = ('dataseries','dataset')
 
 
 @admin.register(Quantities)
