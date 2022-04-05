@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/3.1/ref/settings/
 
 import os
 from pathlib import Path
+from sds import localsettings
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve(strict=True).parent.parent
@@ -38,7 +39,6 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'django_admin_logs',
     'authors',
     'crosswalks',
     'datasets',
@@ -49,8 +49,8 @@ INSTALLED_APPS = [
     'systems',
     'volumes',
     'rest_framework',
-    'sds',
-]
+    'sds'
+] + localsettings.localapps
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',

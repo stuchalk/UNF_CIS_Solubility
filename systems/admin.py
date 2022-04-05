@@ -17,5 +17,5 @@ class SubstancesSystemsAdmin(admin.ModelAdmin):
     """ substances_systems table admin config """
     list_display = ('system', 'substance', 'role')
     ordering = ('system',)
-    search_fields = ('system', 'substance')
+    search_fields = ('system__name', 'substance__name')
     list_filter = ('system',)

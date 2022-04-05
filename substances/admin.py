@@ -24,3 +24,4 @@ class ChemicalsAdmin(admin.ModelAdmin):
     list_display = ('substance', 'report')
     ordering = ('substance',)
     search_fields = ('substance', 'report')
+    list_filter = ('report',)

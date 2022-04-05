@@ -7,7 +7,7 @@ from sds.models import Journals
 @admin.register(References)
 class ReferencesAdmin(admin.ModelAdmin):
     list_display = ('title', 'year', 'volume', 'startpage', 'doi')
-    ordering = ('title', 'year')
+    ordering = ('title',)
     search_fields = ('title', 'doi')
     list_filter = ('journal',)
 
@@ -17,7 +17,6 @@ class ReferencesReportsAdmin(admin.ModelAdmin):
     list_display = ('reference', 'report', 'type')
     ordering = ('reference', 'report')
     search_fields = ('report', 'type')
-
 
 
 @admin.register(Journals)

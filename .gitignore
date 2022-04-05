@@ -145,4 +145,4 @@ dmypy.json
 # Cython debug symbols
 cython_debug/
 
-sds/local.py
+sds/localsettings.py
