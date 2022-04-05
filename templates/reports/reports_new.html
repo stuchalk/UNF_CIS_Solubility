@@ -1,0 +1,10 @@
+<!-- incoming variables from publications (volumes) controller: vol, syss -->
+{% extends 'base.html' %}
+{% load static %}
+{% block title %} Report New {% endblock %}
+{% block content %}
+<form method="POST" class="post-form">{% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit" class="save btn btn-secondary">Save</button>
+</form>
+{% endblock %}
