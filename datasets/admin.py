@@ -1,5 +1,6 @@
 """ admin setup for datasets """
 from django.contrib import admin
+from django.contrib.admin import display
 from sds.models import Datasets
 from sds.models import Dataseries
 from sds.models import Datapoints
@@ -47,10 +48,13 @@ class UnitsAdmin(admin.ModelAdmin):
 
 @admin.register(Conditions)
 class ConditionsAdmin(admin.ModelAdmin):
-    list_display = ('quantity',)
-    ordering = ('quantity',)
-    search_fields = ('quantity',)
+    list_display = ('datapoint_id', 'get_name', 'text')
+    ordering = ('datapoint_id',)
+    search_fields = ('get_name',)
 
+    @display(ordering='quantity__name', description='Name')
+    def get_name(self, obj):
+        return obj.quantity.name
 
 @admin.register(Data)
 class DataAdmin(admin.ModelAdmin):

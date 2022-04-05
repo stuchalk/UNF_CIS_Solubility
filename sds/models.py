@@ -322,6 +322,7 @@ class Reports(models.Model):
         managed = False
         db_table = 'reports'
         verbose_name_plural = "reports"
+        ordering = ['system']
 
     def __str__(self):
         return f'{self.system.name} (Vol. {self.volume.volume}, page {self.page})'

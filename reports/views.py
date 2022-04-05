@@ -1,6 +1,22 @@
 from django.shortcuts import render
 from sds.serializers import *
+from .forms import *
+from django.utils import timezone
+from django.shortcuts import redirect
 
+
+def add_report(request):
+    if request.method == "POST":
+        form = ReportForm(request.POST)
+        if form.is_valid():
+            post = form.save(commit=False)
+            post.author = request.user
+            post.published_date = timezone.now()
+            post.save()
+            return redirect('view')
+    else:
+        form = ReportForm()
+    return render(request, 'reports/reports_new.html', {'form': form})
 
 def index():
     """ this is a test """
