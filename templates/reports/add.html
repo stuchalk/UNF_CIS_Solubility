@@ -1,9 +1,10 @@
 <!-- incoming variables from publications (volumes) controller: vol, syss -->
 {% extends 'base.html' %}
 {% load static %}
+{% load crispy_forms_tags %}
 {% block title %} Add Data {% endblock %}
 {% block content %}
-    <form method="POST" class="post-form">
+<form method="POST" class="post-form">
     {% csrf_token %}
     <div class="row">
         <div class="col-12 mb-2 mt-2">
@@ -13,7 +14,37 @@
             <div class="card card-success">
                 <div class="card-header font-weight-bold">Compilation Metadata</div>
                 <div class="card-body">
-                    {{ form_reports.as_p }}
+                    <div class="form-group row mb-0">
+                        <div class="col-sm-12">
+{#                            {{ form_refs.raw|as_crispy_field }}#}
+                        </div>
+                    </div>
+                    <div class="form-group row mb-0">
+                        <div class="col-sm-6">
+                            {{ form_reports.volume|as_crispy_field }}
+                        </div>
+                        <div class="col-sm-6">
+                            {{ form_reports.page|as_crispy_field }}
+                       </div>
+                    </div>
+                    <div class="form-group row mb-0">
+                        <div class="col-sm-12">
+                            {{ form_reports.system|as_crispy_field }}
+                        </div>
+                    </div>
+                    <div class="form-group row mb-0">
+                        <div class="col-sm-12">
+                            {{ form_reports.method|as_crispy_field }}
+                        </div>
+                    </div>
+                    <div class="form-group row mb-0">
+                        <div class="col-sm-6">
+                            {{ form_reports.variables|as_crispy_field }}
+                        </div>
+                        <div class="col-sm-6">
+                            {{ form_reports.comments|as_crispy_field }}
+                       </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -21,7 +52,7 @@
             <div class="card card-info">
                 <div class="card-header font-weight-bold">Datapoint Condition</div>
                 <div class="card-body">
-                    {{ form_conds.as_p }}
+                    {{ form_conds.as_ul }}
                 </div>
             </div>
         </div>

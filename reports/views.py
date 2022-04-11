@@ -7,6 +7,7 @@ from django.shortcuts import redirect
 
 def add(request):
     if request.method == "POST":
+        form_refs = ReferencesForm(request.POST, prefix='ref')
         form_reports = ReportsForm(request.POST, prefix='reports')
         form_conds = ConditionsForm(request.POST, prefix='conditions')
         form_data = DataForm(request.POST, prefix='data')
@@ -16,25 +17,37 @@ def add(request):
             post_rpt.save()
             # save dataset
             dataset = Datasets()
-
+            vol = post_rpt.volume
+            page = post_rpt.page
+            dataset.title = "Dataset for " + str(vol) + ", page " + page
+            dataset.description = "One datapoint"
+            dataset.report_id = post_rpt.id
+            dataset.comments = "via report add page"
+            dataset.save()
+            # save datapoint
+            point = Datapoints()
+            point.title = str(vol) + ", page " + page
+            point.dataset_id = dataset.id
+            point.rownum = 1
+            point.save()
+            # save condition
             post_conds = form_conds.save(commit=False)
-            post_conds.published_date = timezone.now()
-            post_conds.author = request.user
+            post_conds.datapoint_id = point.id
             post_conds.save()
             post_data = form_data.save(commit=False)
-            post_data.published_date = timezone.now()
-            post_data.author = request.user
-            post_data.datapoint = post_conds
+            post_data.datapoint_id = point.id
             post_data.save()
-            return redirect('index')
+            return redirect('view/' + str(post_rpt.id))
         else:
             print('Form input error...')
     else:
+        form_refs = ReferencesForm(prefix='ref')
         form_reports = ReportsForm(prefix='reports')
         form_conds = ConditionsForm(prefix='conditions')
         form_data = DataForm(prefix='data')
     return render(request, 'reports/add.html',
-                  {'form_conds': form_conds, 'form_data': form_data, 'form_reports': form_reports})
+                  {'form_conds': form_conds, 'form_data': form_data,
+                   'form_reports': form_reports, 'form_refs': form_refs})
 
 
 def index():
