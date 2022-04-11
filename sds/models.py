@@ -1,5 +1,6 @@
 """ django models file for reports app """
 from django.db import models
+from django.forms import ModelForm
 from django.utils.translation import gettext_lazy as _
 
 
@@ -198,7 +199,6 @@ class Datasets(models.Model):
 class Identifiers(models.Model):
     """ indentifiers table model """
 
-
     class TypeOpts(models.TextChoices):
         """ component options enum list """
         IN = ('inchi', _('InChI'))
@@ -292,9 +292,9 @@ class References(models.Model):
 
     class Meta:
         managed = False
-        ordering = ['title']
         db_table = 'references'
         verbose_name_plural = "references"
+        ordering = ['citation']
 
     def __str__(self):
         return f"{self.citation}"
@@ -314,7 +314,7 @@ class Reports(models.Model):
     system = models.ForeignKey("Systems", models.DO_NOTHING, db_column="system_id")
     type = models.CharField(max_length=11, choices=TypeOpts.choices, default='compilation')
     variables = models.CharField(max_length=512, blank=True, null=True)
-    method = models.TextField(blank=True, null=True)
+    method = models.TextField(max_length=2048, blank=True, null=True)
     comments = models.CharField(max_length=1024)
     updated = models.DateTimeField(auto_now_add=True)
 
@@ -322,10 +322,16 @@ class Reports(models.Model):
         managed = False
         db_table = 'reports'
         verbose_name_plural = "reports"
-        ordering = ['system']
+        ordering = ['system__name']
 
     def __str__(self):
         return f'{self.system.name} (Vol. {self.volume.volume}, page {self.page})'
+
+
+class ReportForm(ModelForm):
+    class Meta:
+        model = Reports
+        fields = ['page', 'type', 'variables', 'method']
 
 
 class ReferencesReports(models.Model):
@@ -347,7 +353,6 @@ class ReferencesReports(models.Model):
         managed = False
         db_table = 'references_reports'
         verbose_name_plural = "refs/reports (join)"
-
 
     def __str__(self):
         return f"{self.reference.citation} - Vol. {self.report.volume}, page {self.report.page}"
@@ -427,6 +432,7 @@ class Systems(models.Model):
         managed = False
         db_table = 'systems'
         verbose_name_plural = "systems"
+        ordering = ['name']
 
     def __str__(self):
         return f"{self.name}"
