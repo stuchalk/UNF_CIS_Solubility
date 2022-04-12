@@ -7,7 +7,7 @@ from django.shortcuts import redirect
 
 def add(request):
     if request.method == "POST":
-        form_refs = ReferencesForm(request.POST, prefix='ref')
+        form_refs = ReferencesReportsForm(request.POST, prefix='ref')
         form_reports = ReportsForm(request.POST, prefix='reports')
         form_conds = ConditionsForm(request.POST, prefix='conditions')
         form_data = DataForm(request.POST, prefix='data')
@@ -15,6 +15,12 @@ def add(request):
             # save report data
             post_rpt = form_reports.save(commit=False)
             post_rpt.save()
+            # save orginal ref
+            oriref = ReferencesReports()
+            oriref.reference_id = form_refs.id
+            oriref.report_id = post_rpt.id
+            oriref.type = 'original'
+            oriref.methodrefnum = 0
             # save dataset
             dataset = Datasets()
             vol = post_rpt.volume
@@ -41,7 +47,7 @@ def add(request):
         else:
             print('Form input error...')
     else:
-        form_refs = ReferencesForm(prefix='ref')
+        form_refs = ReferencesReportsForm(prefix='ref')
         form_reports = ReportsForm(prefix='reports')
         form_conds = ConditionsForm(prefix='conditions')
         form_data = DataForm(prefix='data')
