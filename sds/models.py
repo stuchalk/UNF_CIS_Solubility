@@ -346,7 +346,7 @@ class ReferencesReports(models.Model):
     reference = models.ForeignKey("References", models.DO_NOTHING, db_column="reference_id")
     report = models.ForeignKey("Reports", models.DO_NOTHING, db_column="report_id")
     type = models.CharField(max_length=12, choices=TypeOpts.choices, default='original')
-    methodrefnum = models.PositiveIntegerField(default=1)
+    methodrefnum = models.PositiveIntegerField(default=None, null=True)
     updated = models.DateTimeField(auto_now_add=True)
 
     class Meta:
