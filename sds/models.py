@@ -325,7 +325,7 @@ class Reports(models.Model):
         ordering = ['system__name']
 
     def __str__(self):
-        return f'{self.system.name} (Vol. {self.volume.volume}, page {self.page})'
+        return f'id. {self.id} {self.system.name} (Vol. {self.volume.volume}, page {self.page})'
 
 
 class ReportForm(ModelForm):

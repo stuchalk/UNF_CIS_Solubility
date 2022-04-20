@@ -69,6 +69,6 @@ class ConditionsAdmin(admin.ModelAdmin):
 
 @admin.register(Data)
 class DataAdmin(admin.ModelAdmin):
-    list_display = ('quantity', 'text', 'unit', 'datapoint')
-    ordering = ('quantity',)
-    search_fields = ('quantity',)
+    list_display = ('id', 'quantity', 'text', 'unit', 'datapoint')
+    ordering = ('id',)
+    search_fields = ('datapoint', 'quantity',)
