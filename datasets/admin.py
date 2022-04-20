@@ -14,7 +14,7 @@ from sds.models import Data
 class DatasetsAdmin(admin.ModelAdmin):
     list_display = ('id', 'title', 'description', 'report')
     ordering = ('title', 'report')
-    search_fields = ('title', 'description')
+    search_fields = ('title', 'description', 'report')
     list_filter = ('report__volume__volume',)
 
 
@@ -22,7 +22,7 @@ class DatasetsAdmin(admin.ModelAdmin):
 class DataseriesAdmin(admin.ModelAdmin):
     list_display = ('id', 'heading', 'seriesnum', 'dataset')
     ordering = ('heading', 'dataset')
-    search_fields = ('heading',)
+    search_fields = ('dataset', 'heading',)
     list_filter = ('dataset__report__volume__volume',)
 
 
@@ -52,7 +52,7 @@ class UnitsAdmin(admin.ModelAdmin):
 class ConditionsAdmin(admin.ModelAdmin):
     list_display = ('id', 'get_point', 'get_quantity', 'text', 'get_unit' )
     ordering = ('quantity__name', 'text',)
-    search_fields = ('text',)
+    search_fields = ('datapoint', 'text',)
 
     @display(ordering='quantity__name', description='Quantity')
     def get_quantity(self, obj):
