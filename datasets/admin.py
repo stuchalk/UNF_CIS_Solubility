@@ -13,7 +13,7 @@ from sds.models import Data
 @admin.register(Datasets)
 class DatasetsAdmin(admin.ModelAdmin):
     list_display = ('id', 'title', 'description', 'report')
-    ordering = ('id', 'title', 'report')
+    ordering = ('title', 'report')
     search_fields = ('title', 'description', 'report')
     list_filter = ('report__volume__volume',)
 
@@ -21,7 +21,7 @@ class DatasetsAdmin(admin.ModelAdmin):
 @admin.register(Dataseries)
 class DataseriesAdmin(admin.ModelAdmin):
     list_display = ('id', 'heading', 'seriesnum', 'dataset')
-    ordering = ('heading', 'dataset')
+    ordering = ('dataset', 'heading')
     search_fields = ('dataset', 'heading',)
     list_filter = ('dataset__report__volume__volume',)
 

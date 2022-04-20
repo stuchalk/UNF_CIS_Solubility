@@ -6,7 +6,7 @@ from sds.models import AuthorsReports
 @admin.register(Authors)
 class AuthorsAdmin(admin.ModelAdmin):
     list_display = ('id', 'name', 'institution', 'email')
-    ordering = ('name', 'institution')
+    ordering = ('id', 'name', 'institution')
     search_fields = ('name', 'institution', 'email')
 
 

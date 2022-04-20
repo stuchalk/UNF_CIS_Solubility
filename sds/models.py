@@ -193,7 +193,7 @@ class Datasets(models.Model):
         verbose_name_plural = "datasets"
 
     def __str__(self):
-        return f"(id: {self.id}) {self.title}"
+        return f"{self.title}"
 
 
 
@@ -326,7 +326,7 @@ class Reports(models.Model):
         ordering = ['system__name']
 
     def __str__(self):
-        return f'id. {self.id} {self.system.name} (Vol. {self.volume.volume}, page {self.page})'
+        return f'(id. {self.id}) {self.system.name} (Vol. {self.volume.volume}, page {self.page})'
 
 
 class ReportForm(ModelForm):
