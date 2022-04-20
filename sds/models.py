@@ -193,7 +193,8 @@ class Datasets(models.Model):
         verbose_name_plural = "datasets"
 
     def __str__(self):
-        return f"{self.title}"
+        return f"(id: {self.id}) {self.title}"
+
 
 
 class Identifiers(models.Model):
