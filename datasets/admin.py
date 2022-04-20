@@ -12,7 +12,7 @@ from sds.models import Data
 
 @admin.register(Datasets)
 class DatasetsAdmin(admin.ModelAdmin):
-    list_display = ('title', 'description', 'report')
+    list_display = ('id', 'title', 'description', 'report')
     ordering = ('title', 'report')
     search_fields = ('title', 'description')
     list_filter = ('report__volume__volume',)
@@ -20,7 +20,7 @@ class DatasetsAdmin(admin.ModelAdmin):
 
 @admin.register(Dataseries)
 class DataseriesAdmin(admin.ModelAdmin):
-    list_display = ('heading', 'seriesnum', 'dataset')
+    list_display = ('id', 'heading', 'seriesnum', 'dataset')
     ordering = ('heading', 'dataset')
     search_fields = ('heading',)
     list_filter = ('dataset__report__volume__volume',)
@@ -28,7 +28,7 @@ class DataseriesAdmin(admin.ModelAdmin):
 
 @admin.register(Datapoints)
 class DatapointsAdmin(admin.ModelAdmin):
-    list_display = ('title', 'dataset', 'dataseries')
+    list_display = ('id', 'title', 'dataset', 'dataseries')
     ordering = ('dataset', 'dataseries')
     search_fields = ('title',)
     list_filter = ('dataseries', 'dataset')
@@ -36,21 +36,21 @@ class DatapointsAdmin(admin.ModelAdmin):
 
 @admin.register(Quantities)
 class QuantitiesAdmin(admin.ModelAdmin):
-    list_display = ('name', 'symbol', 'baseunit')
+    list_display = ('id', 'name', 'symbol', 'baseunit')
     ordering = ('name',)
     search_fields = ('name',)
 
 
 @admin.register(Units)
 class UnitsAdmin(admin.ModelAdmin):
-    list_display = ('name', 'symbol', 'type')
+    list_display = ('id', 'name', 'symbol', 'type')
     ordering = ('name',)
     search_fields = ('name',)
 
 
 @admin.register(Conditions)
 class ConditionsAdmin(admin.ModelAdmin):
-    list_display = ('get_point', 'get_quantity', 'text', 'get_unit' )
+    list_display = ('id', 'get_point', 'get_quantity', 'text', 'get_unit' )
     ordering = ('quantity__name', 'text',)
     search_fields = ('text',)
 
