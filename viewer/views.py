@@ -11,6 +11,7 @@ from rest_framework import serializers
 from viewer.inspectdb import *
 import json
 from pathlib import Path
+from django.http import JsonResponse
 
 class ReferencesReportsSerializer(serializers.ModelSerializer):
     class Meta:
@@ -96,7 +97,8 @@ def view(request, user_id):
         if datapoints_object:
             datapoints_object_serialized = DatapointsSerializer(datapoints_object)
             serialized_data['datapoints'].append(datapoints_object_serialized.data)
-    student_data = json.dumps(serialized_data, indent=4)
+    student_data = json.dumps(serialized_data)
 
-    return render(request, "../templates/viewer/view.html",
-                  {'student_data': student_data, 'user_id': user_id})
+    return JsonResponse(serialized_data, safe=False)
+    # return render(request, "../templates/viewer/view.html",
+    #               {'student_data': student_data, 'user_id': user_id})
