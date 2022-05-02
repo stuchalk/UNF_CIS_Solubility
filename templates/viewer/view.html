@@ -1,0 +1,20 @@
+
+{% extends 'base.html' %}
+{% load static %}
+{% block title %} User View {% endblock %}
+{% block content %}
+<div class="row">
+    <div class="col-5">
+
+        <div class="card-body">
+            <h5>user_id: {{ user_id }}</h5>
+
+            <pre>
+                {{ student_data }}
+            </pre>
+
+        </div>
+
+    </div>
+</div>
+{% endblock %}

@@ -50,7 +50,8 @@ INSTALLED_APPS = [
     'systems',
     'volumes',
     'rest_framework',
-    'sds'
+    'sds',
+    'viewer',
 ] + localsettings.localapps
 
 MIDDLEWARE = [

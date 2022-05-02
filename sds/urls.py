@@ -25,4 +25,5 @@ urlpatterns = [
     path('systems/', include('systems.urls')),
     path('volumes/', include('volumes.urls')),
     path('admin/', admin.site.urls),
+    path('viewer/', include('viewer.urls'))
 ]
