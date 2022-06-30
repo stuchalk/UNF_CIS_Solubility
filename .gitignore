@@ -146,3 +146,7 @@ dmypy.json
 cython_debug/
 
 sds/localsettings.py
+
+# private files
+instructor/analysis
+instructor/dump
