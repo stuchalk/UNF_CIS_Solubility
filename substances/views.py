@@ -35,10 +35,11 @@ def view(request, subid=0):
     sysids = sub.substancessystems_set.values_list('system_id')
     syslst = Systems.objects.all().filter(id__in=sysids).values('id', 'name').order_by('name')
     # get compilation report(s)
-    crpts = Datasets.objects.all().filter(system__in=sysids, eval=0).values('report_id', 'system_id',
-                                                                            'report__referencesreports__reference__raw')
-    # get compilation report
-    erpts = Datasets.objects.all().filter(system__in=sysids, eval=1).values('report_id', 'system_id')
+    crpts = (Reports.objects.all().
+             filter(system__in=sysids, type='compilation').
+             values('id', 'system_id', 'referencesreports__reference__citation'))
+    # get evaulation report(s)
+    erpts = Reports.objects.all().filter(system__in=sysids, type='evaluation').values('id', 'system_id')
     # agregate data for template
     syss = {}
     for sys in syslst:
@@ -53,7 +54,7 @@ def view(request, subid=0):
         clst = []
         for crpt in crpts:
             if crpt['system_id'] == sys['id']:
-                clst.append(tuple((crpt['report_id'], crpt['report__referencesreports__reference__raw'])))
+                clst.append(tuple((crpt['id'], crpt['referencesreports__reference__citation'])))
         syss[sys['id']].append(clst)
 
     # work out if pubchem has 3d version of sdf file
