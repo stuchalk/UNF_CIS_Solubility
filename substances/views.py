@@ -1,4 +1,4 @@
-""" substance views file """
+""" substances views file """
 import urllib.error
 import urllib.request
 from django.shortcuts import render
