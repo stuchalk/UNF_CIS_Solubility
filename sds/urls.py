@@ -15,10 +15,12 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+from django.shortcuts import redirect
 
 urlpatterns = [
     path('', include('solubility.urls')),
     path('authors/', include('authors.urls')),
+    path('journals/', lambda req: redirect('/')),
     path('references/', include('references.urls')),
     path('reports/', include('reports.urls')),
     path('substances/', include('substances.urls')),
