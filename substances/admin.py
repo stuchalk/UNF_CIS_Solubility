@@ -8,7 +8,7 @@ from sds.models import Chemicals
 class SubstancesAdmin(admin.ModelAdmin):
     list_display = ('id', 'name', 'formula', 'casno')
     ordering = ('name',)
-    search_fields = ('name', 'formula')
+    search_fields = ('name', 'formula', 'casno')
 
 
 @admin.register(Identifiers)

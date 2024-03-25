@@ -145,7 +145,7 @@ class Migration(migrations.Migration):
             name='Identifiers',
             fields=[
                 ('id', models.AutoField(primary_key=True, serialize=False)),
-                ('type', models.CharField(choices=[('inchi', 'InChI'), ('inchikey', 'InChIKey'), ('smiles', 'Canonical SMILES')], default='inchi', max_length=12)),
+                ('type', models.CharField(choices=[('inchi', 'InChI'), ('inchikey', 'InChIKey'), ('smiles', 'Canonical SMILES'), ('casrn', 'CASRN')], default='inchi', max_length=12)),
                 ('value', models.CharField(max_length=1024)),
                 ('updated', models.DateTimeField(auto_now_add=True)),
             ],

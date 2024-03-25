@@ -204,6 +204,7 @@ class Identifiers(models.Model):
         IN = ('inchi', _('InChI'))
         KY = ('inchikey', _('InChIKey'))
         SM = ('smiles', _('Canonical SMILES'))
+        CN = ('casrn', _('CAS-RN'))
 
     id = models.AutoField(primary_key=True)
     substance = models.ForeignKey("Substances", models.DO_NOTHING, db_column="substance_id")
