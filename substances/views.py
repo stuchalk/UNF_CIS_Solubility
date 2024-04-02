@@ -48,7 +48,7 @@ def view(request, subid=0):
         elst = []
         for erpt in erpts:
             if erpt['system_id'] == sys['id']:
-                elst.append(erpt['report_id'])
+                elst.append(erpt['id'])
         syss[sys['id']].append(elst)
         clst = []
         for crpt in crpts:

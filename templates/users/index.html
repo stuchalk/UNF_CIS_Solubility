@@ -12,7 +12,7 @@
                 <div id="results" class="card-body">
                     <ul class='list-unstyled list-compact mb-0'>
                         {% for usr in usrs %}
-                            <li><a href="/users/view/{{ usr.id }}">{{ usr.first_name }} {{ usr.last_name }}</a></li>
+                            <li>{{ usr.first_name }}</li>
                         {% endfor %}
                     </ul>
                 </div>
