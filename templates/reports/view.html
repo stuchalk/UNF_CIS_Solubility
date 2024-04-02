@@ -12,13 +12,25 @@
             <div class="card-header font-weight-bold">Metadata</div>
             <div class="card-body">
                 <h5>Components:</h5>
-                <p>{% for chem in chems %}
-                    ({{ chem.compnum }}) {{ chem.substance.name }},
-                    {% autoescape off %}{{ chem.substance.formula_html }}{% endautoescape %}; [{{ chem.substance.casno }}]
-                    <a href="https://webbook.nist.gov/cgi/cbook.cgi?ID={{ chem.substance.casno }}" target="_blank">
-                        NIST WebBook</a>
-                    {% if not forloop.last %}<br/>{% endif %}
-                {% endfor %}</p>
+                {% if chems %}
+                <p>
+                    {% for chem in chems %}
+                        ({{ chem.compnum }}) {{ chem.substance.name }},
+                        {% autoescape off %}{{ chem.substance.formula_html }}{% endautoescape %}; [{{ chem.substance.casno }}]
+                        <a href="https://webbook.nist.gov/cgi/cbook.cgi?ID={{ chem.substance.casno }}" target="_blank">NIST WebBook</a>
+                        {% if not forloop.last %}<br/>{% endif %}
+                    {% endfor %}
+                </p>
+                {% else %}
+                <p>
+                    {% for chem in compnts %}
+                        ({{ chem.compnum }}) {{ chem.substance.name }},
+                        {% autoescape off %}{{ chem.substance.formula_html }}{% endautoescape %}; [{{ chem.substance.casno }}]
+                        <a href="https://webbook.nist.gov/cgi/cbook.cgi?ID={{ chem.substance.casno }}" target="_blank">NIST WebBook</a>
+                        {% if not forloop.last %}<br/>{% endif %}
+                    {% endfor %}
+                </p>
+                {% endif %}
                 <h5>Original Measurements</h5>
                 <p>{% for ref in refs %}
                     {% if ref.type == 'original' %}
@@ -37,21 +49,26 @@
                         {{ cmplr.author.name }}{% if not forloop.last %}, {% endif %}
                     {% endif %}
                 {% endfor %}</p>
+                <!-- method -->
                 <h5>Method/Apparatus/Procedure:</h5>
-                <p class="text-justify">{% if method|length > 0 %}
-                    {{ method }}
-                {% else %}
-                    NA
-                {% endif %}</p>
+                <p class="text-justify">
+                    {% if method|length > 0 %}
+                        {{ method }}
+                    {% else %}
+                        NA
+                    {% endif %}
+                </p>
+                <!-- chemicals -->
                 {% if chems|length > 0 %}
-                <h5>Source and Purity of Materials:</h5>
-                <p>{% for chem in chems %}
-                    ({{ chem.compnum }}) {{ chem.purity }}
-                    {% if not forloop.last %}<br/>{% endif %}
-                {% endfor %}</p>
+                    <h5>Source and Purity of Materials:</h5>
+                    <p>{% for chem in chems %}
+                            ({{ chem.compnum }}) {{ chem.purity }}
+                            {% if not forloop.last %}<br/>{% endif %}
+                    {% endfor %}</p>
                 {% endif %}
-                {% if mrefs != None %}
-                <h5>References</h5>
+                <!-- references -->
+                {% if mrefs %}
+                    <h5>References</h5>
                     <p>{% for mref in mrefs %}
                         [{{ mref.methodrefnum }}] <a href="{{ mref.reference.url }}">{{ mref.reference.citation }}</a>
                         {% if not forloop.last %}<br/>{% endif %}

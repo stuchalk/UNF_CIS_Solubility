@@ -8,6 +8,7 @@ from sds.models import Quantities
 from sds.models import Units
 from sds.models import Conditions
 from sds.models import Data
+from sds.models import Suppdata
 
 
 @admin.register(Datasets)
@@ -50,21 +51,27 @@ class UnitsAdmin(admin.ModelAdmin):
 
 @admin.register(Conditions)
 class ConditionsAdmin(admin.ModelAdmin):
-    list_display = ('id', 'get_point', 'get_quantity', 'text', 'get_unit' )
+    list_display = ('id', 'get_point', 'get_series', 'get_quantity', 'text', 'get_unit')
     ordering = ('quantity__name', 'text',)
     search_fields = ('datapoint', 'text',)
+    list_filter = ('dataseries',)
+    autocomplete_fields = ('datapoint', 'dataseries')
 
     @display(ordering='quantity__name', description='Quantity')
     def get_quantity(self, obj):
         return obj.quantity.name
 
+    @display(ordering='datapoint__dataseries__heading', description='Dataseries')
+    def get_series(self, obj):
+        return obj.datapoint.dataseries.heading
+
     @display(ordering='datapoint__title', description='Datapoint')
     def get_point(self, obj):
         return obj.datapoint.title
 
-    @display(ordering='unit__name', description='Unit')
+    @display(ordering='unit__symbol', description='Unit')
     def get_unit(self, obj):
-        return obj.unit.name
+        return obj.unit.symbol
 
 
 @admin.register(Data)
@@ -72,3 +79,12 @@ class DataAdmin(admin.ModelAdmin):
     list_display = ('id', 'quantity', 'text', 'unit', 'datapoint')
     ordering = ('id',)
     search_fields = ('datapoint', 'quantity',)
+    autocomplete_fields = ('datapoint',)
+
+
+@admin.register(Suppdata)
+class SuppdataAdmin(admin.ModelAdmin):
+    list_display = ('id', 'quantity', 'unit', 'datapoint')
+    ordering = ('id',)
+    search_fields = ('datapoint', 'quantity',)
+    autocomplete_fields = ('datapoint',)

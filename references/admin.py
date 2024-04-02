@@ -9,7 +9,7 @@ class ReferencesAdmin(admin.ModelAdmin):
     list_display = ('id', 'title', 'year', 'volume', 'startpage', 'doi')
     ordering = ('citation', 'title')
     search_fields = ('title', 'doi')
-    list_filter = ('journal',)
+    list_filter = ('journal__abbrev',)
 
 
 @admin.register(ReferencesReports)

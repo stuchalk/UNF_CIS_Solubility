@@ -413,6 +413,33 @@ class SubstancesSystems(models.Model):
         return f'{self.system.name} ({self.role})'
 
 
+class Suppdata(models.Model):
+    id = models.AutoField(primary_key=True)
+    datapoint = models.ForeignKey("Datapoints", models.DO_NOTHING, db_column="datapoint_id")
+    sysid_tablenum_rownum = models.CharField(max_length=32, db_collation='utf8mb3_general_ci')
+    sysid_tablenum = models.CharField(max_length=15, db_collation='utf8mb3_general_ci', db_comment='Temp field')
+    source = models.CharField(max_length=10, db_collation='utf8mb3_general_ci', blank=True, null=True)
+    dataformat = models.CharField(max_length=5, db_collation='utf8mb3_general_ci', db_comment='Array values are as JSON arrays')
+    quantity = models.ForeignKey("Quantities", models.DO_NOTHING, db_column="quantity_id")
+    significand = models.TextField(db_collation='utf8mb3_general_ci')
+    exponent = models.TextField(db_collation='utf8mb3_general_ci')
+    error = models.TextField(db_collation='utf8mb3_general_ci', blank=True, null=True)
+    error_type = models.CharField(max_length=8, db_collation='utf8mb3_general_ci')
+    number_of_observations = models.SmallIntegerField(db_column='number of observations', blank=True, null=True)  # Field renamed to remove unsuitable characters.
+    unit = models.ForeignKey("Units", models.DO_NOTHING, db_column="unit_id")
+    accuracy = models.TextField(db_collation='utf8mb3_general_ci')
+    component = models.CharField(max_length=50)
+    heading = models.CharField(max_length=50)
+    note = models.TextField(db_collation='utf8mb3_general_ci')
+    exact = models.IntegerField()
+    updated = models.DateTimeField()
+
+    class Meta:
+        managed = False
+        db_table = 'suppdata'
+        verbose_name_plural = "suppdata"
+
+
 class Systems(models.Model):
     """ systems table model """
 

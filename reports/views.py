@@ -91,4 +91,4 @@ def view(request, repid=0):
     cmplrs = data['authrep']
     return render(request, "../templates/reports/view.html",
                   {'sys': sys, 'vol': vol, 'subs': subs, 'vars': variables, 'series': series, 'points': points,
-                   'method': method, 'chems': chems, 'refs': refs, 'mrefs': mrefs, 'cmplrs': cmplrs})
+                   'method': method, 'chems': chems, 'refs': refs, 'mrefs': mrefs, 'cmplrs': cmplrs, 'compnts': compnts})
