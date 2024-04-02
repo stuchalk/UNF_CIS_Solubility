@@ -6,8 +6,7 @@ from sds.models import *
 
 
 def index(request):
-    """
-    present an overview page about the substance in the sds"""
+    """present an overview page about the substance in the sds"""
     data = Substances.objects.all().values('id', 'name').order_by('name')
     chars = []
     subs = {}

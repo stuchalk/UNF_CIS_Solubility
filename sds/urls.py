@@ -19,6 +19,7 @@ from django.shortcuts import redirect
 
 urlpatterns = [
     path('', include('solubility.urls')),
+    path('admin/', admin.site.urls),
     path('authors/', include('authors.urls')),
     path('journals/', lambda req: redirect('/')),
     path('references/', include('references.urls')),
@@ -26,6 +27,6 @@ urlpatterns = [
     path('substances/', include('substances.urls')),
     path('systems/', include('systems.urls')),
     path('volumes/', include('volumes.urls')),
-    path('admin/', admin.site.urls),
-    path('viewer/', include('viewer.urls'))
+    path('viewer/', include('viewer.urls')),
+    path('users/', include('users.urls')),
 ]

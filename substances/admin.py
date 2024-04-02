@@ -2,6 +2,12 @@ from django.contrib import admin
 from sds.models import Substances
 from sds.models import Identifiers
 from sds.models import Chemicals
+from django.contrib.auth.models import Group, User
+
+
+# Remove Groups
+admin.site.unregister(Group)
+admin.site.unregister(User)
 
 
 @admin.register(Substances)

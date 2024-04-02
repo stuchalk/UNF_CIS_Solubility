@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+
+{% block title %} Users Index {% endblock %}
+{% block header %} Users Index {% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12 mt-2">
+        <div class="col-12"><h3>Data Curators</h3></div>
+        <div class="col-8">
+            <div class="card card-default">
+                <div id="results" class="card-body">
+                    <ul class='list-unstyled list-compact mb-0'>
+                        {% for usr in usrs %}
+                            <li><a href="/users/view/{{ usr.id }}">{{ usr.first_name }} {{ usr.last_name }}</a></li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
