@@ -15,7 +15,7 @@ class SystemsAdmin(admin.ModelAdmin):
 @admin.register(SubstancesSystems)
 class SubstancesSystemsAdmin(admin.ModelAdmin):
     """ substances_systems table admin config """
-    list_display = ('id', 'system', 'substance', 'role')
+    list_display = ('id', 'system', 'substance', 'compnum', 'role')
     ordering = ('system',)
     search_fields = ('system__name', 'substance__name')
     list_filter = ('system',)
