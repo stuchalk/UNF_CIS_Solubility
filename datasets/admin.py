@@ -23,16 +23,24 @@ class DatasetsAdmin(admin.ModelAdmin):
 class DataseriesAdmin(admin.ModelAdmin):
     list_display = ('id', 'heading', 'seriesnum', 'dataset')
     ordering = ('dataset', 'heading')
-    search_fields = ('dataset', 'heading',)
-    list_filter = ('dataset__report__volume__volume',)
+    search_fields = ('dataset__title', 'heading',)
 
 
 @admin.register(Datapoints)
 class DatapointsAdmin(admin.ModelAdmin):
-    list_display = ('id', 'title', 'dataset', 'dataseries')
+    list_display = ('title', 'get_set', 'get_series')
     ordering = ('title', 'dataset', 'dataseries')
-    search_fields = ('title',)
-    list_filter = ('dataseries', 'dataset')
+    search_fields = ('dataseries__heading', 'dataset__title',)
+
+    @display(ordering='dataseries__heading', description='Dataseries')
+    def get_series(self, obj):
+        """ series heading """
+        return obj.dataseries.heading
+
+    @display(ordering='dataseries__dataset__title', description='Dataset')
+    def get_set(self, obj):
+        """ series heading """
+        return obj.dataseries.dataset.title
 
 
 @admin.register(Quantities)
@@ -54,31 +62,35 @@ class ConditionsAdmin(admin.ModelAdmin):
     list_display = ('id', 'get_point', 'get_series', 'get_quantity', 'text', 'get_unit')
     ordering = ('quantity__name', 'text',)
     search_fields = ('datapoint', 'text',)
-    list_filter = ('dataseries',)
     autocomplete_fields = ('datapoint', 'dataseries')
 
     @display(ordering='quantity__name', description='Quantity')
     def get_quantity(self, obj):
+        """ quantity name """
         return obj.quantity.name
 
     @display(ordering='datapoint__dataseries__heading', description='Dataseries')
     def get_series(self, obj):
+        """ series heading """
         return obj.datapoint.dataseries.heading
 
     @display(ordering='datapoint__title', description='Datapoint')
     def get_point(self, obj):
+        """ datapoint title """
         return obj.datapoint.title
 
     @display(ordering='unit__symbol', description='Unit')
     def get_unit(self, obj):
+        """ unit symbol """
         return obj.unit.symbol
 
 
 @admin.register(Data)
 class DataAdmin(admin.ModelAdmin):
-    list_display = ('id', 'quantity', 'text', 'unit', 'datapoint')
+    list_display = ('id', 'quantity', 'text', 'unit', 'compnum')
     ordering = ('id',)
-    search_fields = ('datapoint', 'quantity',)
+    search_fields = ('datapoint__title', 'quantity__name',
+                     'datapoint__dataseries__heading', 'datapoint__dataseries__dataset__title')
     autocomplete_fields = ('datapoint',)
 
 
