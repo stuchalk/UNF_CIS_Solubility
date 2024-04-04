@@ -47,10 +47,23 @@ class DataSerializer(serializers.ModelSerializer):
         depth = 1
 
 
+class SuppdataSerializer(serializers.ModelSerializer):
+    """ suppdata serializer """
+    quantity = QuantitySerializer(many=False, required=True)
+    unit = UnitSerializer(many=False, required=True)
+
+    class Meta:
+        """ settings """
+        model = Suppdata
+        fields = '__all__'
+        depth = 1
+
+
 class DatapointSerializer(serializers.ModelSerializer):
     """ datapoint serializer """
     conditions = ConditionSerializer(source='conditions_set', many=True, required=False)
     data = DataSerializer(source='data_set', many=True, required=False)
+    suppdata = SuppdataSerializer(source='suppdata_set', many=True, required=False)
 
     class Meta:
         """ settings """

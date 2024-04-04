@@ -23,7 +23,7 @@ class DatasetsAdmin(admin.ModelAdmin):
 class DataseriesAdmin(admin.ModelAdmin):
     list_display = ('heading', 'seriesnum', 'dataset')
     ordering = ('dataset', 'heading')
-    search_fields = ('dataset__title', 'dataseries__heading',)
+    search_fields = ('dataset__title', 'heading',)
 
 
 @admin.register(Datapoints)
@@ -31,7 +31,7 @@ class DatapointsAdmin(admin.ModelAdmin):
     list_display = ('title', 'get_set', 'get_series')
     ordering = ('title', 'dataset', 'dataseries')
     search_fields = ('dataseries__heading', 'dataseries__dataset__title',)
-    autocomplete_fields = ('dataseries', 'dataset',)
+    autocomplete_fields = ['dataseries', 'dataset']
 
     @display(ordering='dataseries__heading', description='Dataseries')
     def get_series(self, obj):
@@ -61,9 +61,9 @@ class UnitsAdmin(admin.ModelAdmin):
 @admin.register(Conditions)
 class ConditionsAdmin(admin.ModelAdmin):
     list_display = ('get_point', 'get_series', 'get_quantity', 'text', 'get_unit')
-    ordering = ('quantity__name', 'text',)
-    search_fields = ('datapoint__title', 'datapoint__dataseries__heading', 'text',)
-    autocomplete_fields = ('datapoint', 'dataseries')
+    ordering = ('id', 'quantity__name', 'text',)
+    search_fields = ['datapoint__dataseries__heading', 'datapoint__title', 'text']
+    autocomplete_fields = ['dataseries', 'datapoint']
 
     @display(ordering='quantity__name', description='Quantity')
     def get_quantity(self, obj):
@@ -73,7 +73,10 @@ class ConditionsAdmin(admin.ModelAdmin):
     @display(ordering='datapoint__dataseries__heading', description='Dataseries')
     def get_series(self, obj):
         """ series heading """
-        return obj.datapoint.dataseries.heading
+        if obj.datapoint is not None:
+            return obj.datapoint.dataseries.heading
+        else:
+            return obj.dataseries.heading
 
     @display(ordering='datapoint__title', description='Datapoint')
     def get_point(self, obj):

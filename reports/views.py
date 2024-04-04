@@ -1,7 +1,6 @@
 from django.shortcuts import render
-from sds.serializers import *
+# from sds.serializers import *
 from .forms import *
-from django.utils import timezone
 from django.shortcuts import redirect
 
 
@@ -17,7 +16,7 @@ def add(request):
             post_rpt.save()
             # save orginal ref
             oriref = ReferencesReports()
-            oriref.reference_id = form_refs.id
+            oriref.reference_id = form_refs.reference.id
             oriref.report_id = post_rpt.id
             oriref.type = 'original'
             oriref.methodrefnum = 0
@@ -64,39 +63,26 @@ def index():
 def view(request, repid=0):
     """ show data about a specific report """
     rep = Reports.objects.get(id=repid)
-    report = ReportSerializer(rep)
-    data = report.data
-    sys = data['system']
-    vol = data['volume']
-    sysid = sys['id']
-    # get from subsys table as not in serializer output
+    sys = rep.system
+    vol = rep.volume
+    sysid = sys.id
     subsyslst = SubstancesSystems.objects.all().filter(system_id=sysid).values('substance_id', 'compnum', 'role')
     compnts = {}
     for subsys in subsyslst:
         compnts.update({subsys['substance_id']: {'compnum': subsys['compnum'], 'role': subsys['role']}})
-    method = data['method']
-    variables = data['variables']
-    chems = data['chem']
-    series = data['set'][0]['dataseries']
+    method = rep.method
+    variables = rep.variables
+    chems = rep.chemicals_set.all()
     subs = {}
     for chem in chems:
-        subs.update({chem['compnum']: chem['substance']})
-    refs = data['refs']
-    mrefs = []
-    for ref in refs:
-        if ref['type'] == 'supplemental':
-            mrefs.append(ref)
-
-    cmplrs = AuthorsReports.objects.filter(report_id=repid, role='compiler')
+        subs.update({chem.compnum: chem.substance})
+    sets = rep.datasets_set.all()
+    series = sets[0].dataseries_set.all()
+    orefids = rep.referencesreports_set.all().filter(type='original').values_list('reference_id', flat=True)
+    mrefids = rep.referencesreports_set.all().filter(type='supplemental').values_list('reference_id', flat=True)
+    orefs = References.objects.filter(id__in=orefids)
+    mrefs = References.objects.filter(id__in=mrefids)
+    cmplrs = rep.authorsreports_set.all().filter(role='compiler')
     return render(request, "../templates/reports/view.html",
                   {'sys': sys, 'vol': vol, 'subs': subs, 'vars': variables, 'series': series, 'method': method,
-                   'chems': chems, 'refs': refs, 'mrefs': mrefs, 'cmplrs': cmplrs, 'compnts': compnts})
-
-
-def testing(request, repid=0):
-    """ temp function """
-    cond = Conditions.objects.get(id=repid)
-    data = Data.objects.get(id=repid)
-    supp = Suppdata.objects.get(id=repid)
-    return render(request, "../templates/reports/testing.html", {'supp': supp, 'cond': cond, 'data': data})
-
+                   'chems': chems, 'orefs': orefs, 'mrefs': mrefs, 'cmplrs': cmplrs, 'compnts': compnts})

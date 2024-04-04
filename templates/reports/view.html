@@ -23,11 +23,9 @@
                 </p>
                 {% endif %}
                 <h5>Original Measurements</h5>
-                <p>{% for ref in refs %}
-                    {% if ref.type == 'original' %}
-                        <a href="{{ ref.reference.url }}">{{ ref.reference.citation }}</a>
-                        {% if not forloop.last %}<br/>{% endif %}
-                    {% endif %}
+                <p>{% for ref in orefs %}
+                    <a href="{{ ref.url }}">{{ ref.citation }}</a>
+                    {% if not forloop.last %}<br/>{% endif %}
                 {% endfor %}</p>
                 {% if vars|length > 0 %}
                     <h5>Variables:</h5>
@@ -75,24 +73,26 @@
                     {% for table in series %}
                         {% with tablenum=forloop.counter %}
                             <div class="text-center font-weight-bold mb-4">{{ table.heading }}</div>
+                            <!-- series conditions -->
+                            {% if table.conditions_set.all %}
+                                {% for scond in table.conditions_set.all %}
+                                    <p><b>{{ scond.quantity.symbol }}/{{ scond.unit.symbol }}</b> = {{ scond.text }}</p>
+                                {% endfor %}
+                            {% endif %}
                             <table class="table table-striped">
                                 <!-- header -->
-                                {% for point in table.datapoints %}
+                                {% for point in table.datapoints_set.all %}
                                     {% with pointnum=forloop.counter %}
                                         {% if pointnum == 1 %}
                                             <thead class="table-primary"><tr>
-                                            {% for cond in point.conditions %}
+                                            {% for cond in point.conditions_set.all %}
                                                 <th class="font-weight-bold pb-1 pt-1" scope="col">{{ cond.quantity.symbol }} ({{ cond.unit.symbol }})</th>
                                             {% endfor %}
-                                            {% for data in point.data %}
-                                                <th class="font-weight-bold pb-1 pt-1" scope="col">{{ data.quantity.symbol }}
-                                                    {% if data.compnum != None %}<sub>{{ data.compnum }}</sub>{% endif %}
-                                                    ({{ data.unit.symbol }})</th>
+                                            {% for data in point.data_set.all %}
+                                                <th class="font-weight-bold pb-1 pt-1" scope="col">{{ data.quantity.symbol }}{% if data.compnum != None %}<sub>{{ data.compnum }}</sub>{% endif %} ({{ data.unit.symbol }})</th>
                                             {% endfor %}
-                                            {% for supp in point.suppdata %}
-                                                <th class="font-weight-bold pb-1 pt-1" scope="col">{{ supp.quantity.symbol }}
-                                                    {% if supp.compnum != None %}<sub>{{ supp.compnum }}</sub>{% endif %}
-                                                    ({{ supp.unit.symbol }})</th>
+                                            {% for supp in point.suppdata_set.all %}
+                                                <th class="font-weight-bold pb-1 pt-1" scope="col">{{ supp.quantity.symbol }}{% if supp.compnum != None %}<sub>{{ supp.compnum }}</sub>{% endif %} ({{ supp.unit.symbol }})</th>
                                             {% endfor %}
                                             </tr></thead>
                                         {% endif %}
@@ -100,19 +100,19 @@
                                 {% endfor %}
                                 <!-- body -->
                                 <tbody>
-                                {% for point in table.datapoints %}
+                                {% for point in table.datapoints_set.all %}
                                     <tr>
-                                        {% for cond in point.conditions %}
+                                        {% for cond in point.conditions_set.all %}
                                             <td>{{ cond.text }}
                                                 {%  if cond.error != None %}(± {{ cond.error }}){%  endif %}
                                             </td>
                                         {% endfor %}
-                                        {% for data in point.data %}
+                                        {% for data in point.data_set.all %}
                                             <td>{{ data.text }}
                                                 {%  if data.error != None %}(± {{ data.error }}){%  endif %}
                                             </td>
                                         {% endfor %}
-                                        {% for supp in point.suppdata %}
+                                        {% for supp in point.suppdata_set.all %}
                                             <td>{{ supp.text }}
                                                 {%  if supp.error != None %}(± {{ supp.error }}){%  endif %}
                                             </td>
@@ -127,8 +127,8 @@
             </div>
         </div>
     </div>
-    <div class="col-12">
-        <pre> {% debug %} </pre>
-    </div>
+{#    <div class="col-12">#}
+{#        <pre> {% debug %} </pre>#}
+{#    </div>#}
 </div>
 {% endblock %}
