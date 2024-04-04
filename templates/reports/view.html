@@ -21,15 +21,6 @@
                         {% if not forloop.last %}<br/>{% endif %}
                     {% endfor %}
                 </p>
-                {% else %}
-                <p>
-                    {% for chem in compnts %}
-                        ({{ chem.compnum }}) {{ chem.substance.name }},
-                        {% autoescape off %}{{ chem.substance.formula_html }}{% endautoescape %}; [{{ chem.substance.casno }}]
-                        <a href="https://webbook.nist.gov/cgi/cbook.cgi?ID={{ chem.substance.casno }}" target="_blank">NIST WebBook</a>
-                        {% if not forloop.last %}<br/>{% endif %}
-                    {% endfor %}
-                </p>
                 {% endif %}
                 <h5>Original Measurements</h5>
                 <p>{% for ref in refs %}
