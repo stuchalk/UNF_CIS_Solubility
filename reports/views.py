@@ -88,7 +88,16 @@ def view(request, repid=0):
         if ref['type'] == 'supplemental':
             mrefs.append(ref)
 
-    cmplrs = data['authrep']
+    cmplrs = AuthorsReports.objects.filter(report_id=repid, role='compiler')
     return render(request, "../templates/reports/view.html",
                   {'sys': sys, 'vol': vol, 'subs': subs, 'vars': variables, 'series': series, 'points': points,
                    'method': method, 'chems': chems, 'refs': refs, 'mrefs': mrefs, 'cmplrs': cmplrs, 'compnts': compnts})
+
+
+def testing(request, repid=0):
+    """ temp function """
+    cond = Conditions.objects.get(id=repid)
+    data = Data.objects.get(id=repid)
+    supp = Suppdata.objects.get(id=repid)
+    return render(request, "../templates/reports/testing.html", {'supp': supp, 'cond': cond, 'data': data})
+

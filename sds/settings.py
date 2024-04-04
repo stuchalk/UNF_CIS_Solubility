@@ -52,7 +52,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'sds',
     'viewer',
-    'users'
+    'users',
 ] + localsettings.localapps
 
 MIDDLEWARE = [
