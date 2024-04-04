@@ -99,7 +99,7 @@ class Conditions(models.Model):
         verbose_name_plural = "conditions"
 
     def __str__(self):
-        return f"{self.quantity.name}"
+        return f"{{{self.quantity.name}: {self.text} {self.unit.symbol}}}"
 
 
 class Data(models.Model):
@@ -132,7 +132,7 @@ class Data(models.Model):
         verbose_name_plural = "data"
 
     def __str__(self):
-        return f"{{self.quantity.name: {self.text} {self.unit.symbol}}}"
+        return f"{{{self.quantity.name}: {self.text} {self.unit.symbol}}}"
 
 
 class Datapoints(models.Model):
@@ -331,6 +331,7 @@ class Reports(models.Model):
 
 class ReportForm(ModelForm):
     class Meta:
+        """ meta for reports form """
         model = Reports
         fields = ['page', 'type', 'variables', 'method']
 
@@ -414,30 +415,43 @@ class SubstancesSystems(models.Model):
 
 
 class Suppdata(models.Model):
+
+    class TypeOpts(models.TextChoices):
+        """ error types enum list """
+        AB = ('absolute', _('Absolute'))
+        RL = ('relative', _('Relative'))
+        SD = ('SD', _('Std. Dev.'))
+        RS = ('%RSD', _('% RSD'))
+        CI = ('CI', _('Conf. Interval'))
+
+    class SrcOpts(models.TextChoices):
+        """ error types enum list """
+        AB = ('Calculated', _('Author calculation'))
+        RL = ('Compiler', _('Compiler calculation'))
+        SD = ('Evaluator', _('Evaluator calculation'))
+
     id = models.AutoField(primary_key=True)
     datapoint = models.ForeignKey("Datapoints", models.DO_NOTHING, db_column="datapoint_id")
-    sysid_tablenum_rownum = models.CharField(max_length=32, db_collation='utf8mb3_general_ci')
-    sysid_tablenum = models.CharField(max_length=15, db_collation='utf8mb3_general_ci', db_comment='Temp field')
-    source = models.CharField(max_length=10, db_collation='utf8mb3_general_ci', blank=True, null=True)
-    dataformat = models.CharField(max_length=5, db_collation='utf8mb3_general_ci', db_comment='Array values are as JSON arrays')
     quantity = models.ForeignKey("Quantities", models.DO_NOTHING, db_column="quantity_id")
-    significand = models.TextField(db_collation='utf8mb3_general_ci')
-    exponent = models.TextField(db_collation='utf8mb3_general_ci')
-    error = models.TextField(db_collation='utf8mb3_general_ci', blank=True, null=True)
-    error_type = models.CharField(max_length=8, db_collation='utf8mb3_general_ci')
-    number_of_observations = models.SmallIntegerField(db_column='number of observations', blank=True, null=True)  # Field renamed to remove unsuitable characters.
+    text = models.CharField(max_length=16, db_collation='utf8mb3_general_ci')
+    source = models.CharField(max_length=10, choices=SrcOpts.choices, default='Compiler', blank=True, null=True)
+    significand = models.CharField(max_length=16, db_collation='utf8mb3_general_ci')
+    exponent = models.IntegerField()
+    error = models.CharField(max_length=16, db_collation='utf8mb3_general_ci', blank=True, null=True)
+    error_type = models.CharField(max_length=8, db_collation='utf8mb3_general_ci', choices=TypeOpts.choices, blank=True, null=True)
     unit = models.ForeignKey("Units", models.DO_NOTHING, db_column="unit_id")
-    accuracy = models.TextField(db_collation='utf8mb3_general_ci')
-    component = models.CharField(max_length=50)
-    heading = models.CharField(max_length=50)
-    note = models.TextField(db_collation='utf8mb3_general_ci')
-    exact = models.IntegerField()
+    accuracy = models.PositiveIntegerField(default=1)
+    compnum = models.IntegerField(blank=True, null=True)
+    note = models.CharField(max_length=128, db_collation='utf8mb3_general_ci', blank=True, null=True)
     updated = models.DateTimeField()
 
     class Meta:
         managed = False
         db_table = 'suppdata'
         verbose_name_plural = "suppdata"
+
+    def __str__(self):
+        return f"{{{self.quantity.name}: {self.text} {self.unit.symbol}}}"
 
 
 class Systems(models.Model):

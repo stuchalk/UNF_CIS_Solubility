@@ -59,9 +59,9 @@ class UnitsAdmin(admin.ModelAdmin):
 
 @admin.register(Conditions)
 class ConditionsAdmin(admin.ModelAdmin):
-    list_display = ('id', 'get_point', 'get_series', 'get_quantity', 'text', 'get_unit')
+    list_display = ('get_point', 'get_series', 'get_quantity', 'text', 'get_unit')
     ordering = ('quantity__name', 'text',)
-    search_fields = ('datapoint', 'text',)
+    search_fields = ('datapoint__title', 'datapoint__dataseries__heading', 'text',)
     autocomplete_fields = ('datapoint', 'dataseries')
 
     @display(ordering='quantity__name', description='Quantity')
@@ -87,16 +87,27 @@ class ConditionsAdmin(admin.ModelAdmin):
 
 @admin.register(Data)
 class DataAdmin(admin.ModelAdmin):
-    list_display = ('id', 'quantity', 'text', 'unit', 'compnum')
+    list_display = ('get_point', 'quantity', 'text', 'unit', 'compnum')
     ordering = ('id',)
     search_fields = ('datapoint__title', 'quantity__name',
                      'datapoint__dataseries__heading', 'datapoint__dataseries__dataset__title')
     autocomplete_fields = ('datapoint',)
 
+    @display(ordering='datapoint__title', description='Datapoint')
+    def get_point(self, obj):
+        """ datapoint title """
+        return obj.datapoint.title
+
 
 @admin.register(Suppdata)
 class SuppdataAdmin(admin.ModelAdmin):
-    list_display = ('id', 'quantity', 'unit', 'datapoint')
+    list_display = ('get_point', 'quantity', 'text', 'unit', 'compnum')
     ordering = ('id',)
-    search_fields = ('datapoint', 'quantity',)
+    search_fields = ('datapoint__title', 'quantity__name',
+                     'datapoint__dataseries__heading', 'datapoint__dataseries__dataset__title')
     autocomplete_fields = ('datapoint',)
+
+    @display(ordering='datapoint__title', description='Datapoint')
+    def get_point(self, obj):
+        """ datapoint title """
+        return obj.datapoint.title

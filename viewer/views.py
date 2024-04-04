@@ -63,10 +63,18 @@ class ConditionsSerializer(serializers.ModelSerializer):
         exclude = ['datapoints']
         depth = 1
 
+class SuppdataSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Suppdata
+        # fields = '__all__'
+        exclude = ['datapoints']
+        depth = 1
+
 
 class DatapointsSerializer(serializers.ModelSerializer):
     conditions = ConditionsSerializer(source='conditions_set', read_only=True, many=True)
     data = DataSerializer(source='data_set', read_only=True, many=True)
+    suppdata = SuppdataSerializer(source='suppdata_set', read_only=True, many=True)
     datasets = DatasetsSerializer()
 
     class Meta:

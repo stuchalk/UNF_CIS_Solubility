@@ -35,10 +35,9 @@
                 {% endif %}
                 <h5>Prepared by:</h5>
                 <p>{% for cmplr in cmplrs %}
-                    {% if cmplr.role == 'compiler' %}
-                        {% if forloop.last %}and {% endif %}
-                        {{ cmplr.author.name }}{% if not forloop.last %}, {% endif %}
-                    {% endif %}
+                    {% if forloop.last and cmplrs|length > 1 %}and {% endif %}
+                    {{ cmplr.author.name }}
+                    {% if not forloop.last %}, {% endif %}
                 {% endfor %}</p>
                 <!-- method -->
                 <h5>Method/Apparatus/Procedure:</h5>
@@ -83,12 +82,17 @@
                                         {% if pointnum == 1 %}
                                             <thead><tr>
                                             {% for cond in point.conditions %}
-                                            <th class="font-weight-bold" scope="col">{{ cond.quantity.symbol }} ({{ cond.unit.symbol }})</th>
+                                                <th class="font-weight-bold" scope="col">{{ cond.quantity.symbol }} ({{ cond.unit.symbol }})</th>
                                             {% endfor %}
                                             {% for data in point.data %}
-                                            <th class="font-weight-bold" scope="col">{{ data.quantity.symbol }}
-                                                {% if data.compnum != None %}<sub>{{ data.compnum }}</sub>{% endif %}
-                                                ({{ data.unit.symbol }})</th>
+                                                <th class="font-weight-bold" scope="col">{{ data.quantity.symbol }}
+                                                    {% if data.compnum != None %}<sub>{{ data.compnum }}</sub>{% endif %}
+                                                    ({{ data.unit.symbol }})</th>
+                                            {% endfor %}
+                                            {% for supp in point.suppdata %}
+                                                <th class="font-weight-bold" scope="col">{{ supp.quantity.symbol }}
+                                                    {% if supp.compnum != None %}<sub>{{ supp.compnum }}</sub>{% endif %}
+                                                    ({{ supp.unit.symbol }})</th>
                                             {% endfor %}
                                             </tr></thead>
                                         {% endif %}
@@ -108,26 +112,15 @@
                                                 {%  if data.error != None %}(± {{ data.error }}){%  endif %}
                                             </td>
                                         {% endfor %}
+                                        {% for supp in point.suppdata %}
+                                            <td>{{ supp.text }}
+                                                {%  if supp.error != None %}(± {{ supp.error }}){%  endif %}
+                                            </td>
+                                        {% endfor %}
                                     </tr>
                                 {% endfor %}
                                 </tbody>
                             </table>
-                        {% endwith %}
-                    {% endfor %}
-                {% endif %}
-                {% if points|length > 0 %}
-                    <h4>Datapoints</h4>
-                    {% for point in points %}
-                        {% with num=forloop.counter %}
-                            <h5>Point {{ num }}</h5>
-                            <ul>
-                            {% for cond in point.conditions %}
-                                <li>{{ cond.quantity.name }}: {{ cond.text }} {{ cond.unit.symbol }}</li>
-                            {% endfor %}
-                            {% for data in point.data %}
-                                <li>{{ data.quantity.name }}: {{ data.text }} {{ data.unit.symbol }}</li>
-                            {% endfor %}
-                            </ul>
                         {% endwith %}
                     {% endfor %}
                 {% endif %}
