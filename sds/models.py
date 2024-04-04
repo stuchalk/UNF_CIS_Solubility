@@ -438,12 +438,12 @@ class Suppdata(models.Model):
     significand = models.CharField(max_length=16, db_collation='utf8mb3_general_ci')
     exponent = models.IntegerField()
     error = models.CharField(max_length=16, db_collation='utf8mb3_general_ci', blank=True, null=True)
-    error_type = models.CharField(max_length=8, db_collation='utf8mb3_general_ci', choices=TypeOpts.choices, blank=True, null=True)
+    error_type = models.CharField(max_length=8, db_collation='utf8mb3_general_ci', choices=TypeOpts.choices,
+                                  blank=True, null=True)
     unit = models.ForeignKey("Units", models.DO_NOTHING, db_column="unit_id")
     accuracy = models.PositiveIntegerField(default=1)
     compnum = models.IntegerField(blank=True, null=True)
     note = models.CharField(max_length=128, db_collation='utf8mb3_general_ci', blank=True, null=True)
-    updated = models.DateTimeField()
 
     class Meta:
         managed = False

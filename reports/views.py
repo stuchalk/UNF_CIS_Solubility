@@ -78,7 +78,6 @@ def view(request, repid=0):
     variables = data['variables']
     chems = data['chem']
     series = data['set'][0]['dataseries']
-    points = data['set'][0]['datapoints']
     subs = {}
     for chem in chems:
         subs.update({chem['compnum']: chem['substance']})
@@ -90,8 +89,8 @@ def view(request, repid=0):
 
     cmplrs = AuthorsReports.objects.filter(report_id=repid, role='compiler')
     return render(request, "../templates/reports/view.html",
-                  {'sys': sys, 'vol': vol, 'subs': subs, 'vars': variables, 'series': series, 'points': points,
-                   'method': method, 'chems': chems, 'refs': refs, 'mrefs': mrefs, 'cmplrs': cmplrs, 'compnts': compnts})
+                  {'sys': sys, 'vol': vol, 'subs': subs, 'vars': variables, 'series': series, 'method': method,
+                   'chems': chems, 'refs': refs, 'mrefs': mrefs, 'cmplrs': cmplrs, 'compnts': compnts})
 
 
 def testing(request, repid=0):

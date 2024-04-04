@@ -15,7 +15,7 @@ from sds.models import Suppdata
 class DatasetsAdmin(admin.ModelAdmin):
     list_display = ('title', 'description', 'report')
     ordering = ('title', 'report')
-    search_fields = ('title', 'description', 'report')
+    search_fields = ('dataset_title', 'description', 'report')
     list_filter = ('report__volume__volume',)
 
 
@@ -31,7 +31,7 @@ class DatapointsAdmin(admin.ModelAdmin):
     list_display = ('title', 'get_set', 'get_series')
     ordering = ('title', 'dataset', 'dataseries')
     search_fields = ('dataseries__heading', 'dataseries__dataset__title',)
-    autocomplete_fields = ('dataseries', 'dataseries__dataset__title',)
+    autocomplete_fields = ('dataseries', 'dataset',)
 
     @display(ordering='dataseries__heading', description='Dataseries')
     def get_series(self, obj):

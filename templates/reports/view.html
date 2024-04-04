@@ -74,23 +74,23 @@
                 {% if series|length > 0 %}
                     {% for table in series %}
                         {% with tablenum=forloop.counter %}
-                            <div class="text-center font-weight-bold">{{ table.heading }}</div>
+                            <div class="text-center font-weight-bold mb-4">{{ table.heading }}</div>
                             <table class="table table-striped">
                                 <!-- header -->
                                 {% for point in table.datapoints %}
                                     {% with pointnum=forloop.counter %}
                                         {% if pointnum == 1 %}
-                                            <thead><tr>
+                                            <thead class="table-primary"><tr>
                                             {% for cond in point.conditions %}
-                                                <th class="font-weight-bold" scope="col">{{ cond.quantity.symbol }} ({{ cond.unit.symbol }})</th>
+                                                <th class="font-weight-bold pb-1 pt-1" scope="col">{{ cond.quantity.symbol }} ({{ cond.unit.symbol }})</th>
                                             {% endfor %}
                                             {% for data in point.data %}
-                                                <th class="font-weight-bold" scope="col">{{ data.quantity.symbol }}
+                                                <th class="font-weight-bold pb-1 pt-1" scope="col">{{ data.quantity.symbol }}
                                                     {% if data.compnum != None %}<sub>{{ data.compnum }}</sub>{% endif %}
                                                     ({{ data.unit.symbol }})</th>
                                             {% endfor %}
                                             {% for supp in point.suppdata %}
-                                                <th class="font-weight-bold" scope="col">{{ supp.quantity.symbol }}
+                                                <th class="font-weight-bold pb-1 pt-1" scope="col">{{ supp.quantity.symbol }}
                                                     {% if supp.compnum != None %}<sub>{{ supp.compnum }}</sub>{% endif %}
                                                     ({{ supp.unit.symbol }})</th>
                                             {% endfor %}
@@ -127,8 +127,8 @@
             </div>
         </div>
     </div>
-{#    <div class="col-12">#}
-{#        <pre> {% debug %} </pre>#}
-{#    </div>#}
+    <div class="col-12">
+        <pre> {% debug %} </pre>
+    </div>
 </div>
 {% endblock %}
