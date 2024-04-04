@@ -13,7 +13,7 @@ from sds.models import Suppdata
 
 @admin.register(Datasets)
 class DatasetsAdmin(admin.ModelAdmin):
-    list_display = ('id', 'title', 'description', 'report')
+    list_display = ('title', 'description', 'report')
     ordering = ('title', 'report')
     search_fields = ('title', 'description', 'report')
     list_filter = ('report__volume__volume',)
@@ -21,16 +21,17 @@ class DatasetsAdmin(admin.ModelAdmin):
 
 @admin.register(Dataseries)
 class DataseriesAdmin(admin.ModelAdmin):
-    list_display = ('id', 'heading', 'seriesnum', 'dataset')
+    list_display = ('heading', 'seriesnum', 'dataset')
     ordering = ('dataset', 'heading')
-    search_fields = ('dataset__title', 'heading',)
+    search_fields = ('dataset__title', 'dataseries__heading',)
 
 
 @admin.register(Datapoints)
 class DatapointsAdmin(admin.ModelAdmin):
     list_display = ('title', 'get_set', 'get_series')
     ordering = ('title', 'dataset', 'dataseries')
-    search_fields = ('dataseries__heading', 'dataset__title',)
+    search_fields = ('dataseries__heading', 'dataseries__dataset__title',)
+    autocomplete_fields = ('dataseries', 'dataseries__dataset__title',)
 
     @display(ordering='dataseries__heading', description='Dataseries')
     def get_series(self, obj):
@@ -45,14 +46,14 @@ class DatapointsAdmin(admin.ModelAdmin):
 
 @admin.register(Quantities)
 class QuantitiesAdmin(admin.ModelAdmin):
-    list_display = ('id', 'name', 'symbol', 'baseunit')
+    list_display = ('name', 'symbol', 'baseunit')
     ordering = ('name',)
     search_fields = ('name',)
 
 
 @admin.register(Units)
 class UnitsAdmin(admin.ModelAdmin):
-    list_display = ('id', 'name', 'symbol', 'type')
+    list_display = ('name', 'symbol', 'type')
     ordering = ('name',)
     search_fields = ('name',)
 
