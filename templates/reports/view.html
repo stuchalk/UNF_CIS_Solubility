@@ -72,14 +72,14 @@
                 {% if series|length > 0 %}
                     {% for table in series %}
                         {% with tablenum=forloop.counter %}
-                            <div class="text-center font-weight-bold mb-4">{{ table.heading }}</div>
+                            <h5 class="text-center mb-4">{{ table.heading }}</h5>
                             <!-- series conditions -->
                             {% if table.conditions_set.all %}
                                 {% for scond in table.conditions_set.all %}
                                     <p><b>{{ scond.quantity.symbol }}/{{ scond.unit.symbol }}</b> = {{ scond.text }}</p>
                                 {% endfor %}
                             {% endif %}
-                            <table class="table table-striped">
+                            <table class="table table-striped table-sm">
                                 <!-- header -->
                                 {% for point in table.datapoints_set.all %}
                                     {% with pointnum=forloop.counter %}
