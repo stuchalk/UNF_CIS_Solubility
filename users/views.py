@@ -1,7 +1,8 @@
 from django.shortcuts import render
 from django.forms.models import model_to_dict
 from django.contrib.auth.models import User
-from django.contrib.admin.models import LogEntry, ContentType
+from django.contrib.admin.models import LogEntry
+from sds.models import *
 import json
 
 
@@ -15,16 +16,10 @@ def index(request):
 def view(request, usrid=0):
     """ show data about a specific substance"""
     usr = User.objects.get(id=usrid)
-    ents = LogEntry.objects.filter(user=usr)
-    acts = []
-    for ent in ents:
-        tmp = model_to_dict(ent)
-        ctype = ContentType.objects.get(id=ent.content_type_id)
-        tmp.update({'table': ctype.model})
-        tmp2 = dict()
-        jsn = json.dumps(ent.change_message.strip("[]"))
-        tmp2['act'] = json.loads(jsn)
-        keys = tmp2['act'].keys()
-        tmp.update({'action': keys[0]})  # still a string!  Why?
-        acts.append(tmp)
-    return render(request, "../templates/users/view.html", {'usr': usr, 'acts': acts})
+    rptids = LogEntry.objects.filter(user=usr, content_type_id=26).values_list('object_id', flat=True)
+    rpts = {}
+    for rptid in rptids:
+        rpt = Reports.objects.get(id=rptid)
+        title = rpt.volume.volume + ": " + rpt.system.name
+        rpts.update({rptid: title})
+    return render(request, "../templates/users/view.html", {'usr': usr, 'rpts': rpts})
