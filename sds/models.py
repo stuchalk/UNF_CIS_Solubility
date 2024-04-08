@@ -466,7 +466,7 @@ class Systems(models.Model):
     # fields
     id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=256)
-    # volume = models.ForeignKey("Volumes", models.DO_NOTHING, db_column="volume_id")
+    volume = models.ForeignKey("Volumes", models.DO_NOTHING, db_column="volume_id")
     components = models.PositiveIntegerField(choices=CompOpts.choices, default=2)
     updated = models.DateTimeField(auto_now_add=True)
 
