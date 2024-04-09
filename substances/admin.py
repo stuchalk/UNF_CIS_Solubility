@@ -29,5 +29,5 @@ class IdentifiersAdmin(admin.ModelAdmin):
 class ChemicalsAdmin(admin.ModelAdmin):
     list_display = ('id', 'substance', 'report')
     ordering = ('substance',)
-    search_fields = ('substance', 'report')
+    search_fields = ('substance__name',)
     list_filter = ('report',)
