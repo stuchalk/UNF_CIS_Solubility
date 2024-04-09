@@ -8,7 +8,7 @@ from sds.models import Journals
 class ReferencesAdmin(admin.ModelAdmin):
     list_display = ('id', 'title', 'year', 'volume', 'startpage', 'doi')
     ordering = ('citation', 'title')
-    search_fields = ('title', 'doi')
+    search_fields = ('title', 'doi', 'authors')
     list_filter = ('journal__abbrev',)
 
 
