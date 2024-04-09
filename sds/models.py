@@ -511,7 +511,7 @@ class Units(models.Model):
 class Volumes(models.Model):
     """ publications table model """
     id = models.SmallAutoField(primary_key=True)
-    volume = models.CharField(max_length=32, blank=True, null=True)
+    volume = models.CharField(max_length=16, blank=True, null=True)
     year = models.SmallIntegerField(blank=True, null=True)
     title = models.CharField(max_length=256)
     authors = models.CharField(max_length=512)
