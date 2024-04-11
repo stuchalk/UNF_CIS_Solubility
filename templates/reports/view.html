@@ -100,7 +100,7 @@
                                 {% endfor %}
                                 <!-- body -->
                                 <tbody>
-                                {% for point in table.datapoints_set.all %}
+                                {% for point in table.datapoints_set.all|dictsort:"rownum" %} <!-- sort data by row -->
                                     <tr>
                                         {% for cond in point.conditions_set.all %}
                                             <td>{{ cond.text }}
