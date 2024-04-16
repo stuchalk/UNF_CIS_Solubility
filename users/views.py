@@ -3,7 +3,6 @@ from django.forms.models import model_to_dict
 from django.contrib.auth.models import User
 from django.contrib.admin.models import LogEntry
 from sds.models import *
-import json
 
 
 def index(request):

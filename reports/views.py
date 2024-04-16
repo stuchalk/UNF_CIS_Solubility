@@ -80,15 +80,19 @@ def view(request, repid=0):
     for chem in chems:
         subs.update({chem.compnum: chem.substance})
     sets = rep.datasets_set.all()
-    series = sets[0].dataseries_set.all()
-    orefids = rep.referencesreports_set.all().filter(type='original').values_list('reference_id', flat=True)
-    mrefids = rep.referencesreports_set.all().filter(type='supplemental').values_list('reference_id', flat=True)
-    orefs = References.objects.filter(id__in=orefids)
-    mrefs = References.objects.filter(id__in=mrefids)
-    cmplrs = rep.authorsreports_set.all().filter(role='compiler')
-    return render(request, "../templates/reports/view.html",
+    # TODO: Get user usr = User.objects.get(username=rep.username)
+    if sets.count() > 0:
+        series = sets[0].dataseries_set.all()
+        orefids = rep.referencesreports_set.all().filter(type='original').values_list('reference_id', flat=True)
+        mrefids = rep.referencesreports_set.all().filter(type='supplemental').values_list('reference_id', flat=True)
+        orefs = References.objects.filter(id__in=orefids)
+        mrefs = References.objects.filter(id__in=mrefids)
+        cmplrs = rep.authorsreports_set.all().filter(role='compiler')
+        return render(request, "../templates/reports/view.html",
                   {'sys': sys, 'vol': vol, 'subs': subs, 'vars': variables, 'series': series, 'method': method,
                    'chems': chems, 'orefs': orefs, 'mrefs': mrefs, 'cmplrs': cmplrs, 'compnts': compnts})
+    else:
+        return render(request, "../templates/reports/nodata.html")
 
 
 def scidata(request, repid=0):

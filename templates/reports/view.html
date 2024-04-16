@@ -5,7 +5,14 @@
 {% block content %}
 <div class="row">
     <div class="col-12 mb-2 mt-2">
-        <h3 class="text-center text-primary">Solubility System: {{ vol.name }} from Vol. {{ vol.volume }}</h3>
+        <h3 class="text-center text-primary">Solubility System (Vol. {{ vol.vol }}): 
+            {% for chem in chems %}
+                {% if not forloop.first %}
+                    {% if not forloop.last %}, {% else %}, and {% endif %}
+                {% endif %}
+                {{ chem.substance.name|title }}
+            {% endfor %}
+        </h3>
     </div>
     <div class="col-5">
         <div class="card card-success">
@@ -81,10 +88,9 @@
                             {% endif %}
                             <table class="table table-striped table-sm">
                                 <!-- header -->
-                                {% for point in table.datapoints_set.all %}
-                                    {% with pointnum=forloop.counter %}
-                                        {% if pointnum == 1 %}
-                                            <thead class="table-primary"><tr>
+                                {% for point in table.datapoints_set.all|dictsort:"rownum" %}
+                                    {% if point.rownum == 1 %}
+                                        <thead class="table-primary"><tr>
                                             {% for cond in point.conditions_set.all %}
                                                 <th class="font-weight-bold pb-1 pt-1" scope="col">{{ cond.quantity.symbol }} ({{ cond.unit.symbol }})</th>
                                             {% endfor %}
@@ -94,9 +100,8 @@
                                             {% for supp in point.suppdata_set.all %}
                                                 <th class="font-weight-bold pb-1 pt-1" scope="col">{{ supp.quantity.symbol }}{% if supp.compnum != None %}<sub>{{ supp.compnum }}</sub>{% endif %} ({{ supp.unit.symbol }})</th>
                                             {% endfor %}
-                                            </tr></thead>
-                                        {% endif %}
-                                    {% endwith %}
+                                        </tr></thead>
+                                    {% endif %}
                                 {% endfor %}
                                 <!-- body -->
                                 <tbody>
@@ -124,11 +129,12 @@
                         {% endwith %}
                     {% endfor %}
                 {% endif %}
+{#                <div class="col-12">#}
+{#                    <pre> {% debug %} </pre>#}
+{#                </div>#}
             </div>
         </div>
     </div>
-{#    <div class="col-12">#}
-{#        <pre> {% debug %} </pre>#}
-{#    </div>#}
+   
 </div>
 {% endblock %}

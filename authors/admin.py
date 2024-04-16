@@ -14,5 +14,5 @@ class AuthorsAdmin(admin.ModelAdmin):
 class AuthorsReportsAdmin(admin.ModelAdmin):
     list_display = ('id', 'author', 'role', 'report')
     ordering = ('author', 'report')
-    search_fields = ('author', 'report')
+    search_fields = ('author__name', 'report__method')
     autocomplete_fields = ('report',)
