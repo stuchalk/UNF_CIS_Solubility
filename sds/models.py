@@ -65,7 +65,7 @@ class Chemicals(models.Model):
         verbose_name_plural = "chemicals"
 
     def __str__(self):
-        return f'{self.substance.name} - Vol. {self.report.volume.volume}, page {self.report.page}'
+        return f'{self.substance.name} - Vol. {self.report.volume.vol}, page {self.report.page}'
 
 
 class Conditions(models.Model):
@@ -326,7 +326,7 @@ class Reports(models.Model):
         ordering = ['system__name']
 
     def __str__(self):
-        return f'(id. {self.id}) {self.system.name} (Vol. {self.volume.volume}, page {self.page})'
+        return f'{self.system.name} (Vol. {self.volume.vol}, page {self.page})'
 
 
 class ReportForm(ModelForm):
@@ -466,7 +466,7 @@ class Systems(models.Model):
     # fields
     id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=256)
-    volume = models.ForeignKey("Volumes", models.DO_NOTHING, db_column="volume_id")
+    # volume = models.ForeignKey("Volumes", models.DO_NOTHING, db_column="volume_id")
     components = models.PositiveIntegerField(choices=CompOpts.choices, default=2)
     updated = models.DateTimeField(auto_now_add=True)
 
@@ -511,7 +511,7 @@ class Units(models.Model):
 class Volumes(models.Model):
     """ publications table model """
     id = models.SmallAutoField(primary_key=True)
-    volume = models.CharField(max_length=16, blank=True, null=True)
+    vol = models.CharField(max_length=16, blank=True, null=True, db_column="volume")
     year = models.SmallIntegerField(blank=True, null=True)
     title = models.CharField(max_length=256)
     authors = models.CharField(max_length=512)
@@ -524,4 +524,4 @@ class Volumes(models.Model):
         verbose_name_plural = "volumes"
 
     def __str__(self):
-        return f"{self.volume}"
+        return f"{self.vol}"

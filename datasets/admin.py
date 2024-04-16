@@ -16,7 +16,7 @@ class DatasetsAdmin(admin.ModelAdmin):
     list_display = ('title', 'description', 'report')
     ordering = ('title', 'report')
     search_fields = ('title', 'description', 'report__system__name')
-    list_filter = ('report__volume__volume',)
+    list_filter = ('report__volume__vol',)
 
 
 @admin.register(Dataseries)
@@ -32,6 +32,7 @@ class DatapointsAdmin(admin.ModelAdmin):
     ordering = ('title', 'dataset', 'dataseries')
     search_fields = ('title', 'dataseries__heading')
     autocomplete_fields = ['dataseries', 'dataset']
+    list_filter = ('dataseries__heading',)
 
     @display(ordering='dataseries__heading', description='Dataseries')
     def get_series(self, obj):
@@ -64,6 +65,7 @@ class ConditionsAdmin(admin.ModelAdmin):
     ordering = ('id', 'quantity__name', 'text',)
     search_fields = ['datapoint__dataseries__heading', 'datapoint__title', 'text']
     autocomplete_fields = ['dataseries', 'datapoint']
+    list_filter = ('dataseries__heading',)
 
     @display(ordering='quantity__name', description='Quantity')
     def get_quantity(self, obj):

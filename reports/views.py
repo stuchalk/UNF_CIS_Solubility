@@ -1,5 +1,5 @@
+""" django view file for reports """
 from django.shortcuts import render
-# from sds.serializers import *
 from .forms import *
 from django.shortcuts import redirect
 from django.http import JsonResponse
@@ -7,6 +7,7 @@ from scidatalib.scidata import *
 
 
 def add(request):
+    """ method to add a report """
     if request.method == "POST":
         form_refs = ReferencesReportsForm(request.POST, prefix='ref')
         form_reports = ReportsForm(request.POST, prefix='reports')
@@ -58,8 +59,8 @@ def add(request):
 
 
 def index():
-    """ this is a test """
-    print("Hellow world")
+    """ display an index of reports (needed?) """
+    pass
 
 
 def view(request, repid=0):
@@ -91,6 +92,7 @@ def view(request, repid=0):
 
 
 def scidata(request, repid=0):
+    """ output report as scidata.jsonld"""
     rep = Reports.objects.get(id=repid)
     vol = rep.volume
     sets = rep.datasets_set.all()
@@ -110,6 +112,7 @@ def scidata(request, repid=0):
     chms = []
     subs = []
     conds = []
+    sconds = []
     datums = []
     sdatas = []
 
@@ -125,11 +128,11 @@ def scidata(request, repid=0):
     test.namespaces({
         "sdo": "https://stuchalk.github.io/scidata/ontology/scidata.owl#",
         "dc": "http://purl.org/dc/terms/",
-        "qudt": "http://qudt.org/vocab/unit/",
+        "qudt": "https://qudt.org/vocab/unit/",
         "xsd": "http://www.w3.org/2001/XMLSchema#",
         "gb": "https://goldbook.iupac.org/",
         "so": "https://stuchalk.github.io/scidata/ontology/solubility.owl#",
-        "ss": "http://semanticscience.org/resource/",
+        "ss": "https://semanticscience.org/resource/",
         "obo": "http://purl.obolibrary.org/obo/",
         "afrl": "http://purl.allotrope.org/ontologies/role#"})
 
@@ -199,15 +202,19 @@ def scidata(request, repid=0):
     # dataseries
     dset = sets[0]
     for ser in dset.dataseries_set.all():
+        scnds = ser.conditions_set.all().values()
+        for scnd in scnds:
+            quant = Quantities.objects.get(id=scnd['quantity_id'])
+            scnd['quantity'] = quant.name
+            sconds.append(scnd)
         for point in ser.datapoints_set.all():
-            conds = point.conditions_set.all(). \
-                values('datapoint', 'quantity__name', 'significand', 'exponent', 'error', 'unit__name')
-            for cond in conds:
-                conds.append(cond)
-            datms = point.data_set.all()
+            cnds = point.conditions_set.all().values()
+            for cnd in cnds:
+                conds.append(cnd)
+            datms = point.data_set.all().values()
             for datm in datms:
                 datums.append(datm)
-            supps = point.suppdata_set.all()
+            supps = point.suppdata_set.all().values()
             for supp in supps:
                 sdatas.append(supp)
 
@@ -237,6 +244,16 @@ def scidata(request, repid=0):
         cond.update({'valuearray': condarray})
         conds.append(cond)
     test.facets(conds)
+
+    # add series conditions
+    # define name/number of series conditions
+    usconds = []
+    for scond in sconds:
+        name = scond.quantity.name
+        if name not in usconds:
+            usconds.append(name)
+
+    return JsonResponse(usconds, status=200, safe=False)
 
     # dataset
     # datagroup

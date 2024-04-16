@@ -27,7 +27,7 @@ class IdentifiersAdmin(admin.ModelAdmin):
 
 @admin.register(Chemicals)
 class ChemicalsAdmin(admin.ModelAdmin):
-    list_display = ('id', 'substance', 'report')
+    list_display = ('substance', 'report')
     ordering = ('substance',)
     search_fields = ('substance__name',)
     list_filter = ('report',)

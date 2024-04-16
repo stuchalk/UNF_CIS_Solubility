@@ -4,6 +4,6 @@ from sds.models import Volumes
 
 @admin.register(Volumes)
 class VolumesAdmin(admin.ModelAdmin):
-    list_display = ('id', 'volume', 'year', 'title')
-    ordering = ('volume',)
-    search_fields = ('title',)
+    list_display = ('vol', 'year', 'title')
+    ordering = ('vol',)
+    search_fields = ('title', 'vol')
