@@ -20,6 +20,6 @@ def view(request, usrid=0):
     rpts = {}
     for rptid in rptids:
         rpt = Reports.objects.get(id=rptid)
-        title = rpt.volume.volume + ": " + rpt.system.name
+        title = rpt.volume.vol + ": " + rpt.system.name
         rpts.update({rptid: title})
     return render(request, "../templates/users/view.html", {'usr': usr, 'rpts': rpts})
