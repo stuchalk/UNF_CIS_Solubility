@@ -12,7 +12,12 @@
                 <div id="results" class="card-body">
                     <ul class='list-unstyled list-compact mb-0'>
                         {% for usr in usrs %}
-                            <li><a href="/users/view/{{ usr.id }}">{{ usr.first_name }}</a></li>
+                            <!-- only show data for user -->
+                            {% if user.id == usr.id %}
+                                <li><a href="/users/view/{{ usr.id }}">{{ usr.first_name }}</a> (Cond: {{ usr.concnt }}, Data: {{ usr.datcnt }}, Supp: {{ usr.supcnt }}, TOTAL: {{ usr.total }})</li>
+                            {% else %}
+                                <li><a href="/users/view/{{ usr.id }}">{{ usr.first_name }}</a></li>
+                            {% endif %}
                         {% endfor %}
                     </ul>
                 </div>
