@@ -91,6 +91,7 @@ class Conditions(models.Model):
     unit = models.ForeignKey("Units", models.DO_NOTHING, db_column="unit_id")
     accuracy = models.PositiveIntegerField()
     compnum = models.CharField(max_length=50, blank=True, null=True)
+    comments = models.CharField(max_length=256, blank=True, null=True)
     updated = models.DateTimeField(auto_now_add=True)
 
     class Meta:
@@ -124,6 +125,7 @@ class Data(models.Model):
     unit = models.ForeignKey("Units", models.DO_NOTHING, db_column="unit_id")
     accuracy = models.PositiveIntegerField(default=1)
     compnum = models.IntegerField(blank=True, null=True)
+    comments = models.CharField(max_length=256, blank=True, null=True)
     updated = models.DateTimeField(auto_now_add=True)
 
     class Meta:
@@ -443,7 +445,7 @@ class Suppdata(models.Model):
     unit = models.ForeignKey("Units", models.DO_NOTHING, db_column="unit_id")
     accuracy = models.PositiveIntegerField(default=1)
     compnum = models.IntegerField(blank=True, null=True)
-    note = models.CharField(max_length=128, db_collation='utf8mb3_general_ci', blank=True, null=True)
+    comments = models.CharField(max_length=256, blank=True, null=True)
 
     class Meta:
         managed = False
