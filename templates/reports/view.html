@@ -21,7 +21,7 @@
                 <h5>Components:</h5>
                 {% if chems %}
                 <p>
-                    {% for chem in chems %}
+                    {% for chem in chems|dictsort:"compnum" %}
                         ({{ chem.compnum }}) {{ chem.substance.name }},
                         {% autoescape off %}{{ chem.substance.formula_html }}{% endautoescape %}; [{{ chem.substance.casno }}]
                         <a href="https://webbook.nist.gov/cgi/cbook.cgi?ID={{ chem.substance.casno }}" target="_blank">NIST WebBook</a>
