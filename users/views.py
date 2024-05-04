@@ -46,10 +46,11 @@ def index(request):
 def view(request, usrid=0):
     """ show data about a specific substance"""
     usr = User.objects.get(id=usrid)
-    rptids = LogEntry.objects.filter(user=usr, content_type_id=26).values_list('object_id', flat=True)
+    # content_type = 26 are reports, list includes deleted reports
+    rptids = list(LogEntry.objects.filter(user=usr, content_type_id=26, action_flag=1).values_list('object_id', flat=True))
+    rptlst = Reports.objects.filter(id__in=rptids)  # ignores deleted reports
     rpts = {}
-    for rptid in rptids:
-        rpt = Reports.objects.get(id=rptid)
+    for rpt in rptlst:
         title = rpt.volume.vol + ": " + rpt.system.name
-        rpts.update({rptid: title})
+        rpts.update({rpt.id: title})
     return render(request, "../templates/users/view.html", {'usr': usr, 'rpts': rpts})
