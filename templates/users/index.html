@@ -13,11 +13,14 @@
                     <ul class='list-unstyled list-compact mb-0'>
                         {% for usr in usrs %}
                             <!-- only show data for user -->
-                            {% if user.id == usr.id %}
-                                <li><a href="/users/view/{{ usr.id }}">{{ usr.first_name }}</a> (Cond: {{ usr.concnt }}, Data: {{ usr.datcnt }}, Supp: {{ usr.supcnt }}, TOTAL: {{ usr.total }})</li>
-                            {% else %}
-                                <li><a href="/users/view/{{ usr.id }}">{{ usr.first_name }}</a></li>
+                            <li><a href="/users/view/{{ usr.id }}">{{ usr.first_name }}</a>
+                            {% if user.id == usr.id or user.id == 26 %}
+                                 (Cond: {{ usr.concnt }}, Data: {{ usr.datcnt }}, Supp: {{ usr.supcnt }}, TOTAL: {{ usr.total }})
                             {% endif %}
+                            {% if user.id == 26 %}
+                                , CONERRS: {{ usr.conerr }}%, DATERRS: {{ usr.daterr }}%, SUPERRS: {{ usr.superr }}%,
+                            {% endif %}
+                            </li>
                         {% endfor %}
                     </ul>
                 </div>

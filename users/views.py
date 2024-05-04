@@ -10,13 +10,36 @@ def index(request):
     usrs = (User.objects.all().filter(last_login__gt='2024-03-01').
             values('id', 'first_name', 'last_name').order_by('last_name'))
     for usr in usrs:
-        ccnt = LogEntry.objects.all().filter(user_id=usr['id'], content_type_id=16, action_flag=1).count()
-        dcnt = LogEntry.objects.all().filter(user_id=usr['id'], content_type_id=17, action_flag=1).count()
-        scnt = LogEntry.objects.all().filter(user_id=usr['id'], content_type_id=33, action_flag=1).count()
+        # stats on conditions, data, and suppdata fields
+        cids = (LogEntry.objects.all().
+                filter(user_id=usr['id'], content_type_id=16, action_flag=1).values_list('object_id', flat=True))
+        dids = (LogEntry.objects.all().
+                filter(user_id=usr['id'], content_type_id=17, action_flag=1).values_list('object_id', flat=True))
+        sids = (LogEntry.objects.all()
+                .filter(user_id=usr['id'], content_type_id=33, action_flag=1).values_list('object_id', flat=True))
+        ccnt = cids.count()
+        dcnt = dids.count()
+        scnt = sids.count()
         usr.update({'concnt': ccnt})
         usr.update({'datcnt': dcnt})
         usr.update({'supcnt': scnt})
         usr.update({'total': ccnt + dcnt + scnt})
+        # grading data: conditions, data, suppdata entries with errors in comments fields
+        cons = Conditions.objects.all().filter(id__in=cids, comments__isnull=False).count()
+        data = Data.objects.all().filter(id__in=dids, comments__isnull=False).count()
+        supp = Suppdata.objects.all().filter(id__in=sids, comments__isnull=False).count()
+        if cons > 0:
+            usr.update({'conerr': round((cons*100)/ccnt, 1)})
+        else:
+            usr.update({'conerr': 0})
+        if data > 0:
+            usr.update({'daterr': round((data*100)/dcnt, 1)})
+        else:
+            usr.update({'daterr': 0})
+        if supp > 0:
+            usr.update({'superr': round((supp*100)/scnt, 1)})
+        else:
+            usr.update({'superr': 0})
     return render(request, "../templates/users/index.html", {'usrs': usrs})
 
 
