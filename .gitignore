@@ -150,3 +150,5 @@ sds/localsettings.py
 # private files
 instructor/analysis
 instructor/dump
+
+Pipfile.lock
