@@ -29,4 +29,5 @@ urlpatterns = [
     path('volumes/', include('volumes.urls')),
     path('viewer/', include('viewer.urls')),
     path('users/', include('users.urls')),
+    path("__debug__/", include("debug_toolbar.urls")),
 ]

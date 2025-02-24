@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'debug_toolbar',
     'authors',
     'crispy_forms',
     'crosswalks',
@@ -63,6 +64,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'debug_toolbar.middleware.DebugToolbarMiddleware',
 ]
 
 ROOT_URLCONF = 'sds.urls'
@@ -143,3 +145,8 @@ STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
 
 # crispy
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
+
+# for django-debug-toolbar
+INTERNAL_IPS = [
+    "127.0.0.1",
+]
